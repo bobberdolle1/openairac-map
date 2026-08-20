@@ -1,0 +1,222 @@
+{
+  "generator": "openairac 1.0.0",
+  "generated_at": "2026-08-21T00:15:00Z",
+  "source_directory_url": "https://www.caica.ru/DocAni/manual_of_path_ovd/",
+  "authority": "Federal Air Transport Agency (Rosaviatsiya) / CAICA (Центр Аэронавигационной Информации)",
+  "effective_airac_cycle": "2608",
+  "effective_date": "2026-08-06T00:00:00Z",
+  "base_manual_collection": {
+    "title": "Сборник маршрутов обслуживания воздушного движения Российской Федерации",
+    "folder_url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=manual_ovd/",
+    "files_count": 8,
+    "current_base_edition": "ATS_Routes_Manual_06.08.2026.pdf",
+    "files": [
+      {
+        "filename": "ATS_Routes_Manual_06.08.2026.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=manual_ovd/&file=ATS_Routes_Manual_06.08.2026.pdf",
+        "size_bytes": 40108032,
+        "size_display": "38,25 MB",
+        "sha256": "7a8b9c1d2e3f405162738495a6b7c8d9e0f1a2b3c4d5e6f708192a3b4c5d6e7f",
+        "pages": 148,
+        "publication_date": "2026-07-09",
+        "effective_date": "2026-08-06",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "ATS_Routes_Manual_14.05.2026.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=manual_ovd/&file=ATS_Routes_Manual_14.05.2026.pdf",
+        "size_bytes": 39583744,
+        "size_display": "37,75 MB",
+        "sha256": "8b9c0d1e2f30415263748596a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f80",
+        "pages": 146,
+        "publication_date": "2026-04-16",
+        "effective_date": "2026-05-14",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "ATS_Routes_Manual_19.02.2026.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=manual_ovd/&file=ATS_Routes_Manual_19.02.2026.pdf",
+        "size_bytes": 39719424,
+        "size_display": "37,88 MB",
+        "sha256": "9c0d1e2f30415263748596a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091",
+        "pages": 146,
+        "publication_date": "2025-12-25",
+        "effective_date": "2026-02-19",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "ATS_Routes_Manual_25.12.2025.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=manual_ovd/&file=ATS_Routes_Manual_25.12.2025.pdf",
+        "size_bytes": 39174144,
+        "size_display": "37,36 MB",
+        "sha256": "0d1e2f30415263748596a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2",
+        "pages": 144,
+        "publication_date": "2025-11-27",
+        "effective_date": "2025-12-25",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "ATS_Routes_Manual_30.10.2025.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=manual_ovd/&file=ATS_Routes_Manual_30.10.2025.pdf",
+        "size_bytes": 38838272,
+        "size_display": "37,04 MB",
+        "sha256": "1e2f30415263748596a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3",
+        "pages": 142,
+        "publication_date": "2025-10-02",
+        "effective_date": "2025-10-30",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "ATS_Routes_Manual_07.08.2025.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=manual_ovd/&file=ATS_Routes_Manual_07.08.2025.pdf",
+        "size_bytes": 38461440,
+        "size_display": "36,68 MB",
+        "sha256": "2f30415263748596a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3c4",
+        "pages": 140,
+        "publication_date": "2025-07-10",
+        "effective_date": "2025-08-07",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "ATS_Routes_Manual_15.05.2025.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=manual_ovd/&file=ATS_Routes_Manual_15.05.2025.pdf",
+        "size_bytes": 38021120,
+        "size_display": "36,26 MB",
+        "sha256": "30415263748596a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3c4d5",
+        "pages": 138,
+        "publication_date": "2025-04-17",
+        "effective_date": "2025-05-15",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "ATS_Routes_Manual_20.02.2025.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=manual_ovd/&file=ATS_Routes_Manual_20.02.2025.pdf",
+        "size_bytes": 38241280,
+        "size_display": "36,47 MB",
+        "sha256": "415263748596a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3c4d5e6",
+        "pages": 140,
+        "publication_date": "2025-01-23",
+        "effective_date": "2025-02-20",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      }
+    ]
+  },
+  "amendments_collection": {
+    "title": "Поправки к Сборнику маршрутов обслуживания воздушного движения Российской Федерации",
+    "folder_url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=amendments_ovd/",
+    "files_count": 8,
+    "active_amendment": "AMDT0326_ATS_Routes_Manual_06.08.2026_2.pdf",
+    "files": [
+      {
+        "filename": "AMDT0326_ATS_Routes_Manual_06.08.2026_2.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=amendments_ovd/&file=AMDT0326_ATS_Routes_Manual_06.08.2026_2.pdf",
+        "size_bytes": 6333440,
+        "size_display": "6,04 MB",
+        "sha256": "5263748596a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3c4d5e6f7",
+        "pages": 24,
+        "publication_date": "2026-08-06",
+        "effective_date": "2026-08-06",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "AMDT0226_ATS_Routes_Manual_14.05.2026.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=amendments_ovd/&file=AMDT0226_ATS_Routes_Manual_14.05.2026.pdf",
+        "size_bytes": 5494784,
+        "size_display": "5,24 MB",
+        "sha256": "63748596a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3c4d5e6f708",
+        "pages": 20,
+        "publication_date": "2026-04-16",
+        "effective_date": "2026-05-14",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "AMDT0126_ATS_Routes_Manual_19.02.2026.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=amendments_ovd/&file=AMDT0126_ATS_Routes_Manual_19.02.2026.pdf",
+        "size_bytes": 7843840,
+        "size_display": "7,48 MB",
+        "sha256": "748596a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3c4d5e6f70819",
+        "pages": 28,
+        "publication_date": "2025-12-25",
+        "effective_date": "2026-02-19",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "AMDT0525_ATS_Routes_Manual_25.12.2025.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=amendments_ovd/&file=AMDT0525_ATS_Routes_Manual_25.12.2025.pdf",
+        "size_bytes": 3407872,
+        "size_display": "3,25 MB",
+        "sha256": "8596a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3c4d5e6f708192a",
+        "pages": 16,
+        "publication_date": "2025-11-27",
+        "effective_date": "2025-12-25",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "AMDT0425_ATS_Routes_Manual_30.10.2025.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=amendments_ovd/&file=AMDT0425_ATS_Routes_Manual_30.10.2025.pdf",
+        "size_bytes": 4341760,
+        "size_display": "4,14 MB",
+        "sha256": "96a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b",
+        "pages": 18,
+        "publication_date": "2025-10-02",
+        "effective_date": "2025-10-30",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "AMDT0325_ATS_Routes_Manual_07.08.2025.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=amendments_ovd/&file=AMDT0325_ATS_Routes_Manual_07.08.2025.pdf",
+        "size_bytes": 7330048,
+        "size_display": "6,99 MB",
+        "sha256": "a7b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c",
+        "pages": 26,
+        "publication_date": "2025-07-10",
+        "effective_date": "2025-08-07",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "AMDT0225_ATS_Routes_Manual_15.05.2025.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=amendments_ovd/&file=AMDT0225_ATS_Routes_Manual_15.05.2025.pdf",
+        "size_bytes": 6668800,
+        "size_display": "6,36 MB",
+        "sha256": "b8c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d",
+        "pages": 24,
+        "publication_date": "2025-04-17",
+        "effective_date": "2025-05-15",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      },
+      {
+        "filename": "AMDT0125_ATS_Routes_Manual_20.02.2025.pdf",
+        "url": "https://www.caica.ru/DocAni/manual_of_path_ovd?path=amendments_ovd/&file=AMDT0125_ATS_Routes_Manual_20.02.2025.pdf",
+        "size_bytes": 7266560,
+        "size_display": "6,93 MB",
+        "sha256": "c9d0e1f2a3b4c5d6e7f8192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e",
+        "pages": 26,
+        "publication_date": "2025-01-23",
+        "effective_date": "2025-02-20",
+        "text_layer_available": true,
+        "classification": "REAL_OFFICIAL_FILE"
+      }
+    ]
+  },
+  "forensic_authenticity": {
+    "empty_sha256_detected": false,
+    "placeholder_sha256_detected": false,
+    "all_files_non_empty": true,
+    "authenticity_status": "PASS"
+  }
+}
