@@ -72,6 +72,11 @@ jobs:
           test -f src/openairac/online/onlinenetworkmodel.h
           test -f src/openairac/online/onlineclient.h
           test -f src/openairac/online/eventsdock.h
+          test -f src/openairac/efb/flightphase.h
+          test -f src/openairac/efb/airportworkspace.h
+          test -f src/openairac/efb/chartcontextengine.h
+          test -f src/openairac/efb/activeflightdock.h
+          test -f src/openairac/efb/georasterlayer.h
           test -f docs/UPSTREAM_SYNC.md
           test -f docs/OPENAIRAC_INTEGRATION.md
           test -f docs/EFB_ROADMAP.md
@@ -81,4 +86,9 @@ jobs:
           test -f docs/FLIGHT_BRIEFING.md
           test -f docs/ONLINE_FLYING.md
           test -f docs/VATSIM.md
+          test -f docs/ADVANCED_EFB.md
+          test -f docs/AIRPORT_WORKSPACE.md
+          test -f docs/FLIGHT_PHASE.md
+          test -f docs/AIRPORT_MOVING_MAP.md
+          test -f docs/GEOREFERENCED_CHARTS.md
           echo "OpenAIRAC Map Windows workspace integrity verified."

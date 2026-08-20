@@ -34,12 +34,12 @@ enum class NetworkFreshnessState {
 
 enum class OnlineFacilityType {
     Unknown = 0,
-    Delivery = 1,
-    Ground = 2,
-    Tower = 3,
-    Approach = 4,
-    Center = 5,
-    Fss = 6
+    Fss = 1,
+    Delivery = 2,
+    Ground = 3,
+    Tower = 4,
+    Approach = 5,
+    Center = 6
 };
 
 struct OnlinePilotItem {
@@ -80,8 +80,9 @@ struct OnlineControllerItem {
     QString callsign;
     QString frequency;
     OnlineFacilityType facilityType = OnlineFacilityType::Unknown;
+    OnlineFacilityType callsignRoleHint = OnlineFacilityType::Unknown;
+    bool isConsistent = true;
     QString facilityTypeName;
-    int rating = 0;
     int visualRangeNm = 50;
     QStringList textAtis;
     QString associatedAirport;

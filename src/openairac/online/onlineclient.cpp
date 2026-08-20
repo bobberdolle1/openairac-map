@@ -282,28 +282,59 @@ void OnlineClient::parseVatsimDataJson(const QByteArray& data) {
         ctrl.rating = c[QStringLiteral("rating")].toInt();
         ctrl.visualRangeNm = c[QStringLiteral("visual_range")].toInt();
 
-        // Facility type detection
-        if (fac == 1 || ctrl.callsign.endsWith(QStringLiteral("_DEL")) || ctrl.callsign.endsWith(QStringLiteral("_CLR"))) {
+        // Authoritative facility type from VATSIM Data API v3 facilities[]
+        switch (fac) {
+        case 1:
+            ctrl.facilityType = OnlineFacilityType::Fss;
+            ctrl.facilityTypeName = QStringLiteral("FSS");
+            break;
+        case 2:
             ctrl.facilityType = OnlineFacilityType::Delivery;
             ctrl.facilityTypeName = QStringLiteral("DEL");
-        } else if (fac == 2 || ctrl.callsign.endsWith(QStringLiteral("_GND"))) {
+            break;
+        case 3:
             ctrl.facilityType = OnlineFacilityType::Ground;
             ctrl.facilityTypeName = QStringLiteral("GND");
-        } else if (fac == 3 || ctrl.callsign.endsWith(QStringLiteral("_TWR"))) {
+            break;
+        case 4:
             ctrl.facilityType = OnlineFacilityType::Tower;
             ctrl.facilityTypeName = QStringLiteral("TWR");
-        } else if (fac == 4 || ctrl.callsign.endsWith(QStringLiteral("_APP")) || ctrl.callsign.endsWith(QStringLiteral("_DEP"))) {
+            break;
+        case 5:
             ctrl.facilityType = OnlineFacilityType::Approach;
             ctrl.facilityTypeName = QStringLiteral("APP");
-        } else if (fac == 5 || ctrl.callsign.endsWith(QStringLiteral("_CTR")) || ctrl.callsign.endsWith(QStringLiteral("_ACC"))) {
+            break;
+        case 6:
             ctrl.facilityType = OnlineFacilityType::Center;
             ctrl.facilityTypeName = QStringLiteral("CTR");
             ctrl.isEnroute = true;
-        } else {
+            break;
+        default:
             ctrl.facilityType = OnlineFacilityType::Unknown;
             ctrl.facilityTypeName = QStringLiteral("ATC");
+            break;
         }
 
+        // Callsign role hint
+        if (ctrl.callsign.endsWith(QStringLiteral("_DEL")) || ctrl.callsign.endsWith(QStringLiteral("_CLR"))) {
+            ctrl.callsignRoleHint = OnlineFacilityType::Delivery;
+        } else if (ctrl.callsign.endsWith(QStringLiteral("_GND"))) {
+            ctrl.callsignRoleHint = OnlineFacilityType::Ground;
+        } else if (ctrl.callsign.endsWith(QStringLiteral("_TWR"))) {
+            ctrl.callsignRoleHint = OnlineFacilityType::Tower;
+        } else if (ctrl.callsign.endsWith(QStringLiteral("_APP")) || ctrl.callsign.endsWith(QStringLiteral("_DEP")) || ctrl.callsign.endsWith(QStringLiteral("_DIR"))) {
+            ctrl.callsignRoleHint = OnlineFacilityType::Approach;
+        } else if (ctrl.callsign.endsWith(QStringLiteral("_CTR")) || ctrl.callsign.endsWith(QStringLiteral("_ACC")) || ctrl.callsign.endsWith(QStringLiteral("_UIR"))) {
+            ctrl.callsignRoleHint = OnlineFacilityType::Center;
+        } else if (ctrl.callsign.endsWith(QStringLiteral("_FSS")) || ctrl.callsign.endsWith(QStringLiteral("_RDO"))) {
+            ctrl.callsignRoleHint = OnlineFacilityType::Fss;
+        } else {
+            ctrl.callsignRoleHint = OnlineFacilityType::Unknown;
+        }
+
+        ctrl.isConsistent = (ctrl.facilityType == OnlineFacilityType::Unknown
+                             || ctrl.callsignRoleHint == OnlineFacilityType::Unknown
+                             || ctrl.facilityType == ctrl.callsignRoleHint);
         QStringList parts = ctrl.callsign.split(QLatin1Char('_'));
         if (!parts.isEmpty() && !ctrl.isEnroute) {
             QString prefix = parts[0];

@@ -27,10 +27,12 @@ OpenAIRAC Map EFB Platform
 - European AIP / eAIP chart integration (France SIA, DFS Germany, ENAIRE Spain).
 - Georeferenced chart calibration metadata (clipping bounds, projection parameters, airport reference points).
 
-### Phase 2: Georeferenced Chart Overlay & Automatic Switching (v2.1)
-- Live aircraft position overlaid onto georeferenced airport diagram and instrument approach plates.
-- Automatic chart switching based on active flight plan phase (Departure -> Enroute -> Arrival -> Approach -> Taxi).
-
+### Phase 2: Georeferenced Chart Overlay & Automatic Switching (v0.5.0 — SHIPPED)
+- Unified Airport Workspace with Overview, Weather, Charts, Procedures, Online, Runways & Wind, and Ground Map.
+- Deterministic Flight Phase Engine (`FlightPhaseEngine`) with hysteresis and slew protection.
+- Phase-aware chart suggestion engine (`ChartContextEngine`) with exact vs ambiguous matching and auto-mode control.
+- Official FAA GeoTIFF georeferenced raster layer (`GeoRasterLayer`) with affine coordinate transform and ownship overlay.
+- Active Flight Workspace dock (`ActiveFlightDock`) with cross-track distance, planning TOD, and next waypoint ETA.
 ### Phase 3: Comprehensive Weather Engine (v2.2)
 - High-resolution live METAR, TAF, and SIGMET/AIRMET decoded layers.
 - Route weather profile (cross-section showing winds aloft, icing probability, turbulence, and cloud tops).
