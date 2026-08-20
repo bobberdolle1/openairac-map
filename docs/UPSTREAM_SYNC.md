@@ -77,12 +77,33 @@ To minimize merge friction:
 - `docs/` (OpenAIRAC documentation and integration contracts)
 
 ---
+## 5. Strict Upstream Contribution & Write Policy
 
-## 5. Summary Table
+**UPSTREAM `albar965/littlenavmap` IS STRICTLY READ-ONLY FOR OPENAIRAC DEVELOPMENT.**
+
+OpenAIRAC Map is intentionally an independent, standalone GPL-3.0 fork of Little Navmap with custom branding, EFB workspaces, and OpenAIRAC navigation engine integration. We are **NOT** attempting to upstream OpenAIRAC-specific features into Little Navmap.
+
+### Inviolable Rules:
+1. **FORBIDDEN WITHOUT EXPLICIT HUMAN DIRECTIVE**:
+   - Never push branches to `upstream`.
+   - Never open pull requests against `albar965/littlenavmap`.
+   - Never comment on or modify upstream issue/PR trackers.
+2. **AUTOMATION SAFETY**:
+   - All pull requests, issues, and releases must explicitly specify `--repo bobberdolle1/openairac-map` (e.g. `gh pr create -R bobberdolle1/openairac-map ...`) to prevent `gh` from defaulting to the parent repository.
+3. **UPSTREAM CONTRIBUTION MODE (Only if specifically requested by user)**:
+   - Must be an isolated, generic bugfix.
+   - Zero branding or OpenAIRAC-specific references.
+   - Must be built and tested against official upstream toolchain (Qt 6.5+, MinGW/GCC or Clang, C++20).
+   - Requires explicit human review before PR creation.
+
+---
+
+## 6. Summary Table
 
 | Category | Policy |
 |---|---|
-| License | `GPL-3.0-or-later` preserved across all files |
-| Upstream Credits | 100% preserved in About dialog, headers, and docs |
-| Database Files | `openairac.sqlite` strictly isolated from `little_navmap_navigraph.sqlite` |
+| Upstream Remote | Strictly READ-ONLY (fetch & merge only) |
+| Fork Remote (`origin`) | Primary development repository (`bobberdolle1/openairac-map`) |
+| Upstream Pull Requests | Strictly FORBIDDEN unless explicitly directed by human maintainer |
+| Navigation Engine | OpenAIRAC is default primary provider (`openairac.sqlite`) |
 | Navigraph | Preserved as optional integration; fallback is OFF by default |

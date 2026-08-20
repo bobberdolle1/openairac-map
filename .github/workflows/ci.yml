@@ -7,8 +7,8 @@ on:
     branches: [ master ]
 
 jobs:
-  build-linux:
-    name: Linux (Ubuntu 24.04 / Qt)
+  build-linux-qt6:
+    name: Linux Qt6 Subsystem Check (Ubuntu 24.04 / GCC)
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout OpenAIRAC Map
@@ -22,28 +22,26 @@ jobs:
           repository: albar965/atools
           path: atools
 
-      - name: Install System Dependencies
+      - name: Install System Dependencies (Qt 6.5+ & Tools)
         run: |
           sudo apt-get update
-          sudo apt-get install -y qtbase5-dev qttools5-dev-tools qt5-qmake libqt5svg5-dev libqt5sql5-sqlite libqt5network5
+          sudo apt-get install -y qt6-base-dev qt6-tools-dev libqt6svg6-dev libqt6sql6-sqlite qt6-base-dev-tools libqt6core5compat6-dev g++ make
 
       - name: Verify Workspace Structure
         run: |
-          ls -la
           cd openairac-map
           ls -la src/openairac/
 
-      - name: Validate Project Configuration
+      - name: Validate Qt6 Configuration
         run: |
           cd openairac-map
-          qmake -version
+          qmake6 -version || qmake -version
 
-  build-windows:
-    name: Windows (MSVC / CMake)
+  subsystem-static-integrity:
+    name: Subsystem & Docs Static Integrity (Windows)
     runs-on: windows-latest
     steps:
       - name: Checkout OpenAIRAC Map
-        uses: actions/checkout@v4
         with:
           path: openairac-map
 
