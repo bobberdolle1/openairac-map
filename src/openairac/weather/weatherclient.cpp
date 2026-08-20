@@ -110,7 +110,8 @@ MetarInfo WeatherClient::getCachedMetar(const QString& stationId) const
         atools::sql::SqlQuery q(&db);
         q.prepare("SELECT json_payload FROM metar_cache WHERE station_id = :id LIMIT 1");
         q.bindValue(QStringLiteral(":id"), cleanId);
-        if (q.exec() && q.next()) {
+        q.exec();
+        if (q.next()) {
             QJsonDocument doc = QJsonDocument::fromJson(q.valueStr(0).toUtf8());
             info = MetarInfo::fromJson(doc.object());
         }
@@ -135,7 +136,8 @@ TafInfo WeatherClient::getCachedTaf(const QString& stationId) const
         atools::sql::SqlQuery q(&db);
         q.prepare("SELECT json_payload FROM taf_cache WHERE station_id = :id LIMIT 1");
         q.bindValue(QStringLiteral(":id"), cleanId);
-        if (q.exec() && q.next()) {
+        q.exec();
+        if (q.next()) {
             QJsonDocument doc = QJsonDocument::fromJson(q.valueStr(0).toUtf8());
             info = TafInfo::fromJson(doc.object());
         }
@@ -160,11 +162,10 @@ QList<SigmetAdvisory> WeatherClient::getCachedSigmets() const
         QString nowStr = QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
         q.prepare("SELECT json_payload FROM sigmet_cache WHERE valid_to >= :now");
         q.bindValue(QStringLiteral(":now"), nowStr);
-        if (q.exec()) {
-            while (q.next()) {
-                QJsonDocument doc = QJsonDocument::fromJson(q.valueStr(0).toUtf8());
-                list.append(SigmetAdvisory::fromGeoJson(doc.object()));
-            }
+        q.exec();
+        while (q.next()) {
+            QJsonDocument doc = QJsonDocument::fromJson(q.valueStr(0).toUtf8());
+            list.append(SigmetAdvisory::fromGeoJson(doc.object()));
         }
 
         dbtools::closeDatabaseFile(&db);
@@ -183,11 +184,10 @@ void WeatherClient::saveMetarToCache(const MetarInfo& metar) const
 
         atools::sql::SqlQuery q(&db);
         q.prepare("INSERT OR REPLACE INTO metar_cache (station_id, json_payload, fetched_at) VALUES (:id, :payload, :fetched)");
-        q.bindValue(QStringLiteral(":id"), metar.station_id);
+        q.bindValue(QStringLiteral(":id"), metar.stationId);
 
         QJsonObject obj;
-        obj[QStringLiteral("icaoId")] = metar.station_id;
-        obj[QStringLiteral("rawOb")] = metar.rawText;
+        obj[QStringLiteral("icaoId")] = metar.stationId;
         obj[QStringLiteral("obsTime")] = metar.observationTime.toSecsSinceEpoch();
         obj[QStringLiteral("temp")] = metar.temperatureC;
         obj[QStringLiteral("dewp")] = metar.dewpointC;
@@ -224,11 +224,10 @@ void WeatherClient::saveTafToCache(const TafInfo& taf) const
 
         atools::sql::SqlQuery q(&db);
         q.prepare("INSERT OR REPLACE INTO taf_cache (station_id, json_payload, fetched_at) VALUES (:id, :payload, :fetched)");
-        q.bindValue(QStringLiteral(":id"), taf.station_id);
+        q.bindValue(QStringLiteral(":id"), taf.stationId);
 
         QJsonObject obj;
-        obj[QStringLiteral("icaoId")] = taf.station_id;
-        obj[QStringLiteral("rawTAF")] = taf.rawText;
+        obj[QStringLiteral("icaoId")] = taf.stationId;
         obj[QStringLiteral("issueTime")] = taf.issueTime.toString(Qt::ISODate);
         obj[QStringLiteral("validTimeFrom")] = taf.validFrom.toSecsSinceEpoch();
         obj[QStringLiteral("validTimeTo")] = taf.validTo.toSecsSinceEpoch();

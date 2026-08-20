@@ -16,10 +16,10 @@
 
 #include "openairac/openairacdbmanager.h"
 #include "fs/db/databasemeta.h"
+#include "util/version.h"
 #include "sql/sqldatabase.h"
 #include "sql/sqlquery.h"
 #include "db/dbtools.h"
-
 #include <QCryptographicHash>
 #include <QFile>
 #include <QFileInfo>
@@ -68,7 +68,7 @@ bool OpenAiracDbManager::validateDatabaseCompatibility(const QString& dbPath, QS
         if (!meta.isDatabaseCompatible()) {
             if (errorOut) {
                 *errorOut = QStringLiteral("Database version ") + meta.getDatabaseVersion().getVersionString() +
-                            QStringLiteral(" is incompatible with required schema v14.29");
+                            QStringLiteral(" is incompatible with required schema");
             }
             dbtools::closeDatabaseFile(&db);
             return false;
@@ -118,15 +118,18 @@ DatabaseStatusInfo OpenAiracDbManager::checkDatabaseStatus(const QString& dbPath
             info.compiledDate = meta.getLastLoadTime();
             info.dataSource = meta.getDataSource();
             info.compilerVersion = meta.getCompilerVersion();
-            info.majorVersion = meta.getMajorVersionDb();
-            info.minorVersion = meta.getMinorVersionDb();
-            info.hasSidStar = meta.hasSidStar();
+            info.majorVersion = meta.getDatabaseVersion().getMajor();
+            info.minorVersion = meta.getDatabaseVersion().getMinor();
 
             atools::sql::SqlQuery q(&db);
-            if (q.exec("SELECT COUNT(*) FROM airport") && q.next()) info.airportCount = q.valueInt(0);
-            if (q.exec("SELECT (SELECT COUNT(*) FROM vor) + (SELECT COUNT(*) FROM ndb)") && q.next()) info.navaidCount = q.valueInt(0);
-            if (q.exec("SELECT COUNT(*) FROM airway") && q.next()) info.airwayCount = q.valueInt(0);
-            if (q.exec("SELECT COUNT(*) FROM approach") && q.next()) info.approachCount = q.valueInt(0);
+            q.exec("SELECT COUNT(*) FROM airport");
+            if (q.next()) info.airportCount = q.valueInt(0);
+            q.exec("SELECT (SELECT COUNT(*) FROM vor) + (SELECT COUNT(*) FROM ndb)");
+            if (q.next()) info.navaidCount = q.valueInt(0);
+            q.exec("SELECT COUNT(*) FROM airway");
+            if (q.next()) info.airwayCount = q.valueInt(0);
+            q.exec("SELECT COUNT(*) FROM approach");
+            if (q.next()) info.approachCount = q.valueInt(0);
         } else {
             info.valid = false;
             info.lastError = QStringLiteral("Invalid database metadata");

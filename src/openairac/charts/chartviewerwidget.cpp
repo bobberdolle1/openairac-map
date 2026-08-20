@@ -19,6 +19,7 @@
 #include <QHBoxLayout>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QFile>
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QPainter>

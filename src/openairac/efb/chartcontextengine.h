@@ -34,7 +34,7 @@ enum class ChartAutoMode {
 
 struct ContextualChartResult {
     ChartEntry chart;
-    AssociationConfidence confidence = AssociationConfidence::Unresolved;
+    QString confidence;
     QString reason;
     bool isAmbiguous = false;
     QList<ChartEntry> ambiguousCandidates;
@@ -68,9 +68,8 @@ public:
     QList<ChartEntry> pinnedCharts() const { return m_pinnedCharts; }
 
 signals:
-    void chartSuggested(const openairac::ChartEntry& chart, openairac::AssociationConfidence confidence, const QString& reason);
+    void chartSuggested(const openairac::ChartEntry& chart, const QString& confidence, const QString& reason);
     void chartAutoOpened(const openairac::ChartEntry& chart);
-
 private:
     ChartContextEngine();
     virtual ~ChartContextEngine() override = default;

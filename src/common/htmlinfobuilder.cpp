@@ -582,11 +582,11 @@ void HtmlInfoBuilder::airportText(const MapAirport& airport, const map::WeatherC
   // Add OpenAIRAC Provenance & Coverage Diagnostics
   if(info && !print)
   {
-    openairac::EntityProvenance prov = openairac::ProvenanceManager::instance().getAirportProvenance(airport.ident, airport.country, airport.numApproach);
-    html.raw(openairac::ProvenanceManager::instance().formatProvenanceHtml(prov));
+    openairac::EntityProvenance prov = openairac::ProvenanceManager::instance().getAirportProvenance(airport.ident, airport.region, 0);
+    html.append(openairac::ProvenanceManager::instance().formatProvenanceHtml(prov));
 
-    openairac::AirportCoverageSummary cov = openairac::CoverageManager::instance().evaluateAirportCoverage(airport.ident, airport.country, 0, 0, airport.numApproach);
-    html.raw(openairac::CoverageManager::instance().formatCoverageHtml(cov));
+    openairac::AirportCoverageSummary cov = openairac::CoverageManager::instance().evaluateAirportCoverage(airport.ident, airport.region, 0, 0, 0);
+    html.append(openairac::CoverageManager::instance().formatCoverageHtml(cov));
   }
   if(!info)
     routeWindText(html, route, airport.routeIndex);

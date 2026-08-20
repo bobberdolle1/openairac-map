@@ -345,6 +345,7 @@ SOURCES += \
   src/gui/messagesettings.cpp \
   src/gui/runwaytable.cpp \
   src/gui/statusbar.cpp \
+  src/gui/statusbareventfilter.cpp \
   src/openairac/navigationprovider.cpp \
   src/openairac/provenancemanager.cpp \
   src/openairac/coveragemanager.cpp \
@@ -370,7 +371,6 @@ SOURCES += \
   src/openairac/product/appupdater.cpp \
   src/openairac/product/diagnosticsdialog.cpp \
   src/openairac/product/migration.cpp \
-  src/online/clientdetailhandler.cpp \
   src/gui/stylehandler.cpp \
   src/gui/textdialog.cpp \
   src/gui/texteditdialog.cpp \
@@ -1108,15 +1108,15 @@ win32 {
   } else { # 64 Bit build
     deploy.commands += del /f /q $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME/simconnect/SimConnect.dll) &&
     deploy.commands += del /f /q $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME/simconnect/simconnect.manifest) &&
-    deploy.commands += copy /Y $$p($$SIMCONNECT_PATH_WIN64_MSFS_2024/lib/SimConnect.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME/SimConnect_msfs_2024.dll) &&
-    deploy.commands += copy /Y $$p($$SIMCONNECT_PATH_WIN64_MSFS_2020/lib/SimConnect.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME/SimConnect_msfs_2020.dll) &&
+    !isEmpty(SIMCONNECT_PATH_WIN64_MSFS_2024) : deploy.commands += copy /Y $$p($$SIMCONNECT_PATH_WIN64_MSFS_2024/lib/SimConnect.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME/SimConnect_msfs_2024.dll) &&
+    !isEmpty(SIMCONNECT_PATH_WIN64_MSFS_2020) : deploy.commands += copy /Y $$p($$SIMCONNECT_PATH_WIN64_MSFS_2020/lib/SimConnect.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME/SimConnect_msfs_2020.dll) &&
   }
   deploy.commands += xcopy /F $$p($$MARBLE_LIB_PATH/../libmarblewidget-lnm-qt6$${DLL_SUFFIX}.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME) &&
   deploy.commands += xcopy /F $$p($$[QT_INSTALL_BINS]/libgcc*.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME) &&
   deploy.commands += xcopy /F $$p($$[QT_INSTALL_BINS]/libstdc*.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME) &&
   deploy.commands += xcopy /F $$p($$[QT_INSTALL_BINS]/libwinpthread*.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME) &&
-  deploy.commands += xcopy /F $$p($$OPENSSL_PATH_WIN\libcrypto*.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME) &&
-  deploy.commands += xcopy /F $$p($$OPENSSL_PATH_WIN\libssl*.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME) &&
+  !isEmpty(OPENSSL_PATH_WIN) : deploy.commands += xcopy /F $$p($$OPENSSL_PATH_WIN\libcrypto*.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME) &&
+  !isEmpty(OPENSSL_PATH_WIN) : deploy.commands += xcopy /F $$p($$OPENSSL_PATH_WIN\libssl*.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME) &&
   deploy.commands += xcopy /F $$p($$[QT_INSTALL_BINS]/Qt6Network.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME) &&
   deploy.commands += xcopy /F $$p($$[QT_INSTALL_BINS]/Qt6PrintSupport.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME) &&
   deploy.commands += xcopy /F $$p($$[QT_INSTALL_BINS]/Qt6Sql.dll) $$p($$DEPLOY_BASE/$$WIN_TARGET_NAME) &&

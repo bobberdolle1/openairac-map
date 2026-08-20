@@ -83,6 +83,7 @@ struct OnlineControllerItem {
     OnlineFacilityType callsignRoleHint = OnlineFacilityType::Unknown;
     bool isConsistent = true;
     QString facilityTypeName;
+    int rating = 0;
     int visualRangeNm = 50;
     QStringList textAtis;
     QString associatedAirport;
@@ -128,7 +129,7 @@ struct OnlineEventItem {
 };
 
 struct OnlineSnapshotItem {
-    QString providerName = QStringLiteral("VATSIM");
+    QString providerName;
     QDateTime generatedAt;
     QDateTime receivedAt;
     int connectedClients = 0;

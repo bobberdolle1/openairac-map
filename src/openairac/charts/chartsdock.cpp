@@ -243,7 +243,9 @@ void ChartsDock::pinChart(const ChartEntry& chart)
 
 void ChartsDock::updatePinnedTabBar()
 {
-    m_pinnedTabBar->clear();
+    while (m_pinnedTabBar->count() > 0) {
+        m_pinnedTabBar->removeTab(0);
+    }
     for (const ChartEntry& c : m_pinnedCharts) {
         m_pinnedTabBar->addTab(QStringLiteral("[") + c.providerBadge() + QStringLiteral("] ") + c.displayTitle());
     }

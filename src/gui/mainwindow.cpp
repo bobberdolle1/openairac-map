@@ -2025,8 +2025,7 @@ void MainWindow::updateWindowTitle()
   }
 
   // Nav database badge & cycle =========
-  QString navSource = NavApp::getDatabaseDataSourceNav().toUpper();
-  QString badge = (navSource.contains(QStringLiteral("NAVIGRAPH"))) ? QStringLiteral("N") : QStringLiteral("OA");
+  QString badge = QStringLiteral("OA");
 
   if(navDbStatus == navdb::ALL)
     title += tr(" / %1").arg(badge);
@@ -2034,7 +2033,6 @@ void MainWindow::updateWindowTitle()
     title += tr(" / %1").arg(badge);
   else if(navDbStatus == navdb::OFF)
     title += tr(" / (%1)").arg(badge);
-
   if((navDbStatus == navdb::ALL || navDbStatus == navdb::MIXED) && !NavApp::getDatabaseAiracCycleNav().isEmpty())
     title += tr(" ") % NavApp::getDatabaseAiracCycleNav();
   // Flight plan name  ==========================================
@@ -5463,24 +5461,15 @@ void MainWindow::debugDumpContainerSizes() const
 void MainWindow::showFlightBriefing()
 {
   const Route& route = NavApp::getRouteConst();
-  QString dep = route.getDepartureAirportIdent();
-  QString dest = route.getDestinationAirportIdent();
-  if (dep.isEmpty() && dest.isEmpty()) {
-    dep = QStringLiteral("KJFK");
-    dest = QStringLiteral("LFPG");
-  }
+  QString dep = route.hasValidDeparture() ? route.getDepartureAirportLeg().getIdent() : QStringLiteral("KJFK");
+  QString dest = route.hasValidDestination() ? route.getDestinationAirportLeg().getIdent() : QStringLiteral("LFPG");
 
   QList<QPair<double, double>> coords;
   for (int i = 0; i < route.size(); ++i) {
-    const RouteLeg& leg = route.getLegConst(i);
-    coords.append(qMakePair(leg.getPosition().getLon(), leg.getPosition().getLat()));
+    const RouteLeg& leg = route.value(i);
+    coords.append(qMakePair(static_cast<double>(leg.getPosition().getLonX()), static_cast<double>(leg.getPosition().getLatY())));
   }
-
   double flightHours = 7.0;
-  if (route.hasValidDeparture() && route.hasValidDestination()) {
-    flightHours = route.getFlightPlanDurationMinutes() / 60.0;
-    if (flightHours < 0.1) flightHours = 7.0;
-  }
 
   openairac::FlightBriefingDialog dlg(this);
   dlg.setRoute(dep, dest, QStringList(), coords, flightHours);

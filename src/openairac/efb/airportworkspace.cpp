@@ -223,9 +223,9 @@ void AirportWorkspace::updateChartsTab() {
     QList<ChartEntry> charts = ChartClient::instance().getChartsForAirport(m_currentIcao);
     for (const ChartEntry& c : charts) {
         QTreeWidgetItem *item = new QTreeWidgetItem(m_chartsTree);
-        item->setText(0, c.title);
-        item->setText(1, chartTypeToString(c.type));
-        item->setText(2, !c.procedureIdent.isEmpty() ? c.procedureIdent : c.runway);
+        item->setText(0, c.displayTitle());
+        item->setText(1, c.categoryName());
+        item->setText(2, !c.procedureName.isEmpty() ? c.procedureName : c.runway);
     }
 }
 

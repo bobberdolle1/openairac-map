@@ -249,9 +249,6 @@
                 <property name="calendarPopup">
                  <bool>true</bool>
                 </property>
-                <property name="timeSpec">
-                 <enum>Qt::UTC</enum>
-                </property>
                </widget>
               </item>
               <item row="2" column="0">
@@ -316,9 +313,6 @@
                 </property>
                 <property name="calendarPopup">
                  <bool>true</bool>
-                </property>
-                <property name="timeSpec">
-                 <enum>Qt::LocalTime</enum>
                 </property>
                </widget>
               </item>
@@ -432,9 +426,6 @@
                 <property name="calendarPopup">
                  <bool>true</bool>
                 </property>
-                <property name="timeSpec">
-                 <enum>Qt::LocalTime</enum>
-                </property>
                </widget>
               </item>
               <item row="3" column="1">
@@ -444,9 +435,6 @@
                 </property>
                 <property name="calendarPopup">
                  <bool>true</bool>
-                </property>
-                <property name="timeSpec">
-                 <enum>Qt::UTC</enum>
                 </property>
                </widget>
               </item>

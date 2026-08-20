@@ -45,7 +45,7 @@ public:
 
 public slots:
     void onFlightPhaseChanged(openairac::FlightPhase oldPhase, openairac::FlightPhase newPhase, const QString& evidence);
-    void onChartSuggested(const openairac::ChartEntry& chart, openairac::AssociationConfidence confidence, const QString& reason);
+    void onChartSuggested(const openairac::ChartEntry& chart, const QString& confidence, const QString& reason);
     void onOpenSuggestedChartClicked();
 
 private:

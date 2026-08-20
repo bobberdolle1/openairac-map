@@ -34,8 +34,8 @@ AppUpdater::AppUpdater()
 }
 
 void AppUpdater::checkForUpdates(bool silent) {
-    QNetworkRequest req(QUrl(m_releasesApiUrl));
-    req.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("OpenAIRAC-Map-Updater/1.0.0"));
+    QUrl url(m_releasesApiUrl);
+    QNetworkRequest req(url);
 
     QNetworkReply *reply = m_netManager->get(req);
     connect(reply, &QNetworkReply::finished, this, [this, reply, silent]() {

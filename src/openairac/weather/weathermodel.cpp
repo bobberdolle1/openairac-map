@@ -15,7 +15,8 @@
 *****************************************************************************/
 
 #include "openairac/weather/weathermodel.h"
-
+#include <QJsonArray>
+#include <QTimeZone>
 namespace openairac {
 
 int MetarInfo::ageMinutes(const QDateTime& now) const
@@ -66,9 +67,8 @@ MetarInfo MetarInfo::fromJson(const QJsonObject& obj)
 
     if (obj.contains(QStringLiteral("obsTime"))) {
         qint64 ts = obj.value(QStringLiteral("obsTime")).toVariant().toLongLong();
-        info.observationTime = QDateTime::fromSecsSinceEpoch(ts, Qt::UTC);
+        info.observationTime = QDateTime::fromSecsSinceEpoch(ts, QTimeZone::UTC);
     } else if (obj.contains(QStringLiteral("reportTime"))) {
-        info.observationTime = QDateTime::fromString(obj.value(QStringLiteral("reportTime")).toString(), Qt::ISODate);
     }
 
     info.temperatureC = obj.value(QStringLiteral("temp")).toDouble(0.0);
@@ -113,8 +113,8 @@ TafPeriodInfo TafPeriodInfo::fromJson(const QJsonObject& obj)
     TafPeriodInfo p;
     qint64 tFrom = obj.value(QStringLiteral("timeFrom")).toVariant().toLongLong();
     qint64 tTo = obj.value(QStringLiteral("timeTo")).toVariant().toLongLong();
-    p.validFrom = QDateTime::fromSecsSinceEpoch(tFrom, Qt::UTC);
-    p.validTo = QDateTime::fromSecsSinceEpoch(tTo, Qt::UTC);
+    p.validFrom = QDateTime::fromSecsSinceEpoch(tFrom, QTimeZone::UTC);
+    p.validTo = QDateTime::fromSecsSinceEpoch(tTo, QTimeZone::UTC);
     p.changeType = obj.value(QStringLiteral("change")).toString();
     p.windDirDeg = obj.value(QStringLiteral("wdir")).toInt(0);
     p.windSpeedKts = obj.value(QStringLiteral("wspd")).toInt(0);
@@ -153,8 +153,8 @@ TafInfo TafInfo::fromJson(const QJsonObject& obj)
 
     qint64 vFrom = obj.value(QStringLiteral("validTimeFrom")).toVariant().toLongLong();
     qint64 vTo = obj.value(QStringLiteral("validTimeTo")).toVariant().toLongLong();
-    taf.validFrom = QDateTime::fromSecsSinceEpoch(vFrom, Qt::UTC);
-    taf.validTo = QDateTime::fromSecsSinceEpoch(vTo, Qt::UTC);
+    taf.validFrom = QDateTime::fromSecsSinceEpoch(vFrom, QTimeZone::UTC);
+    taf.validTo = QDateTime::fromSecsSinceEpoch(vTo, QTimeZone::UTC);
 
     QJsonArray fcsts = obj.value(QStringLiteral("fcsts")).toArray();
     for (const QJsonValue& f : fcsts) {
@@ -200,7 +200,7 @@ PirepInfo PirepInfo::fromJson(const QJsonObject& obj)
 {
     PirepInfo p;
     qint64 ts = obj.value(QStringLiteral("obsTime")).toVariant().toLongLong();
-    p.obsTime = QDateTime::fromSecsSinceEpoch(ts, Qt::UTC);
+    p.obsTime = QDateTime::fromSecsSinceEpoch(ts, QTimeZone::UTC);
     p.aircraftType = obj.value(QStringLiteral("acType")).toString();
     p.latitude = obj.value(QStringLiteral("lat")).toDouble();
     p.longitude = obj.value(QStringLiteral("lon")).toDouble();

@@ -76,9 +76,9 @@ ContextualChartResult ChartContextEngine::evaluateContext(FlightPhase phase) {
         if (m_depIcao.isEmpty()) break;
         QList<ChartEntry> charts = ChartClient::instance().getChartsForAirport(m_depIcao);
         for (const ChartEntry& c : charts) {
-            if (c.type == ChartType::AirportDiagram) {
+            if (c.category == ChartCategory::AirportDiagram) {
                 res.chart = c;
-                res.confidence = AssociationConfidence::Exact;
+                res.confidence = QStringLiteral("Exact");
                 res.reason = QStringLiteral("Departure Airport Diagram for taxi-out");
                 break;
             }
@@ -92,10 +92,10 @@ ContextualChartResult ChartContextEngine::evaluateContext(FlightPhase phase) {
         QList<ChartEntry> charts = ChartClient::instance().getChartsForAirport(m_depIcao);
         QList<ChartEntry> sidMatches;
         for (const ChartEntry& c : charts) {
-            if (c.type == ChartType::Sid) {
-                if (!m_sidName.isEmpty() && (c.procedureIdent == m_sidName || c.title.toUpper().contains(m_sidName))) {
+            if (c.category == ChartCategory::Departure) {
+                if (!m_sidName.isEmpty() && (c.procedureName == m_sidName || c.title.toUpper().contains(m_sidName))) {
                     res.chart = c;
-                    res.confidence = AssociationConfidence::Exact;
+                    res.confidence = QStringLiteral("Exact");
                     res.reason = QStringLiteral("Active Departure Procedure (SID): %1").arg(m_sidName);
                     sidMatches.clear();
                     break;
@@ -103,10 +103,10 @@ ContextualChartResult ChartContextEngine::evaluateContext(FlightPhase phase) {
                 sidMatches.append(c);
             }
         }
-        if (res.confidence == AssociationConfidence::Unresolved && !sidMatches.isEmpty()) {
+        if (res.confidence == QStringLiteral("Unmatched") && !sidMatches.isEmpty()) {
             if (sidMatches.size() == 1) {
                 res.chart = sidMatches.first();
-                res.confidence = AssociationConfidence::Likely;
+                res.confidence = QStringLiteral("Likely");
                 res.reason = QStringLiteral("Departure Procedure chart");
             } else {
                 res.isAmbiguous = true;
@@ -122,10 +122,10 @@ ContextualChartResult ChartContextEngine::evaluateContext(FlightPhase phase) {
         QList<ChartEntry> charts = ChartClient::instance().getChartsForAirport(m_destIcao);
         QList<ChartEntry> starMatches;
         for (const ChartEntry& c : charts) {
-            if (c.type == ChartType::Star) {
-                if (!m_starName.isEmpty() && (c.procedureIdent == m_starName || c.title.toUpper().contains(m_starName))) {
+            if (c.category == ChartCategory::Arrival) {
+                if (!m_starName.isEmpty() && (c.procedureName == m_starName || c.title.toUpper().contains(m_starName))) {
                     res.chart = c;
-                    res.confidence = AssociationConfidence::Exact;
+                    res.confidence = QStringLiteral("Exact");
                     res.reason = QStringLiteral("Active Arrival Procedure (STAR): %1").arg(m_starName);
                     starMatches.clear();
                     break;
@@ -133,10 +133,10 @@ ContextualChartResult ChartContextEngine::evaluateContext(FlightPhase phase) {
                 starMatches.append(c);
             }
         }
-        if (res.confidence == AssociationConfidence::Unresolved && !starMatches.isEmpty()) {
+        if (res.confidence == QStringLiteral("Unmatched") && !starMatches.isEmpty()) {
             if (starMatches.size() == 1) {
                 res.chart = starMatches.first();
-                res.confidence = AssociationConfidence::Likely;
+                res.confidence = QStringLiteral("Likely");
                 res.reason = QStringLiteral("Terminal Arrival chart");
             } else {
                 res.isAmbiguous = true;
@@ -152,10 +152,10 @@ ContextualChartResult ChartContextEngine::evaluateContext(FlightPhase phase) {
         QList<ChartEntry> charts = ChartClient::instance().getChartsForAirport(m_destIcao);
         QList<ChartEntry> appMatches;
         for (const ChartEntry& c : charts) {
-            if (c.type == ChartType::Approach) {
-                if (!m_appName.isEmpty() && (c.procedureIdent == m_appName || c.title.toUpper().contains(m_appName))) {
+            if (c.category == ChartCategory::Approach) {
+                if (!m_appName.isEmpty() && (c.procedureName == m_appName || c.title.toUpper().contains(m_appName))) {
                     res.chart = c;
-                    res.confidence = AssociationConfidence::Exact;
+                    res.confidence = QStringLiteral("Exact");
                     res.reason = QStringLiteral("Active Instrument Approach: %1").arg(m_appName);
                     appMatches.clear();
                     break;
@@ -165,10 +165,10 @@ ContextualChartResult ChartContextEngine::evaluateContext(FlightPhase phase) {
                 }
             }
         }
-        if (res.confidence == AssociationConfidence::Unresolved && !appMatches.isEmpty()) {
+        if (res.confidence == QStringLiteral("Unmatched") && !appMatches.isEmpty()) {
             if (appMatches.size() == 1) {
                 res.chart = appMatches.first();
-                res.confidence = AssociationConfidence::Likely;
+                res.confidence = QStringLiteral("Likely");
                 res.reason = QStringLiteral("Approach chart matching runway %1").arg(m_destRwy);
             } else {
                 res.isAmbiguous = true;
@@ -184,9 +184,9 @@ ContextualChartResult ChartContextEngine::evaluateContext(FlightPhase phase) {
         if (m_destIcao.isEmpty()) break;
         QList<ChartEntry> charts = ChartClient::instance().getChartsForAirport(m_destIcao);
         for (const ChartEntry& c : charts) {
-            if (c.type == ChartType::AirportDiagram) {
+            if (c.category == ChartCategory::AirportDiagram) {
                 res.chart = c;
-                res.confidence = AssociationConfidence::Exact;
+                res.confidence = QStringLiteral("Exact");
                 res.reason = QStringLiteral("Destination Airport Diagram for taxi-in & parking");
                 break;
             }
@@ -197,9 +197,9 @@ ContextualChartResult ChartContextEngine::evaluateContext(FlightPhase phase) {
         break;
     }
 
-    if (res.confidence == AssociationConfidence::Exact || res.confidence == AssociationConfidence::Likely) {
+    if (res.confidence == QStringLiteral("Exact") || res.confidence == QStringLiteral("Likely")) {
         emit chartSuggested(res.chart, res.confidence, res.reason);
-        if (m_autoMode == ChartAutoMode::AutoOpen && res.confidence == AssociationConfidence::Exact) {
+        if (m_autoMode == ChartAutoMode::AutoOpen && res.confidence == QStringLiteral("Exact")) {
             emit chartAutoOpened(res.chart);
         }
     }

@@ -129,7 +129,7 @@ void ActiveFlightDock::onFlightPhaseChanged(FlightPhase oldPhase, FlightPhase ne
     updateDisplay();
 }
 
-void ActiveFlightDock::onChartSuggested(const ChartEntry& chart, AssociationConfidence confidence, const QString& reason) {
+void ActiveFlightDock::onChartSuggested(const ChartEntry& chart, const QString& confidence, const QString& reason) {
     Q_UNUSED(confidence);
     m_suggestedChart = chart;
     m_chartSuggestionLabel->setText(QStringLiteral("<b>Suggested:</b> ") + chart.title + QStringLiteral("<br/><span style='color: #666; font-size: 11px;'>") + reason + QStringLiteral("</span>"));
@@ -137,7 +137,7 @@ void ActiveFlightDock::onChartSuggested(const ChartEntry& chart, AssociationConf
 
 void ActiveFlightDock::onOpenSuggestedChartClicked() {
     if (!m_suggestedChart.id.isEmpty()) {
-        ChartClient::instance().requestChartAsset(m_suggestedChart.id);
+        ChartClient::instance().fetchChartAsset(m_suggestedChart);
     }
 }
 
