@@ -360,6 +360,11 @@ SOURCES += \
   src/openairac/online/onlinenetworkmodel.cpp \
   src/openairac/online/onlineclient.cpp \
   src/openairac/online/eventsdock.cpp \
+  src/openairac/efb/flightphase.cpp \
+  src/openairac/efb/airportworkspace.cpp \
+  src/openairac/efb/chartcontextengine.cpp \
+  src/openairac/efb/activeflightdock.cpp \
+  src/openairac/efb/georasterlayer.cpp \
   src/online/clientdetailhandler.cpp \
   src/gui/stylehandler.cpp \
   src/gui/textdialog.cpp \
@@ -585,6 +590,11 @@ HEADERS  += \
   src/openairac/online/onlinenetworkmodel.h \
   src/openairac/online/onlineclient.h \
   src/openairac/online/eventsdock.h \
+  src/openairac/efb/flightphase.h \
+  src/openairac/efb/airportworkspace.h \
+  src/openairac/efb/chartcontextengine.h \
+  src/openairac/efb/activeflightdock.h \
+  src/openairac/efb/georasterlayer.h \
   src/db/undoredoprogress.h \
   src/geo/aircrafttrail.h \
   src/geo/coordinateconverter.h \
