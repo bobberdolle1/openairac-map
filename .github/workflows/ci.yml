@@ -77,9 +77,16 @@ jobs:
           test -f src/openairac/efb/chartcontextengine.h
           test -f src/openairac/efb/activeflightdock.h
           test -f src/openairac/efb/georasterlayer.h
+          test -f src/openairac/product/firstrunwizard.h
+          test -f src/openairac/product/datamanagerdialog.h
+          test -f src/openairac/product/appupdater.h
+          test -f src/openairac/product/diagnosticsdialog.h
+          test -f src/openairac/product/migration.h
           test -f docs/UPSTREAM_SYNC.md
           test -f docs/OPENAIRAC_INTEGRATION.md
           test -f docs/EFB_ROADMAP.md
+          test -f docs/PLATFORM_SUPPORT.md
+          test -f THIRD_PARTY_NOTICES.md
           test -f docs/CHARTS.md
           test -f docs/OFFLINE_CHARTS.md
           test -f docs/WEATHER.md
@@ -91,4 +98,16 @@ jobs:
           test -f docs/FLIGHT_PHASE.md
           test -f docs/AIRPORT_MOVING_MAP.md
           test -f docs/GEOREFERENCED_CHARTS.md
+          test -f docs/user/INSTALL.md
+          test -f docs/user/FIRST_RUN.md
+          test -f docs/user/NAVDATA.md
+          test -f docs/user/FLIGHT_PLANNING.md
+          test -f docs/user/CHARTS.md
+          test -f docs/user/WEATHER.md
+          test -f docs/user/ONLINE.md
+          test -f docs/user/SIMULATOR_CONNECTION.md
+          test -f docs/user/UPDATES.md
+          test -f docs/user/TROUBLESHOOTING.md
+          test -f .github/ISSUE_TEMPLATE/bug_report.yml
+          test -f .github/ISSUE_TEMPLATE/feature_request.yml
           echo "OpenAIRAC Map Windows workspace integrity verified."

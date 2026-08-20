@@ -365,6 +365,11 @@ SOURCES += \
   src/openairac/efb/chartcontextengine.cpp \
   src/openairac/efb/activeflightdock.cpp \
   src/openairac/efb/georasterlayer.cpp \
+  src/openairac/product/firstrunwizard.cpp \
+  src/openairac/product/datamanagerdialog.cpp \
+  src/openairac/product/appupdater.cpp \
+  src/openairac/product/diagnosticsdialog.cpp \
+  src/openairac/product/migration.cpp \
   src/online/clientdetailhandler.cpp \
   src/gui/stylehandler.cpp \
   src/gui/textdialog.cpp \
@@ -595,6 +600,11 @@ HEADERS  += \
   src/openairac/efb/chartcontextengine.h \
   src/openairac/efb/activeflightdock.h \
   src/openairac/efb/georasterlayer.h \
+  src/openairac/product/firstrunwizard.h \
+  src/openairac/product/datamanagerdialog.h \
+  src/openairac/product/appupdater.h \
+  src/openairac/product/diagnosticsdialog.h \
+  src/openairac/product/migration.h \
   src/db/undoredoprogress.h \
   src/geo/aircrafttrail.h \
   src/geo/coordinateconverter.h \

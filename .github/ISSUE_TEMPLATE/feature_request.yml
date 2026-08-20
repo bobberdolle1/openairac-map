@@ -1,0 +1,21 @@
+name: Feature Request
+description: Suggest an enhancement or new feature for OpenAIRAC Map
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for suggesting new ideas for OpenAIRAC Map!
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      placeholder: Describe the problem or use case.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      placeholder: Describe how this feature should work in OpenAIRAC Map.
+    validations:
+      required: true
