@@ -49,8 +49,9 @@ class OpenAiracDbManager : public QObject {
 public:
     static OpenAiracDbManager& instance();
 
-    DatabaseStatusInfo checkDatabaseStatus(const QString& dbPath) const;
+    QString defaultDatabasePath() const;
 
+    DatabaseStatusInfo checkDatabaseStatus(const QString& dbPath) const;
     /**
      * Atomically replace the target database with a new candidate database.
      * Creates a rollback backup (.backup) before replacing.

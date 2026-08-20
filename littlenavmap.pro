@@ -371,6 +371,9 @@ SOURCES += \
   src/openairac/product/appupdater.cpp \
   src/openairac/product/diagnosticsdialog.cpp \
   src/openairac/product/migration.cpp \
+  src/openairac/efb/aircraftprofile.cpp \
+  src/openairac/online/ivao/ivaoclient.cpp \
+  src/openairac/api/openairacapicontroller.cpp \
   src/gui/stylehandler.cpp \
   src/gui/textdialog.cpp \
   src/gui/texteditdialog.cpp \
@@ -605,6 +608,9 @@ HEADERS  += \
   src/openairac/product/appupdater.h \
   src/openairac/product/diagnosticsdialog.h \
   src/openairac/product/migration.h \
+  src/openairac/efb/aircraftprofile.h \
+  src/openairac/online/ivao/ivaoclient.h \
+  src/openairac/api/openairacapicontroller.h \
   src/db/undoredoprogress.h \
   src/geo/aircrafttrail.h \
   src/geo/coordinateconverter.h \

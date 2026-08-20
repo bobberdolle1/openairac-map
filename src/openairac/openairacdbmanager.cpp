@@ -18,7 +18,9 @@
 #include "sql/sqldatabase.h"
 #include "sql/sqlquery.h"
 #include "fs/db/databasemeta.h"
+#include "settings/settings.h"
 #include "util/version.h"
+#include "common/constants.h"
 #include <QCryptographicHash>
 #include <QUuid>
 #include <QFileInfo>
@@ -30,6 +32,10 @@ OpenAiracDbManager& OpenAiracDbManager::instance()
 {
     static OpenAiracDbManager s_instance;
     return s_instance;
+}
+QString OpenAiracDbManager::defaultDatabasePath() const
+{
+    return atools::settings::Settings::getPath() + atools::SEP + "little_navmap_db" + atools::SEP + "little_navmap_navigraph.sqlite";
 }
 
 QString OpenAiracDbManager::computeSha256(const QString& filePath) const

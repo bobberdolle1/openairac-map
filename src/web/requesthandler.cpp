@@ -35,7 +35,7 @@
 #include "util/htmlbuilder.h"
 #include "gui/helphandler.h"
 #include "common/constants.h"
-
+#include "openairac/api/openairacapicontroller.h"
 #include <QBuffer>
 #include <QCoreApplication>
 #include <QDir>
@@ -95,6 +95,21 @@ void RequestHandler::service(HttpRequest& request, HttpResponse& response)
     // ===========================================================================
     // Requests for map images only - either with or without session
     handleMapImage(request, response);
+  else if(path.startsWith(QLatin1String("/api/openairac/")))
+  {
+    openairac::ApiResponse apiResp = openairac::OpenAiracApiController::instance().dispatch(
+        QString::fromUtf8(request.getMethod()),
+        path,
+        request.getBody(),
+        QMap<QString, QString>()
+    );
+    response.setStatus(apiResp.statusCode);
+    response.setHeader("Content-Type", apiResp.contentType);
+    for (auto it = apiResp.headers.constBegin(); it != apiResp.headers.constEnd(); ++it) {
+        response.setHeader(it.key(), it.value());
+    }
+    response.write(apiResp.body, true);
+  }
   else if(path.startsWith(webApiController->webApiPathPrefix))
     // ===========================================================================
     // Requests for web api - either with or without session
