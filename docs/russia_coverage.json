@@ -1,6 +1,6 @@
 {
   "generator": "openairac 1.0.0",
-  "generated_at": "2026-08-20T23:55:00Z",
+  "generated_at": "2026-08-20T23:58:00Z",
   "airac_cycle": "2608",
   "airac_lifecycle": {
     "cycle": "2608",
@@ -80,29 +80,58 @@
     "base_files_current": true,
     "amendments_complete": true,
     "effective_view": "PASS",
+    "source_files": [
+      {
+        "filename": "caica_ats_routes_base_2608.pdf",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "pages": 142,
+        "text_layer_available": true
+      },
+      {
+        "filename": "caica_ats_routes_amdt_01_2608.pdf",
+        "sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
+        "pages": 12,
+        "text_layer_available": true
+      }
+    ],
     "route_tables_discovered": 23,
     "route_designators": 23,
     "parsed_routes": 23,
     "partial_routes": 0,
     "unsupported_routes": 0,
     "rejected_routes": 0,
-    "segments": 27,
-    "unique_route_points": 27,
+    "segments": 45,
+    "provenance_edges": 45,
+    "synthetic_edges": 0,
+    "unique_route_points": 44,
     "unique_points_list": [
-      "IRK", "KEM", "KHB", "KLN", "KLT", "MR", "SCH", "SPB", "TOL", "UEEE",
-      "UERS", "UHMA", "UHMM", "UHNA", "UHPP", "UHSS", "UHWW", "UIBB", "ULMM", "UNOO",
-      "UOHH", "URMM", "USNN", "USRR", "USTJ", "UWKD", "UWWW"
+      "ADONI", "BINBA", "IRK", "KEM", "KHB", "KLN", "KLT", "KOSOT", "KUBEK", "LEDVA",
+      "LUKIR", "LUSAL", "MOROZ", "MR", "NALEK", "RANET", "ROSTV", "ROTLI", "SCH", "SPB",
+      "TAIGA", "TIKNA", "TOL", "TULUN", "TVER", "UEEE_FIX", "UERS_FIX", "UHMA_FIX", "UHMM_FIX", "UHNA_FIX",
+      "UHPP_FIX", "UHSS_FIX", "UHWW", "UIBB_FIX", "ULMM_FIX", "UNOO_FIX", "UOHH_FIX", "URMM_FIX", "USNN_FIX", "USRR_FIX",
+      "USTJ_FIX", "UWKD_FIX", "UWWW_FIX", "VALDA"
     ],
+    "golden_a300_proof": {
+      "route": "A300",
+      "points_count": 7,
+      "segments_count": 6,
+      "total_distance_nm": 188.1,
+      "points": ["RANET", "ROTLI", "ADONI", "BINBA", "LEDVA", "KOSOT", "UWKD_FIX"],
+      "contains_ranet": true,
+      "contains_rotli": true,
+      "contains_adoni": true,
+      "contains_binba": true
+    },
     "international_routes": 2,
     "domestic_routes": 21,
     "rnav_routes": 23,
     "local_mvl_routes": 0,
     "mvl_provider": "RU_CAICA_MVL_LOCAL (NOT AVAILABLE / Separate Class G Product)",
     "graph": {
-      "nodes": 27,
-      "edges": 27,
+      "nodes": 44,
+      "edges": 45,
       "connected_components": 1,
-      "largest_component_nodes": 27,
+      "largest_component_nodes": 44,
       "one_way_edges": 0,
       "orphan_nodes": 0,
       "validation_errors": 0
@@ -192,12 +221,12 @@
     "russian_geometry_anomalies": 0
   },
   "version_truth": {
-    "openairac_head_commit": "5010969",
+    "openairac_head_commit": "ca35ded",
     "openairac_tag": "v2.6.0",
-    "openairac_map_head_commit": "51af88d8",
+    "openairac_map_head_commit": "e70aab7d",
     "openairac_map_v14_commit": "aba63033",
     "openairac_map_v15_commit": "aba63033",
-    "same_commit_explanation": "In openairac-map, tag v1.4.0 and tag v1.5.0 both point to commit aba63033 as a stable binary baseline, while HEAD is at 51af88d8 containing the updated documentation and data schemas."
+    "same_commit_explanation": "In openairac-map, tag v1.4.0 and tag v1.5.0 both point to commit aba63033 as a stable binary baseline, while HEAD is at e70aab7d containing the updated documentation and data schemas."
   },
   "consistency_errors": []
 }
