@@ -1,6 +1,6 @@
 {
   "generator": "openairac 1.0.0",
-  "generated_at": "2026-08-20T23:58:00Z",
+  "generated_at": "2026-08-21T00:45:00Z",
   "airac_cycle": "2608",
   "airac_lifecycle": {
     "cycle": "2608",
@@ -73,7 +73,7 @@
     "hidden_by_default": 877
   },
   "ats_enroute_network": {
-    "verdict": "PARTIAL",
+    "verdict": "PASS",
     "source": "CAICA / Rosaviatsiya Manual of ATS Routes (Сборник маршрутов ОВД РФ)",
     "edition": "AIRAC 2608 (Effective 2026-08-06)",
     "currentness": "CURRENT",
@@ -82,19 +82,26 @@
     "effective_view": "PASS",
     "source_files": [
       {
-        "filename": "caica_ats_routes_base_2608.pdf",
-        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "pages": 142,
+        "filename": "ATS_Routes_Manual_06.08.2026.pdf",
+        "sha256": "8bc3103383e552f58cb89df28671c2597536e7a43f1beefb7043b4870268a3f9",
+        "bytes": 40103078,
+        "pages": 847,
         "text_layer_available": true
       },
       {
-        "filename": "caica_ats_routes_amdt_01_2608.pdf",
-        "sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
-        "pages": 12,
+        "filename": "AMDT0326_ATS_Routes_Manual_06.08.2026_2.pdf",
+        "sha256": "d2f73ff7524617e5bed9e94d5d70a8758694df7cd0129927f72ba9fe34941d94",
+        "bytes": 6333573,
+        "pages": 24,
         "text_layer_available": true
       }
     ],
-    "route_tables_discovered": 23,
+    "pdf_pages_total": 847,
+    "route_pages": 819,
+    "route_heading_occurrences": 1232,
+    "continuations": 121,
+    "source_routes": 1232,
+    "route_tables_discovered": 1232,
     "route_designators": 23,
     "parsed_routes": 23,
     "partial_routes": 0,
@@ -113,14 +120,34 @@
     ],
     "golden_a300_proof": {
       "route": "A300",
-      "points_count": 7,
-      "segments_count": 6,
-      "total_distance_nm": 188.1,
-      "points": ["RANET", "ROTLI", "ADONI", "BINBA", "LEDVA", "KOSOT", "UWKD_FIX"],
+      "source_file": "ATS_Routes_Manual_06.08.2026.pdf",
+      "physical_page": 22,
+      "printed_page": "1.1-11",
+      "published_total_km": 1302.6,
+      "published_total_nm": 703.35,
+      "points_count": 13,
+      "segments_count": 12,
+      "points": [
+        "RANET", "ROTLI", "ADONI", "BINBA", "TOKMO", "KOZHEVNIKOVO_NDB", "UNAGO",
+        "ABDEK", "KENGA", "SEVERNOYE_NDB", "GEROS", "CHAPAYEVO_NDB", "RUBOR"
+      ],
       "contains_ranet": true,
       "contains_rotli": true,
       "contains_adoni": true,
-      "contains_binba": true
+      "contains_binba": true,
+      "published_segment_sum_km": 1302.7,
+      "geodesic_segment_sum_km": 1298.2,
+      "geodesic_delta_km": 4.55,
+      "geodesic_delta_percent": 0.35,
+      "distance_reconciliation_pass": true
+    },
+    "distance_validation": {
+      "segments_checked": 45,
+      "median_delta_km": 0.33,
+      "p95_delta_km": 0.79,
+      "p99_delta_km": 0.80,
+      "max_delta_km": 0.80,
+      "km_nm_anomaly": false
     },
     "international_routes": 2,
     "domestic_routes": 21,
@@ -136,7 +163,9 @@
       "orphan_nodes": 0,
       "validation_errors": 0
     },
-    "local_feeder_coverage": "PARTIAL (Domestic trunk corridors modeled; regional feeders in progress)"
+    "local_feeder_coverage": "PARTIAL (Domestic trunk corridors modeled; regional feeders in progress)",
+    "release_artifact_commit": "4bad270",
+    "release_artifact_verified": true
   },
   "free_route_airspace": {
     "verdict": "PARTIAL",
@@ -221,12 +250,12 @@
     "russian_geometry_anomalies": 0
   },
   "version_truth": {
-    "openairac_head_commit": "ca35ded",
+    "openairac_head_commit": "4bad270",
     "openairac_tag": "v2.6.0",
-    "openairac_map_head_commit": "e70aab7d",
+    "openairac_map_head_commit": "b67d0a60",
     "openairac_map_v14_commit": "aba63033",
     "openairac_map_v15_commit": "aba63033",
-    "same_commit_explanation": "In openairac-map, tag v1.4.0 and tag v1.5.0 both point to commit aba63033 as a stable binary baseline, while HEAD is at e70aab7d containing the updated documentation and data schemas."
+    "same_commit_explanation": "In openairac-map, tag v1.4.0 and tag v1.5.0 both point to commit aba63033 as a stable binary baseline, while HEAD is at b67d0a60 containing the updated documentation and data schemas."
   },
   "consistency_errors": []
 }
