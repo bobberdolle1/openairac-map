@@ -1,6 +1,6 @@
 {
   "generator": "openairac 1.0.0",
-  "generated_at": "2026-08-20T23:30:00Z",
+  "generated_at": "2026-08-20T23:50:00Z",
   "airac_cycle": "2608",
   "airac_lifecycle": {
     "cycle": "2608",
@@ -11,24 +11,26 @@
   },
   "source_index": {
     "official_url": "https://www.caica.ru/ProcedureList/book/rus/index.html",
-    "total_href_links": 134,
-    "total_iframe_elements": 1,
-    "total_navigation_entries": 1,
-    "total_aviation_objects": 134,
-    "airports": 128,
-    "heliports_vertodromes": 1,
-    "offshore_platforms": 5,
-    "missing_entries": 0
+    "total_href": 134,
+    "aviation_objects": 133,
+    "airports": 127,
+    "vertodromes": 1,
+    "offshore": 5,
+    "navigation": 1,
+    "missing": 0,
+    "arithmetic": "PASS"
   },
   "national_procedures": {
-    "pages_discovered": 134,
-    "pages_attempted": 134,
-    "pages_with_structured_procedures": 85,
-    "pages_no_procedure_data": 49,
-    "pages_failed": 0,
+    "pages_attempted": 133,
+    "pages_with_procedures": 85,
+    "pages_no_procedure_data": 48,
+    "failed_pages": 0,
+    "sid_airports": 15,
+    "star_airports": 15,
+    "approach_airports": 15,
     "sample_procedures_parsed": 335,
-    "sample_procedure_legs_parsed": 1832,
-    "sample_holding_patterns": 18,
+    "sample_legs_parsed": 1832,
+    "sample_holds": 18,
     "path_terminator_histogram": {
       "TF": 1198,
       "IF": 272,
@@ -37,7 +39,7 @@
       "CF": 104
     },
     "unknown_path_terminators": 0,
-    "procedure_validation": {
+    "validation": {
       "valid_percentage": 100.0,
       "warnings": 0,
       "invalid": 0
@@ -65,12 +67,15 @@
     "verdict": "PARTIAL",
     "source": "CAICA / Rosaviatsiya Manual of ATS Routes (Сборник маршрутов ОВД РФ)",
     "edition": "AIRAC 2608 (Effective 2026-08-06)",
-    "status": "Trunk ATS airways parsed; regional feeder extraction in progress",
-    "parsed_airways": ["M864", "B210", "G370", "N869", "T562", "W31"],
+    "currentness": "CURRENT",
+    "route_tables_discovered": 6,
+    "route_designators": 6,
+    "parsed_routes": ["M864", "B210", "G370", "N869", "T562", "W31"],
     "segments": 8,
+    "unique_points": 8,
     "rnav_specification": "RNAV 5",
-    "unique_fixes": 18,
-    "rejected_routes": 0
+    "rejected_routes": 0,
+    "local_feeder_coverage": "PARTIAL (Domestic trunk corridors modeled; regional feeders in progress)"
   },
   "free_route_airspace": {
     "verdict": "PARTIAL",
@@ -155,10 +160,11 @@
     "russian_geometry_anomalies": 0
   },
   "version_truth": {
-    "openairac_commit": "7ffc602",
-    "openairac_version": "v2.5.0",
-    "openairac_map_commit": "aba63033",
-    "openairac_map_version": "v1.5.0",
-    "same_map_commit_explanation": "OpenAIRAC Map binary baseline is stable and synchronized with v2.5.0 SQLite data schemas without separate C++ code modifications."
+    "openairac_head_commit": "308a9ba",
+    "openairac_tag": "v2.5.0",
+    "openairac_map_head_commit": "e79c57d0",
+    "openairac_map_v14_commit": "aba63033",
+    "openairac_map_v15_commit": "aba63033",
+    "same_commit_explanation": "In openairac-map, tag v1.4.0 and tag v1.5.0 both point to commit aba63033 as a stable binary baseline, while HEAD is at e79c57d0 containing the updated documentation and data schemas."
   }
 }
