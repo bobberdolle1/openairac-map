@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-linux-qt6:
-    name: Linux Qt6 Subsystem Check (Ubuntu 24.04 / GCC)
+    name: Full Application Qt6 Build (Ubuntu 24.04 / GCC)
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout OpenAIRAC Map
@@ -22,21 +22,45 @@ jobs:
           repository: albar965/atools
           path: atools
 
+      - name: Checkout marble
+        uses: actions/checkout@v4
+        with:
+          repository: albar965/marble
+          ref: lnm/1.1
+          path: marble
+
       - name: Install System Dependencies (Qt 6.5+ & Tools)
         run: |
           sudo apt-get update
-          sudo apt-get install -y qt6-base-dev qt6-tools-dev libqt6svg6-dev libqt6sql6-sqlite qt6-base-dev-tools libqt6core5compat6-dev g++ make
+          sudo apt-get install -y qt6-base-dev qt6-tools-dev libqt6svg6-dev libqt6sql6-sqlite qt6-base-dev-tools libqt6core5compat6-dev g++ make cmake zlib1g-dev
 
-      - name: Verify Workspace Structure
+      - name: Build atools
         run: |
-          cd openairac-map
-          ls -la src/openairac/
+          mkdir -p build-atools-release
+          cd build-atools-release
+          qmake6 ../atools/atools.pro CONFIG+=release ATOOLS_NO_CRASHHANDLER=true
+          make -j$(nproc)
 
-      - name: Validate Qt6 Configuration
+      - name: Build Marble Widget
         run: |
-          cd openairac-map
-          qmake6 -version || qmake -version
+          mkdir -p build-marble-release
+          cd build-marble-release
+          cmake -DCMAKE_BUILD_TYPE=Release -DSTATIC_BUILD=FALSE -DQTONLY=TRUE -DBUILD_MARBLE_APPS=NO -DBUILD_MARBLE_EXAMPLES=NO -DBUILD_MARBLE_TESTS=NO -DBUILD_MARBLE_TOOLS=NO -DBUILD_TESTING=NO -DBUILD_WITH_DBUS=NO -DMARBLE_EMPTY_MAPTHEME=YES -DMOBILE=NO -DWITH_DESIGNER_PLUGIN=NO -DWITH_Phonon=NO -DWITH_Qt5Location=NO -DWITH_Qt5Positioning=NO -DWITH_Qt5SerialPort=NO -DWITH_ZLIB=NO -DWITH_libgps=NO -DWITH_libshp=NO -DWITH_libwlocate=NO -DCMAKE_INSTALL_PREFIX=$PWD/../Marble-release -DEXEC_INSTALL_PREFIX=$PWD/../Marble-release ../marble/
+          make -j$(nproc)
+          make install || true
 
+      - name: Build OpenAIRAC Map (Full littlenavmap binary)
+        run: |
+          mkdir -p build-openairac-map-release
+          cd build-openairac-map-release
+          export ATOOLS_INC_PATH=$PWD/../atools/src
+          export ATOOLS_LIB_PATH=$PWD/../build-atools-release
+          export MARBLE_INC_PATH=$PWD/../Marble-release/include
+          export MARBLE_LIB_PATH=$PWD/../build-marble-release/src/lib/marble
+          export ATOOLS_NO_CRASHHANDLER=true
+          qmake6 ../openairac-map/littlenavmap.pro CONFIG+=release
+          make -j$(nproc)
+          ls -la littlenavmap
   subsystem-static-integrity:
     name: Subsystem & Docs Static Integrity (Windows)
     runs-on: windows-latest

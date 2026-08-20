@@ -15,17 +15,15 @@
 *****************************************************************************/
 
 #include "openairac/openairacdbmanager.h"
-#include "fs/db/databasemeta.h"
-#include "util/version.h"
 #include "sql/sqldatabase.h"
 #include "sql/sqlquery.h"
-#include "db/dbtools.h"
+#include "fs/db/databasemeta.h"
+#include "util/version.h"
 #include <QCryptographicHash>
-#include <QFile>
+#include <QUuid>
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
-
 namespace openairac {
 
 OpenAiracDbManager& OpenAiracDbManager::instance()
@@ -54,14 +52,18 @@ bool OpenAiracDbManager::validateDatabaseCompatibility(const QString& dbPath, QS
         return false;
     }
 
+    QString connName = QStringLiteral("openairac_val_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
     try {
-        atools::sql::SqlDatabase db(QStringLiteral("OPENAIRAC_VALIDATE_TEMP"));
-        dbtools::openDatabaseFile(&db, dbPath, true /* readonly */, false /* createSchema */);
+        atools::sql::SqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        atools::sql::SqlDatabase db(connName);
+        db.setDatabaseName(dbPath);
+        db.open(QStringList(), true /* readonly */);
 
         atools::fs::db::DatabaseMeta meta(&db);
         if (!meta.isValid()) {
             if (errorOut) *errorOut = QStringLiteral("Invalid metadata or missing metadata table");
-            dbtools::closeDatabaseFile(&db);
+            db.close();
+            atools::sql::SqlDatabase::removeDatabase(connName);
             return false;
         }
 
@@ -70,7 +72,8 @@ bool OpenAiracDbManager::validateDatabaseCompatibility(const QString& dbPath, QS
                 *errorOut = QStringLiteral("Database version ") + meta.getDatabaseVersion().getVersionString() +
                             QStringLiteral(" is incompatible with required schema");
             }
-            dbtools::closeDatabaseFile(&db);
+            db.close();
+            atools::sql::SqlDatabase::removeDatabase(connName);
             return false;
         }
 
@@ -79,13 +82,16 @@ bool OpenAiracDbManager::validateDatabaseCompatibility(const QString& dbPath, QS
         q.exec("SELECT COUNT(*) FROM airport");
         if (!q.next()) {
             if (errorOut) *errorOut = QStringLiteral("Failed to query airport table");
-            dbtools::closeDatabaseFile(&db);
+            db.close();
+            atools::sql::SqlDatabase::removeDatabase(connName);
             return false;
         }
 
-        dbtools::closeDatabaseFile(&db);
+        db.close();
+        atools::sql::SqlDatabase::removeDatabase(connName);
         return true;
     } catch (const std::exception& e) {
+        atools::sql::SqlDatabase::removeDatabase(connName);
         if (errorOut) *errorOut = QString::fromUtf8(e.what());
         return false;
     }
@@ -107,9 +113,12 @@ DatabaseStatusInfo OpenAiracDbManager::checkDatabaseStatus(const QString& dbPath
     info.sizeBytes = fi.size();
     info.sha256Hash = computeSha256(dbPath);
 
+    QString connName = QStringLiteral("openairac_stat_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
     try {
-        atools::sql::SqlDatabase db(QStringLiteral("OPENAIRAC_STATUS_TEMP"));
-        dbtools::openDatabaseFile(&db, dbPath, true /* readonly */, false /* createSchema */);
+        atools::sql::SqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        atools::sql::SqlDatabase db(connName);
+        db.setDatabaseName(dbPath);
+        db.open(QStringList(), true /* readonly */);
 
         atools::fs::db::DatabaseMeta meta(&db);
         if (meta.isValid()) {
@@ -135,8 +144,10 @@ DatabaseStatusInfo OpenAiracDbManager::checkDatabaseStatus(const QString& dbPath
             info.lastError = QStringLiteral("Invalid database metadata");
         }
 
-        dbtools::closeDatabaseFile(&db);
+        db.close();
+        atools::sql::SqlDatabase::removeDatabase(connName);
     } catch (const std::exception& e) {
+        atools::sql::SqlDatabase::removeDatabase(connName);
         info.valid = false;
         info.lastError = QString::fromUtf8(e.what());
     }

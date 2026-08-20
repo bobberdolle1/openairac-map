@@ -14,15 +14,14 @@
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
 *****************************************************************************/
-
 #include "openairac/navigationprovider.h"
-#include "fs/db/databasemeta.h"
 #include "sql/sqldatabase.h"
-#include "sql/sqlquery.h"
-#include "db/dbtools.h"
-
-#include <QFile>
+#include "fs/db/databasemeta.h"
+#include <QUuid>
 #include <QFileInfo>
+#include <QDir>
+#include <QDebug>
+#include <QFile>
 #include <QDir>
 #include <QDebug>
 
@@ -59,9 +58,12 @@ bool OpenAiracProvider::refreshMetadata()
         return false;
     }
 
+    QString connName = QStringLiteral("openairac_meta_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
     try {
-        atools::sql::SqlDatabase db(QStringLiteral("OPENAIRAC_META_TEMP"));
-        dbtools::openDatabaseFile(&db, m_databasePath, true /* readonly */, false /* createSchema */);
+        atools::sql::SqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        atools::sql::SqlDatabase db(connName);
+        db.setDatabaseName(m_databasePath);
+        db.open(QStringList(), true /* readonly */);
 
         atools::fs::db::DatabaseMeta meta(&db);
         if (meta.isValid()) {
@@ -74,9 +76,11 @@ bool OpenAiracProvider::refreshMetadata()
             m_caps.approaches = meta.hasSidStar();
         }
 
-        dbtools::closeDatabaseFile(&db);
+        db.close();
+        atools::sql::SqlDatabase::removeDatabase(connName);
         return true;
     } catch (const std::exception& e) {
+        atools::sql::SqlDatabase::removeDatabase(connName);
         qWarning() << "Failed to refresh OpenAIRAC metadata:" << e.what();
         return false;
     }
@@ -118,9 +122,12 @@ bool SimulatorProvider::refreshMetadata()
         return false;
     }
 
+    QString connName = QStringLiteral("sim_meta_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
     try {
-        atools::sql::SqlDatabase db(QStringLiteral("SIM_META_TEMP"));
-        dbtools::openDatabaseFile(&db, m_databasePath, true /* readonly */, false /* createSchema */);
+        atools::sql::SqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        atools::sql::SqlDatabase db(connName);
+        db.setDatabaseName(m_databasePath);
+        db.open(QStringList(), true /* readonly */);
 
         atools::fs::db::DatabaseMeta meta(&db);
         if (meta.isValid()) {
@@ -129,9 +136,11 @@ bool SimulatorProvider::refreshMetadata()
             m_compilerVersion = meta.getCompilerVersion();
         }
 
-        dbtools::closeDatabaseFile(&db);
+        db.close();
+        atools::sql::SqlDatabase::removeDatabase(connName);
         return true;
     } catch (const std::exception& e) {
+        atools::sql::SqlDatabase::removeDatabase(connName);
         qWarning() << "Failed to refresh Simulator metadata:" << e.what();
         return false;
     }
@@ -171,9 +180,12 @@ bool NavigraphProvider::refreshMetadata()
         return false;
     }
 
+    QString connName = QStringLiteral("navigraph_meta_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
     try {
-        atools::sql::SqlDatabase db(QStringLiteral("NAVIGRAPH_META_TEMP"));
-        dbtools::openDatabaseFile(&db, m_databasePath, true /* readonly */, false /* createSchema */);
+        atools::sql::SqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        atools::sql::SqlDatabase db(connName);
+        db.setDatabaseName(m_databasePath);
+        db.open(QStringList(), true /* readonly */);
 
         atools::fs::db::DatabaseMeta meta(&db);
         if (meta.isValid()) {
@@ -182,9 +194,11 @@ bool NavigraphProvider::refreshMetadata()
             m_compilerVersion = meta.getCompilerVersion();
         }
 
-        dbtools::closeDatabaseFile(&db);
+        db.close();
+        atools::sql::SqlDatabase::removeDatabase(connName);
         return true;
     } catch (const std::exception& e) {
+        atools::sql::SqlDatabase::removeDatabase(connName);
         qWarning() << "Failed to refresh Navigraph metadata:" << e.what();
         return false;
     }

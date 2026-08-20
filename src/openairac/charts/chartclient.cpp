@@ -16,17 +16,15 @@
 
 #include "openairac/charts/chartclient.h"
 #include "settings/settings.h"
-#include "sql/sqldatabase.h"
-#include "sql/sqlquery.h"
-#include "db/dbtools.h"
-
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QUuid>
 #include <QCryptographicHash>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QDebug>
-
 namespace openairac {
 
 ChartClient& ChartClient::instance()
@@ -76,43 +74,43 @@ void ChartClient::ensureDefaultCatalog() const
     }
 
     // Initialize catalog SQLite schema
-    try {
-        atools::sql::SqlDatabase db(QStringLiteral("CHARTS_INIT_TEMP"));
-        dbtools::openDatabaseFile(&db, m_catalogDbPath, false /* readonly */, true /* createSchema */);
-
-        atools::sql::SqlQuery q(&db);
-        q.exec(
-            "CREATE TABLE IF NOT EXISTS chart_documents ("
-            "  id TEXT PRIMARY KEY NOT NULL,"
-            "  provider_id TEXT NOT NULL,"
-            "  airport_icao TEXT NOT NULL,"
-            "  airport_iata TEXT,"
-            "  chart_type TEXT NOT NULL,"
-            "  provider_chart_type TEXT NOT NULL,"
-            "  title TEXT NOT NULL,"
-            "  procedure_name TEXT,"
-            "  runway TEXT,"
-            "  effective_from TEXT,"
-            "  effective_to TEXT,"
-            "  revision_date TEXT,"
-            "  airac_cycle TEXT NOT NULL,"
-            "  language TEXT,"
-            "  source_url TEXT NOT NULL,"
-            "  source_document_id TEXT,"
-            "  license_policy TEXT NOT NULL,"
-            "  attribution TEXT NOT NULL,"
-            "  mime_type TEXT NOT NULL,"
-            "  asset_sha256 TEXT,"
-            "  file_size_bytes INTEGER,"
-            "  georeference_status TEXT NOT NULL,"
-            "  change_flag TEXT"
-            ")"
-        );
-
-        dbtools::closeDatabaseFile(&db);
-    } catch (const std::exception& e) {
-        qWarning() << "Failed to initialize charts catalog database:" << e.what();
+    QString connName = QStringLiteral("charts_init_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        db.setDatabaseName(m_catalogDbPath);
+        if (db.open()) {
+            QSqlQuery q(db);
+            q.exec(
+                "CREATE TABLE IF NOT EXISTS chart_documents ("
+                "  id TEXT PRIMARY KEY NOT NULL,"
+                "  provider_id TEXT NOT NULL,"
+                "  airport_icao TEXT NOT NULL,"
+                "  airport_iata TEXT,"
+                "  chart_type TEXT NOT NULL,"
+                "  provider_chart_type TEXT NOT NULL,"
+                "  title TEXT NOT NULL,"
+                "  procedure_name TEXT,"
+                "  runway TEXT,"
+                "  effective_from TEXT,"
+                "  effective_to TEXT,"
+                "  revision_date TEXT,"
+                "  airac_cycle TEXT NOT NULL,"
+                "  language TEXT,"
+                "  source_url TEXT NOT NULL,"
+                "  source_document_id TEXT,"
+                "  license_policy TEXT NOT NULL,"
+                "  attribution TEXT NOT NULL,"
+                "  mime_type TEXT NOT NULL,"
+                "  asset_sha256 TEXT,"
+                "  file_size_bytes INTEGER,"
+                "  georeference_status TEXT NOT NULL,"
+                "  change_flag TEXT"
+                ")"
+            );
+            db.close();
+        }
     }
+    QSqlDatabase::removeDatabase(connName);
 }
 
 QList<ChartEntry> ChartClient::getChartsForAirport(const QString& airportIcao) const
@@ -125,58 +123,59 @@ QList<ChartEntry> ChartClient::getChartsForAirport(const QString& airportIcao) c
         return result;
     }
 
-    try {
-        atools::sql::SqlDatabase db(QStringLiteral("CHARTS_QUERY_TEMP"));
-        dbtools::openDatabaseFile(&db, m_catalogDbPath, true /* readonly */, false /* createSchema */);
+    QString connName = QStringLiteral("charts_query_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        db.setDatabaseName(m_catalogDbPath);
+        if (db.open()) {
+            QSqlQuery q(db);
+            q.prepare(
+                "SELECT id, provider_id, airport_icao, airport_iata, chart_type, provider_chart_type, "
+                "       title, procedure_name, runway, effective_from, effective_to, revision_date, "
+                "       airac_cycle, language, source_url, source_document_id, license_policy, "
+                "       attribution, mime_type, asset_sha256, file_size_bytes, georeference_status, change_flag "
+                "FROM chart_documents "
+                "WHERE airport_icao = :icao OR airport_iata = :icao "
+                "ORDER BY chart_type, title"
+            );
+            q.bindValue(QStringLiteral(":icao"), cleanIcao);
+            if (q.exec()) {
+                while (q.next()) {
+                    QJsonObject obj;
+                    obj[QStringLiteral("id")] = q.value(0).toString();
+                    obj[QStringLiteral("provider_id")] = q.value(1).toString();
+                    obj[QStringLiteral("airport_icao")] = q.value(2).toString();
+                    obj[QStringLiteral("airport_iata")] = q.value(3).toString();
+                    obj[QStringLiteral("chart_type")] = q.value(4).toString();
+                    obj[QStringLiteral("provider_chart_type")] = q.value(5).toString();
+                    obj[QStringLiteral("title")] = q.value(6).toString();
+                    obj[QStringLiteral("procedure_name")] = q.value(7).toString();
+                    obj[QStringLiteral("runway")] = q.value(8).toString();
+                    obj[QStringLiteral("effective_from")] = q.value(9).toString();
+                    obj[QStringLiteral("effective_to")] = q.value(10).toString();
+                    obj[QStringLiteral("airac_cycle")] = q.value(12).toString();
+                    obj[QStringLiteral("source_url")] = q.value(14).toString();
+                    obj[QStringLiteral("source_document_id")] = q.value(15).toString();
+                    obj[QStringLiteral("license_policy")] = q.value(16).toString();
+                    obj[QStringLiteral("attribution")] = q.value(17).toString();
+                    obj[QStringLiteral("mime_type")] = q.value(18).toString();
+                    obj[QStringLiteral("georeference_status")] = q.value(21).toString();
 
-        atools::sql::SqlQuery q(&db);
-        q.prepare(
-            "SELECT id, provider_id, airport_icao, airport_iata, chart_type, provider_chart_type, "
-            "       title, procedure_name, runway, effective_from, effective_to, revision_date, "
-            "       airac_cycle, language, source_url, source_document_id, license_policy, "
-            "       attribution, mime_type, asset_sha256, file_size_bytes, georeference_status, change_flag "
-            "FROM chart_documents "
-            "WHERE airport_icao = :icao OR airport_iata = :icao "
-            "ORDER BY chart_type, title"
-        );
-        q.bindValue(QStringLiteral(":icao"), cleanIcao);
-        q.exec();
-
-        while (q.next()) {
-            QJsonObject obj;
-            obj[QStringLiteral("id")] = q.valueStr(0);
-            obj[QStringLiteral("provider_id")] = q.valueStr(1);
-            obj[QStringLiteral("airport_icao")] = q.valueStr(2);
-            obj[QStringLiteral("airport_iata")] = q.valueStr(3);
-            obj[QStringLiteral("chart_type")] = q.valueStr(4);
-            obj[QStringLiteral("provider_chart_type")] = q.valueStr(5);
-            obj[QStringLiteral("title")] = q.valueStr(6);
-            obj[QStringLiteral("procedure_name")] = q.valueStr(7);
-            obj[QStringLiteral("runway")] = q.valueStr(8);
-            obj[QStringLiteral("effective_from")] = q.valueStr(9);
-            obj[QStringLiteral("effective_to")] = q.valueStr(10);
-            obj[QStringLiteral("airac_cycle")] = q.valueStr(12);
-            obj[QStringLiteral("source_url")] = q.valueStr(14);
-            obj[QStringLiteral("source_document_id")] = q.valueStr(15);
-            obj[QStringLiteral("license_policy")] = q.valueStr(16);
-            obj[QStringLiteral("attribution")] = q.valueStr(17);
-            obj[QStringLiteral("mime_type")] = q.valueStr(18);
-            obj[QStringLiteral("georeference_status")] = q.valueStr(21);
-
-            ChartEntry entry = ChartEntry::fromJson(obj);
-            entry.isCached = isChartCached(entry);
-            if (entry.isCached) {
-                entry.localCachePath = getCachedFilePath(entry);
+                    ChartEntry entry = ChartEntry::fromJson(obj);
+                    entry.isCached = isChartCached(entry);
+                    if (entry.isCached) {
+                        entry.localCachePath = getCachedFilePath(entry);
+                    }
+                    result.append(entry);
+                }
             }
-            result.append(entry);
+            db.close();
         }
-
-        dbtools::closeDatabaseFile(&db);
-    } catch (const std::exception& e) {
-        qWarning() << "Error querying charts for airport:" << e.what();
     }
-
+    QSqlDatabase::removeDatabase(connName);
     return result;
+    // Remainder elided
+
 }
 
 QList<ProcedureChartMatch> ChartClient::matchProcedureCharts(

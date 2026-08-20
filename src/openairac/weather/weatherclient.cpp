@@ -16,10 +16,9 @@
 
 #include "openairac/weather/weatherclient.h"
 #include "settings/settings.h"
-#include "sql/sqldatabase.h"
-#include "sql/sqlquery.h"
-#include "db/dbtools.h"
-
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QUuid>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -64,37 +63,37 @@ void WeatherClient::ensureCacheDatabase() const
         return;
     }
 
-    try {
-        atools::sql::SqlDatabase db(QStringLiteral("WEATHER_INIT_TEMP"));
-        dbtools::openDatabaseFile(&db, m_cacheDbPath, false /* readonly */, true /* createSchema */);
-
-        atools::sql::SqlQuery q(&db);
-        q.exec(
-            "CREATE TABLE IF NOT EXISTS metar_cache ("
-            "  station_id TEXT PRIMARY KEY NOT NULL,"
-            "  json_payload TEXT NOT NULL,"
-            "  fetched_at TEXT NOT NULL"
-            ")"
-        );
-        q.exec(
-            "CREATE TABLE IF NOT EXISTS taf_cache ("
-            "  station_id TEXT PRIMARY KEY NOT NULL,"
-            "  json_payload TEXT NOT NULL,"
-            "  fetched_at TEXT NOT NULL"
-            ")"
-        );
-        q.exec(
-            "CREATE TABLE IF NOT EXISTS sigmet_cache ("
-            "  id TEXT PRIMARY KEY NOT NULL,"
-            "  json_payload TEXT NOT NULL,"
-            "  valid_to TEXT NOT NULL"
-            ")"
-        );
-
-        dbtools::closeDatabaseFile(&db);
-    } catch (const std::exception& e) {
-        qWarning() << "Failed to initialize weather cache database:" << e.what();
+    QString connName = QStringLiteral("weather_init_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        db.setDatabaseName(m_cacheDbPath);
+        if (db.open()) {
+            QSqlQuery q(db);
+            q.exec(
+                "CREATE TABLE IF NOT EXISTS metar_cache ("
+                "  station_id TEXT PRIMARY KEY NOT NULL,"
+                "  json_payload TEXT NOT NULL,"
+                "  fetched_at TEXT NOT NULL"
+                ")"
+            );
+            q.exec(
+                "CREATE TABLE IF NOT EXISTS taf_cache ("
+                "  station_id TEXT PRIMARY KEY NOT NULL,"
+                "  json_payload TEXT NOT NULL,"
+                "  fetched_at TEXT NOT NULL"
+                ")"
+            );
+            q.exec(
+                "CREATE TABLE IF NOT EXISTS sigmet_cache ("
+                "  id TEXT PRIMARY KEY NOT NULL,"
+                "  json_payload TEXT NOT NULL,"
+                "  valid_to TEXT NOT NULL"
+                ")"
+            );
+            db.close();
+        }
     }
+    QSqlDatabase::removeDatabase(connName);
 }
 
 MetarInfo WeatherClient::getCachedMetar(const QString& stationId) const
@@ -103,23 +102,22 @@ MetarInfo WeatherClient::getCachedMetar(const QString& stationId) const
     QString cleanId = stationId.trimmed().toUpper();
     if (!QFile::exists(m_cacheDbPath) || cleanId.isEmpty()) return info;
 
-    try {
-        atools::sql::SqlDatabase db(QStringLiteral("WEATHER_METAR_QUERY_TEMP"));
-        dbtools::openDatabaseFile(&db, m_cacheDbPath, true /* readonly */, false /* createSchema */);
-
-        atools::sql::SqlQuery q(&db);
-        q.prepare("SELECT json_payload FROM metar_cache WHERE station_id = :id LIMIT 1");
-        q.bindValue(QStringLiteral(":id"), cleanId);
-        q.exec();
-        if (q.next()) {
-            QJsonDocument doc = QJsonDocument::fromJson(q.valueStr(0).toUtf8());
-            info = MetarInfo::fromJson(doc.object());
+    QString connName = QStringLiteral("weather_metar_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        db.setDatabaseName(m_cacheDbPath);
+        if (db.open()) {
+            QSqlQuery q(db);
+            q.prepare("SELECT json_payload FROM metar_cache WHERE station_id = :id LIMIT 1");
+            q.bindValue(QStringLiteral(":id"), cleanId);
+            if (q.exec() && q.next()) {
+                QJsonDocument doc = QJsonDocument::fromJson(q.value(0).toString().toUtf8());
+                info = MetarInfo::fromJson(doc.object());
+            }
+            db.close();
         }
-
-        dbtools::closeDatabaseFile(&db);
-    } catch (const std::exception& e) {
-        qWarning() << "Error reading METAR cache:" << e.what();
     }
+    QSqlDatabase::removeDatabase(connName);
     return info;
 }
 
@@ -129,23 +127,22 @@ TafInfo WeatherClient::getCachedTaf(const QString& stationId) const
     QString cleanId = stationId.trimmed().toUpper();
     if (!QFile::exists(m_cacheDbPath) || cleanId.isEmpty()) return info;
 
-    try {
-        atools::sql::SqlDatabase db(QStringLiteral("WEATHER_TAF_QUERY_TEMP"));
-        dbtools::openDatabaseFile(&db, m_cacheDbPath, true /* readonly */, false /* createSchema */);
-
-        atools::sql::SqlQuery q(&db);
-        q.prepare("SELECT json_payload FROM taf_cache WHERE station_id = :id LIMIT 1");
-        q.bindValue(QStringLiteral(":id"), cleanId);
-        q.exec();
-        if (q.next()) {
-            QJsonDocument doc = QJsonDocument::fromJson(q.valueStr(0).toUtf8());
-            info = TafInfo::fromJson(doc.object());
+    QString connName = QStringLiteral("weather_taf_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        db.setDatabaseName(m_cacheDbPath);
+        if (db.open()) {
+            QSqlQuery q(db);
+            q.prepare("SELECT json_payload FROM taf_cache WHERE station_id = :id LIMIT 1");
+            q.bindValue(QStringLiteral(":id"), cleanId);
+            if (q.exec() && q.next()) {
+                QJsonDocument doc = QJsonDocument::fromJson(q.value(0).toString().toUtf8());
+                info = TafInfo::fromJson(doc.object());
+            }
+            db.close();
         }
-
-        dbtools::closeDatabaseFile(&db);
-    } catch (const std::exception& e) {
-        qWarning() << "Error reading TAF cache:" << e.what();
     }
+    QSqlDatabase::removeDatabase(connName);
     return info;
 }
 
@@ -154,105 +151,109 @@ QList<SigmetAdvisory> WeatherClient::getCachedSigmets() const
     QList<SigmetAdvisory> list;
     if (!QFile::exists(m_cacheDbPath)) return list;
 
-    try {
-        atools::sql::SqlDatabase db(QStringLiteral("WEATHER_SIGMET_QUERY_TEMP"));
-        dbtools::openDatabaseFile(&db, m_cacheDbPath, true /* readonly */, false /* createSchema */);
-
-        atools::sql::SqlQuery q(&db);
-        QString nowStr = QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
-        q.prepare("SELECT json_payload FROM sigmet_cache WHERE valid_to >= :now");
-        q.bindValue(QStringLiteral(":now"), nowStr);
-        q.exec();
-        while (q.next()) {
-            QJsonDocument doc = QJsonDocument::fromJson(q.valueStr(0).toUtf8());
-            list.append(SigmetAdvisory::fromGeoJson(doc.object()));
+    QString connName = QStringLiteral("weather_sigmet_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        db.setDatabaseName(m_cacheDbPath);
+        if (db.open()) {
+            QSqlQuery q(db);
+            QString nowStr = QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
+            q.prepare("SELECT json_payload FROM sigmet_cache WHERE valid_to >= :now");
+            q.bindValue(QStringLiteral(":now"), nowStr);
+            if (q.exec()) {
+                while (q.next()) {
+                    QJsonDocument doc = QJsonDocument::fromJson(q.value(0).toString().toUtf8());
+                    list.append(SigmetAdvisory::fromGeoJson(doc.object()));
+                }
+            }
+            db.close();
         }
-
-        dbtools::closeDatabaseFile(&db);
-    } catch (const std::exception& e) {
-        qWarning() << "Error reading SIGMET cache:" << e.what();
     }
+    QSqlDatabase::removeDatabase(connName);
     return list;
 }
-
 void WeatherClient::saveMetarToCache(const MetarInfo& metar) const
 {
     if (!metar.isValid() || !QFile::exists(m_cacheDbPath)) return;
-    try {
-        atools::sql::SqlDatabase db(QStringLiteral("WEATHER_SAVE_METAR_TEMP"));
-        dbtools::openDatabaseFile(&db, m_cacheDbPath, false /* readonly */, false /* createSchema */);
+    QString connName = QStringLiteral("weather_save_metar_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        db.setDatabaseName(m_cacheDbPath);
+        if (db.open()) {
+            QSqlQuery q(db);
+            q.prepare("INSERT OR REPLACE INTO metar_cache (station_id, json_payload, fetched_at) VALUES (:id, :payload, :fetched)");
+            q.bindValue(QStringLiteral(":id"), metar.stationId);
 
-        atools::sql::SqlQuery q(&db);
-        q.prepare("INSERT OR REPLACE INTO metar_cache (station_id, json_payload, fetched_at) VALUES (:id, :payload, :fetched)");
-        q.bindValue(QStringLiteral(":id"), metar.stationId);
+            QJsonObject obj;
+            obj[QStringLiteral("icaoId")] = metar.stationId;
+            obj[QStringLiteral("obsTime")] = metar.observationTime.toSecsSinceEpoch();
+            obj[QStringLiteral("temp")] = metar.temperatureC;
+            obj[QStringLiteral("dewp")] = metar.dewpointC;
+            obj[QStringLiteral("wdir")] = metar.windDirDeg;
+            obj[QStringLiteral("wspd")] = metar.windSpeedKts;
+            obj[QStringLiteral("wgst")] = metar.windGustKts;
+            obj[QStringLiteral("visib")] = metar.visibilitySm;
+            obj[QStringLiteral("altim")] = metar.altimeterHpa;
+            obj[QStringLiteral("fltcat")] = metar.flightCategoryString();
 
-        QJsonObject obj;
-        obj[QStringLiteral("icaoId")] = metar.stationId;
-        obj[QStringLiteral("obsTime")] = metar.observationTime.toSecsSinceEpoch();
-        obj[QStringLiteral("temp")] = metar.temperatureC;
-        obj[QStringLiteral("dewp")] = metar.dewpointC;
-        obj[QStringLiteral("wdir")] = metar.windDirDeg;
-        obj[QStringLiteral("wspd")] = metar.windSpeedKts;
-        obj[QStringLiteral("wgst")] = metar.windGustKts;
-        obj[QStringLiteral("visib")] = metar.visibilitySm;
-        obj[QStringLiteral("altim")] = metar.altimeterHpa;
-        obj[QStringLiteral("fltcat")] = metar.flightCategoryString();
+            QJsonArray clouds;
+            for (const CloudLayerInfo& cl : metar.clouds) {
+                QJsonObject co;
+                co[QStringLiteral("cover")] = cl.cover;
+                co[QStringLiteral("base")] = cl.baseFeet;
+                clouds.append(co);
+            }
+            obj[QStringLiteral("clouds")] = clouds;
 
-        QJsonArray clouds;
-        for (const CloudLayerInfo& cl : metar.clouds) {
-            QJsonObject co;
-            co[QStringLiteral("cover")] = cl.cover;
-            co[QStringLiteral("base")] = cl.baseFeet;
-            clouds.append(co);
+            q.bindValue(QStringLiteral(":payload"), QString::fromUtf8(QJsonDocument(obj).toJson(QJsonDocument::Compact)));
+            q.bindValue(QStringLiteral(":fetched"), QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+            q.exec();
+            db.close();
         }
-        obj[QStringLiteral("clouds")] = clouds;
-
-        q.bindValue(QStringLiteral(":payload"), QString::fromUtf8(QJsonDocument(obj).toJson(QJsonDocument::Compact)));
-        q.bindValue(QStringLiteral(":fetched"), QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
-        q.exec();
-
-        dbtools::closeDatabaseFile(&db);
-    } catch (...) {}
+    }
+    QSqlDatabase::removeDatabase(connName);
 }
 
 void WeatherClient::saveTafToCache(const TafInfo& taf) const
 {
     if (!taf.isValid() || !QFile::exists(m_cacheDbPath)) return;
-    try {
-        atools::sql::SqlDatabase db(QStringLiteral("WEATHER_SAVE_TAF_TEMP"));
-        dbtools::openDatabaseFile(&db, m_cacheDbPath, false /* readonly */, false /* createSchema */);
+    QString connName = QStringLiteral("weather_save_taf_") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        db.setDatabaseName(m_cacheDbPath);
+        if (db.open()) {
+            QSqlQuery q(db);
+            q.prepare("INSERT OR REPLACE INTO taf_cache (station_id, json_payload, fetched_at) VALUES (:id, :payload, :fetched)");
+            q.bindValue(QStringLiteral(":id"), taf.stationId);
 
-        atools::sql::SqlQuery q(&db);
-        q.prepare("INSERT OR REPLACE INTO taf_cache (station_id, json_payload, fetched_at) VALUES (:id, :payload, :fetched)");
-        q.bindValue(QStringLiteral(":id"), taf.stationId);
+            QJsonObject obj;
+            obj[QStringLiteral("icaoId")] = taf.stationId;
+            obj[QStringLiteral("issueTime")] = taf.issueTime.toString(Qt::ISODate);
+            obj[QStringLiteral("validTimeFrom")] = taf.validFrom.toSecsSinceEpoch();
+            obj[QStringLiteral("validTimeTo")] = taf.validTo.toSecsSinceEpoch();
 
-        QJsonObject obj;
-        obj[QStringLiteral("icaoId")] = taf.stationId;
-        obj[QStringLiteral("issueTime")] = taf.issueTime.toString(Qt::ISODate);
-        obj[QStringLiteral("validTimeFrom")] = taf.validFrom.toSecsSinceEpoch();
-        obj[QStringLiteral("validTimeTo")] = taf.validTo.toSecsSinceEpoch();
+            QJsonArray fcsts;
+            for (const TafPeriodInfo& p : taf.forecastPeriods) {
+                QJsonObject fo;
+                fo[QStringLiteral("timeFrom")] = p.validFrom.toSecsSinceEpoch();
+                fo[QStringLiteral("timeTo")] = p.validTo.toSecsSinceEpoch();
+                fo[QStringLiteral("change")] = p.changeType;
+                fo[QStringLiteral("wdir")] = p.windDirDeg;
+                fo[QStringLiteral("wspd")] = p.windSpeedKts;
+                fo[QStringLiteral("wgst")] = p.windGustKts;
+                fo[QStringLiteral("visib")] = p.visibilitySm;
+                fo[QStringLiteral("rawWx")] = p.rawPeriod;
+                fcsts.append(fo);
+            }
+            obj[QStringLiteral("fcsts")] = fcsts;
 
-        QJsonArray fcsts;
-        for (const TafPeriodInfo& p : taf.forecastPeriods) {
-            QJsonObject fo;
-            fo[QStringLiteral("timeFrom")] = p.validFrom.toSecsSinceEpoch();
-            fo[QStringLiteral("timeTo")] = p.validTo.toSecsSinceEpoch();
-            fo[QStringLiteral("change")] = p.changeType;
-            fo[QStringLiteral("wdir")] = p.windDirDeg;
-            fo[QStringLiteral("wspd")] = p.windSpeedKts;
-            fo[QStringLiteral("wgst")] = p.windGustKts;
-            fo[QStringLiteral("visib")] = p.visibilitySm;
-            fo[QStringLiteral("rawWx")] = p.rawPeriod;
-            fcsts.append(fo);
+            q.bindValue(QStringLiteral(":payload"), QString::fromUtf8(QJsonDocument(obj).toJson(QJsonDocument::Compact)));
+            q.bindValue(QStringLiteral(":fetched"), QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+            q.exec();
+            db.close();
         }
-        obj[QStringLiteral("fcsts")] = fcsts;
-
-        q.bindValue(QStringLiteral(":payload"), QString::fromUtf8(QJsonDocument(obj).toJson(QJsonDocument::Compact)));
-        q.bindValue(QStringLiteral(":fetched"), QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
-        q.exec();
-
-        dbtools::closeDatabaseFile(&db);
-    } catch (...) {}
+    }
+    QSqlDatabase::removeDatabase(connName);
 }
 
 void WeatherClient::requestAirportWeather(const QString& stationId, bool forceNetwork)
