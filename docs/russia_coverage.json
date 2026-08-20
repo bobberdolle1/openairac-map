@@ -1,0 +1,164 @@
+{
+  "generator": "openairac 1.0.0",
+  "generated_at": "2026-08-20T23:30:00Z",
+  "airac_cycle": "2608",
+  "airac_lifecycle": {
+    "cycle": "2608",
+    "effective_from": "2026-08-06T00:00:00Z",
+    "valid_through": "2026-09-02T23:59:59Z",
+    "next_cycle": "2609",
+    "next_effective_from": "2026-09-03T00:00:00Z"
+  },
+  "source_index": {
+    "official_url": "https://www.caica.ru/ProcedureList/book/rus/index.html",
+    "total_href_links": 134,
+    "total_iframe_elements": 1,
+    "total_navigation_entries": 1,
+    "total_aviation_objects": 134,
+    "airports": 128,
+    "heliports_vertodromes": 1,
+    "offshore_platforms": 5,
+    "missing_entries": 0
+  },
+  "national_procedures": {
+    "pages_discovered": 134,
+    "pages_attempted": 134,
+    "pages_with_structured_procedures": 85,
+    "pages_no_procedure_data": 49,
+    "pages_failed": 0,
+    "sample_procedures_parsed": 335,
+    "sample_procedure_legs_parsed": 1832,
+    "sample_holding_patterns": 18,
+    "path_terminator_histogram": {
+      "TF": 1198,
+      "IF": 272,
+      "CA": 136,
+      "DF": 122,
+      "CF": 104
+    },
+    "unknown_path_terminators": 0,
+    "procedure_validation": {
+      "valid_percentage": 100.0,
+      "warnings": 0,
+      "invalid": 0
+    }
+  },
+  "ourairports_baseline": {
+    "source": "COMMUNITY_OPEN / PUBLIC DOMAIN BASELINE (https://davidmegginson.github.io/ourairports-data/airports.csv)",
+    "retrieved_at": "2026-08-20T19:47:00Z",
+    "airports_csv_sha256": "1a9ef4522a76f2d25f7a0be9d96c9c67dc1f2fbc5bc4767ea9a5fa97f59d57a9",
+    "total_world_airports": 85936,
+    "total_ru_records": 1824,
+    "open_navigation_airports": 947,
+    "large_airports": 44,
+    "medium_airports": 211,
+    "small_airports": 688,
+    "seaplane_bases": 4,
+    "heliports": 550,
+    "closed_historic_facilities": 327,
+    "with_four_letter_icao": 469,
+    "with_iata_code": 219,
+    "stored_in_db": 1824,
+    "hidden_by_default": 877
+  },
+  "ats_enroute_network": {
+    "verdict": "PARTIAL",
+    "source": "CAICA / Rosaviatsiya Manual of ATS Routes (Сборник маршрутов ОВД РФ)",
+    "edition": "AIRAC 2608 (Effective 2026-08-06)",
+    "status": "Trunk ATS airways parsed; regional feeder extraction in progress",
+    "parsed_airways": ["M864", "B210", "G370", "N869", "T562", "W31"],
+    "segments": 8,
+    "rnav_specification": "RNAV 5",
+    "unique_fixes": 18,
+    "rejected_routes": 0
+  },
+  "free_route_airspace": {
+    "verdict": "PARTIAL",
+    "areas_modeled": [
+      {
+        "ident": "UMKK_FRA",
+        "name": "Kaliningrad FIR Upper Airspace",
+        "source": "Rosaviatsiya Official AIP",
+        "status": "Active (FL195-FL660)",
+        "geometry_status": "FraKnownExistsGeometryUnavailable",
+        "entry_exit_points": ["VALDI", "SORGA", "SOVET"]
+      },
+      {
+        "ident": "UHMM_OC_FRA",
+        "name": "Magadan FIR Oceanic Sector",
+        "source": "Magadan ACC / Rosaviatsiya",
+        "status": "Active (FL245-FL660)",
+        "geometry_status": "FraKnownExistsGeometryUnavailable",
+        "entry_exit_points": ["NIPIS", "KUDEN", "GATRI"]
+      },
+      {
+        "ident": "UUWV_FRA",
+        "name": "Moscow FIR Upper Airspace",
+        "source": "Rosaviatsiya AIP",
+        "status": "Active (FL245-FL660)",
+        "geometry_status": "FraKnownExistsGeometryUnavailable",
+        "entry_exit_points": ["MR", "KLN", "LUKIR"]
+      },
+      {
+        "ident": "ULLL_FRA",
+        "name": "St. Petersburg FIR Upper Airspace",
+        "source": "Rosaviatsiya AIP",
+        "status": "Active (FL245-FL660)",
+        "geometry_status": "FraKnownExistsGeometryUnavailable",
+        "entry_exit_points": ["SPB", "KOXOR", "LUGOR"]
+      },
+      {
+        "ident": "USSS_FRA",
+        "name": "Yekaterinburg FIR Upper Airspace",
+        "source": "Rosaviatsiya AIP",
+        "status": "Active (FL245-FL660)",
+        "geometry_status": "FraKnownExistsGeometryUnavailable",
+        "entry_exit_points": ["KLT", "AMKOR", "NEKUL"]
+      },
+      {
+        "ident": "UNNT_FRA",
+        "name": "Novosibirsk FIR Upper Airspace",
+        "source": "Rosaviatsiya AIP",
+        "status": "Active (FL245-FL660)",
+        "geometry_status": "FraKnownExistsGeometryUnavailable",
+        "entry_exit_points": ["TOL", "IN", "OB"]
+      },
+      {
+        "ident": "URRV_FRA",
+        "name": "Rostov FIR Upper Airspace",
+        "source": "Rosaviatsiya AIP",
+        "status": "Active (FL245-FL660)",
+        "geometry_status": "FraKnownExistsGeometryUnavailable",
+        "entry_exit_points": ["SCH", "GUKAN", "RINTO"]
+      }
+    ]
+  },
+  "radionavigation": {
+    "source": "OurAirports (Community Open Baseline) + CAICA Local AIP Vault",
+    "ndb_oprs": 496,
+    "vor_family_total": 53,
+    "vor_dme": 46,
+    "vor_standalone": 5,
+    "vortac": 2,
+    "tacan": 4,
+    "rsbn_stations": 9,
+    "rsbn_list": ["KLN", "CHL", "SHG", "KLT", "TOL", "KEM", "IRK", "KHB", "SCH"]
+  },
+  "ils": {
+    "russian_airports_with_ils": 45,
+    "russian_ils_systems": 82,
+    "russian_loc_components": 82,
+    "russian_gs_components": 82,
+    "russian_dme_components": 64,
+    "russian_total_components": 228,
+    "world_total_components": 2506,
+    "russian_geometry_anomalies": 0
+  },
+  "version_truth": {
+    "openairac_commit": "7ffc602",
+    "openairac_version": "v2.5.0",
+    "openairac_map_commit": "aba63033",
+    "openairac_map_version": "v1.5.0",
+    "same_map_commit_explanation": "OpenAIRAC Map binary baseline is stable and synchronized with v2.5.0 SQLite data schemas without separate C++ code modifications."
+  }
+}
