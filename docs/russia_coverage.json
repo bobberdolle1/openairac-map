@@ -1,6 +1,6 @@
 {
   "generator": "openairac 1.0.0",
-  "generated_at": "2026-08-21T00:45:00Z",
+  "generated_at": "2026-08-21T01:00:00Z",
   "airac_cycle": "2608",
   "airac_lifecycle": {
     "cycle": "2608",
@@ -98,26 +98,20 @@
     ],
     "pdf_pages_total": 847,
     "route_pages": 819,
-    "route_heading_occurrences": 1232,
+    "route_heading_occurrences": 1453,
     "continuations": 121,
-    "source_routes": 1232,
-    "route_tables_discovered": 1232,
-    "route_designators": 23,
-    "parsed_routes": 23,
-    "partial_routes": 0,
+    "source_routes": 1453,
+    "route_tables_discovered": 1453,
+    "parsed_routes": 1451,
+    "partial_routes": 2,
     "unsupported_routes": 0,
     "rejected_routes": 0,
-    "segments": 45,
-    "provenance_edges": 45,
+    "accounting_equation_pass": true,
+    "route_point_rows": 11895,
+    "unique_normalized_points": 6443,
+    "segments": 10442,
+    "provenance_edges": 10442,
     "synthetic_edges": 0,
-    "unique_route_points": 44,
-    "unique_points_list": [
-      "ADONI", "BINBA", "IRK", "KEM", "KHB", "KLN", "KLT", "KOSOT", "KUBEK", "LEDVA",
-      "LUKIR", "LUSAL", "MOROZ", "MR", "NALEK", "RANET", "ROSTV", "ROTLI", "SCH", "SPB",
-      "TAIGA", "TIKNA", "TOL", "TULUN", "TVER", "UEEE_FIX", "UERS_FIX", "UHMA_FIX", "UHMM_FIX", "UHNA_FIX",
-      "UHPP_FIX", "UHSS_FIX", "UHWW", "UIBB_FIX", "ULMM_FIX", "UNOO_FIX", "UOHH_FIX", "URMM_FIX", "USNN_FIX", "USRR_FIX",
-      "USTJ_FIX", "UWKD_FIX", "UWWW_FIX", "VALDA"
-    ],
     "golden_a300_proof": {
       "route": "A300",
       "source_file": "ATS_Routes_Manual_06.08.2026.pdf",
@@ -142,30 +136,29 @@
       "distance_reconciliation_pass": true
     },
     "distance_validation": {
-      "segments_checked": 45,
-      "median_delta_km": 0.33,
-      "p95_delta_km": 0.79,
-      "p99_delta_km": 0.80,
-      "max_delta_km": 0.80,
+      "segments_checked": 10442,
+      "median_length_km": 60.1,
+      "p95_length_km": 254.4,
+      "p99_length_km": 403.7,
+      "max_length_km": 2561.2,
       "km_nm_anomaly": false
     },
-    "international_routes": 2,
-    "domestic_routes": 21,
-    "rnav_routes": 23,
-    "local_mvl_routes": 0,
-    "mvl_provider": "RU_CAICA_MVL_LOCAL (NOT AVAILABLE / Separate Class G Product)",
     "graph": {
-      "nodes": 44,
-      "edges": 45,
+      "nodes": 6443,
+      "edges": 10442,
       "connected_components": 1,
-      "largest_component_nodes": 44,
+      "largest_component_nodes": 6443,
       "one_way_edges": 0,
       "orphan_nodes": 0,
       "validation_errors": 0
     },
-    "local_feeder_coverage": "PARTIAL (Domestic trunk corridors modeled; regional feeders in progress)",
-    "release_artifact_commit": "4bad270",
-    "release_artifact_verified": true
+    "random_20_routes_audit_pass": true,
+    "mvl_provider": "RU_CAICA_MVL_LOCAL (NOT AVAILABLE / Separate Class G Product)",
+    "local_feeder_coverage": "PARTIAL (Domestic trunk and regional network modeled; Class G local lines in separate product)",
+    "release_truth": {
+      "v2_6_1_status": "AFFECTED (Tagged prior to 1,453-route complete national parse)",
+      "corrective_release_prepared": "OpenAIRAC v2.6.2 (Prepared locally; not pushed without authorization)"
+    }
   },
   "free_route_airspace": {
     "verdict": "PARTIAL",
@@ -250,12 +243,12 @@
     "russian_geometry_anomalies": 0
   },
   "version_truth": {
-    "openairac_head_commit": "4bad270",
-    "openairac_tag": "v2.6.0",
-    "openairac_map_head_commit": "b67d0a60",
+    "openairac_head_commit": "ca35ded",
+    "openairac_current_tag": "v2.6.1",
+    "openairac_map_head_commit": "e70aab7d",
     "openairac_map_v14_commit": "aba63033",
     "openairac_map_v15_commit": "aba63033",
-    "same_commit_explanation": "In openairac-map, tag v1.4.0 and tag v1.5.0 both point to commit aba63033 as a stable binary baseline, while HEAD is at b67d0a60 containing the updated documentation and data schemas."
+    "same_commit_explanation": "In openairac-map, tag v1.4.0 and tag v1.5.0 both point to commit aba63033 as a stable binary baseline, while HEAD is at e70aab7d containing the updated documentation and data schemas."
   },
   "consistency_errors": []
 }
