@@ -86,6 +86,7 @@ jobs:
           test -f docs/OPENAIRAC_INTEGRATION.md
           test -f docs/EFB_ROADMAP.md
           test -f docs/PLATFORM_SUPPORT.md
+          test -f docs/PROCEDURE_SOURCES.md
           test -f THIRD_PARTY_NOTICES.md
           test -f docs/CHARTS.md
           test -f docs/OFFLINE_CHARTS.md
