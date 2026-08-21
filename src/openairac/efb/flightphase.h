@@ -38,6 +38,7 @@ enum class FlightPhase {
     Landing,
     TaxiIn,
     Parked,
+    GoAround,
     Unknown
 };
 

@@ -1169,14 +1169,16 @@ void MainWindow::connectAllSlots()
     if (route.hasValidDeparture() && route.hasValidDestination() && activeFlightDock != nullptr) {
       QString dep = route.getDepartureAirportLeg().getIdent();
       QString dest = route.getDestinationAirportLeg().getIdent();
+      double destElev = static_cast<double>(route.getDestinationAirportLeg().getAltitude());
+      double cruiseAlt = static_cast<double>(routeController->getCruiseAltitudeWidget());
       QStringList wpts;
       QList<QPair<double, double>> coords;
       for (int i = 0; i < route.size(); ++i) {
         const RouteLeg& leg = route.value(i);
         wpts.append(leg.getIdent());
-        coords.append(qMakePair(static_cast<double>(leg.getPosition().getLonX()), static_cast<double>(leg.getPosition().getLatY())));
+        coords.append(qMakePair(static_cast<double>(leg.getPosition().getLatY()), static_cast<double>(leg.getPosition().getLonX())));
       }
-      activeFlightDock->setFlightPlan(dep, dest, wpts, coords, 0.0);
+      activeFlightDock->setFlightPlan(dep, dest, wpts, coords, destElev, cruiseAlt);
     }
   });
   // Add departure and dest runway actions separately to windows since their shortcuts overlap with context menu shortcuts

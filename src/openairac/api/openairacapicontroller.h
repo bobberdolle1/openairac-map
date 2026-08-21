@@ -54,6 +54,11 @@ private:
     ApiResponse handleGetFlightplan();
     ApiResponse handleGetActiveFlight();
     ApiResponse handleGetSim();
+    ApiResponse handleGetExecutionStatus();
+    ApiResponse handleGetExecutionActiveLeg();
+    ApiResponse handleGetExecutionProgress();
+    ApiResponse handleGetExecutionWeather();
+    ApiResponse handleGetExecutionSnapshot();
     ApiResponse handleGetWeather(const QString& icao);
     ApiResponse handleGetOnline(const QString& network);
     ApiResponse handleGetCharts(const QString& icao);

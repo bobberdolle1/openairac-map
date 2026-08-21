@@ -24,6 +24,7 @@
 #include "openairac/efb/flightphase.h"
 #include "connect/connectclient.h"
 #include "app/navapp.h"
+#include "openairac/efb/activeflightdock.h"
 #include "route/routecontroller.h"
 #include "mapgui/mappaintwidget.h"
 #include <QJsonArray>
@@ -96,8 +97,16 @@ ApiResponse OpenAiracApiController::dispatch(
             return handleGetCoverage(icao);
         } else if (p == QLatin1String("/api/openairac/v1/flightplan")) {
             return handleGetFlightplan();
-        } else if (p == QLatin1String("/api/openairac/v1/flight/active")) {
-            return handleGetActiveFlight();
+        } else if (p == QLatin1String("/api/openairac/v1/flight/active") || p == QLatin1String("/api/openairac/v1/execution/snapshot")) {
+            return handleGetExecutionSnapshot();
+        } else if (p == QLatin1String("/api/openairac/v1/execution/status")) {
+            return handleGetExecutionStatus();
+        } else if (p == QLatin1String("/api/openairac/v1/execution/active-leg")) {
+            return handleGetExecutionActiveLeg();
+        } else if (p == QLatin1String("/api/openairac/v1/execution/progress")) {
+            return handleGetExecutionProgress();
+        } else if (p == QLatin1String("/api/openairac/v1/execution/weather")) {
+            return handleGetExecutionWeather();
         } else if (p == QLatin1String("/api/openairac/v1/sim")) {
             return handleGetSim();
         } else if (p.startsWith(QLatin1String("/api/openairac/v1/weather/"))) {
@@ -188,9 +197,85 @@ ApiResponse OpenAiracApiController::handleGetFlightplan()
 
 ApiResponse OpenAiracApiController::handleGetActiveFlight()
 {
+    return handleGetExecutionSnapshot();
+}
+
+ApiResponse OpenAiracApiController::handleGetExecutionStatus()
+{
+    if (ActiveFlightDock::instance() != nullptr) {
+        QJsonObject obj;
+        ActiveFlightDock *d = ActiveFlightDock::instance();
+        obj[QStringLiteral("connected")] = d->isSimConnected();
+        obj[QStringLiteral("phase")] = d->currentPhaseStr();
+        obj[QStringLiteral("evidence")] = d->phaseEvidence();
+        obj[QStringLiteral("active_leg")] = d->activeLegName();
+        obj[QStringLiteral("next_fix")] = d->nextFixName();
+        obj[QStringLiteral("xtk_nm")] = d->crossTrackNm();
+        obj[QStringLiteral("dist_to_next_nm")] = d->distanceToNextFixNm();
+        obj[QStringLiteral("remaining_dist_nm")] = d->remainingRouteDistNm();
+        obj[QStringLiteral("tod_nm")] = d->todDistanceNm();
+        obj[QStringLiteral("is_off_route")] = d->isOffRoute();
+        obj[QStringLiteral("telemetry_stale")] = d->isTelemetryStale();
+        return ApiResponse::json(obj);
+    }
     QJsonObject obj;
-    obj[QStringLiteral("phase")] = QStringLiteral("Cruise");
+    obj[QStringLiteral("connected")] = NavApp::getConnectClient() != nullptr && NavApp::getConnectClient()->isConnected();
+    obj[QStringLiteral("phase")] = QStringLiteral("Preflight");
+    return ApiResponse::json(obj);
+}
+
+ApiResponse OpenAiracApiController::handleGetExecutionActiveLeg()
+{
+    if (ActiveFlightDock::instance() != nullptr) {
+        ActiveFlightDock *d = ActiveFlightDock::instance();
+        QJsonObject obj;
+        obj[QStringLiteral("index")] = d->activeLegIndex();
+        obj[QStringLiteral("prev_fix")] = d->prevFixName();
+        obj[QStringLiteral("next_fix")] = d->nextFixName();
+        obj[QStringLiteral("active_leg")] = d->activeLegName();
+        obj[QStringLiteral("distance_nm")] = d->distanceToNextFixNm();
+        obj[QStringLiteral("xtk_nm")] = d->crossTrackNm();
+        obj[QStringLiteral("ete_sec")] = d->eteNextFixSec();
+        return ApiResponse::json(obj);
+    }
+    return ApiResponse::error(404, QStringLiteral("No active flight session"));
+}
+
+ApiResponse OpenAiracApiController::handleGetExecutionProgress()
+{
+    if (ActiveFlightDock::instance() != nullptr) {
+        ActiveFlightDock *d = ActiveFlightDock::instance();
+        QJsonObject obj;
+        obj[QStringLiteral("remaining_route_nm")] = d->remainingRouteDistNm();
+        obj[QStringLiteral("direct_dest_nm")] = d->directDestDistNm();
+        obj[QStringLiteral("tod_dist_nm")] = d->todDistanceNm();
+        obj[QStringLiteral("required_vs_fpm")] = d->requiredVsFpm();
+        obj[QStringLiteral("profile_dev_ft")] = d->profileDeviationFt();
+        obj[QStringLiteral("ete_dest_sec")] = d->eteDestSec();
+        return ApiResponse::json(obj);
+    }
+    return ApiResponse::error(404, QStringLiteral("No active flight session"));
+}
+
+ApiResponse OpenAiracApiController::handleGetExecutionWeather()
+{
+    const Route& r = NavApp::getRouteController()->getRouteConst();
+    QJsonObject obj;
+    QString dest = r.getDestinationAirportLeg().getIdent();
+    if (!dest.isEmpty()) {
+        obj[QStringLiteral("destination")] = QString::fromUtf8(handleGetWeather(dest).body);
+    }
+    return ApiResponse::json(obj);
+}
+
+ApiResponse OpenAiracApiController::handleGetExecutionSnapshot()
+{
+    if (ActiveFlightDock::instance() != nullptr) {
+        return ApiResponse::json(ActiveFlightDock::instance()->executionSnapshot());
+    }
+    QJsonObject obj;
     obj[QStringLiteral("sim_connected")] = NavApp::getConnectClient() != nullptr && NavApp::getConnectClient()->isConnected();
+    obj[QStringLiteral("phase")] = QStringLiteral("Preflight");
     return ApiResponse::json(obj);
 }
 

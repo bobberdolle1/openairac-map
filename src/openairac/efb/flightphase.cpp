@@ -35,6 +35,7 @@ QString flightPhaseToString(FlightPhase phase) {
     case FlightPhase::Landing: return QStringLiteral("LANDING");
     case FlightPhase::TaxiIn: return QStringLiteral("TAXI_IN");
     case FlightPhase::Parked: return QStringLiteral("PARKED");
+    case FlightPhase::GoAround: return QStringLiteral("GO_AROUND");
     case FlightPhase::Unknown: return QStringLiteral("UNKNOWN");
     }
     return QStringLiteral("UNKNOWN");
@@ -56,6 +57,7 @@ QString flightPhaseDisplayString(FlightPhase phase) {
     case FlightPhase::Landing: return QStringLiteral("Landing Rollout");
     case FlightPhase::TaxiIn: return QStringLiteral("Taxi In to Gate");
     case FlightPhase::Parked: return QStringLiteral("Parked at Stand");
+    case FlightPhase::GoAround: return QStringLiteral("Go-Around / Missed Approach");
     case FlightPhase::Unknown: return QStringLiteral("Flight Phase Unknown");
     }
     return QStringLiteral("Flight Phase Unknown");
