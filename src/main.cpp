@@ -422,6 +422,8 @@ int main(int argc, char *argv[])
           Settings::shutdown();
         Translator::unload();
         atools::gui::Application::recordExit();
+        qInfo() << Q_FUNC_INFO << "Clean exit with code" << retval;
+        std::exit(retval);
       }
       else
       {

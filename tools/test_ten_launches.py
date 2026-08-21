@@ -8,7 +8,7 @@ Performs 10 consecutive clean launches and normal exits in an isolated profile:
 
 Verifies:
 1. Process starts cleanly and loads MainWindow.
-2. Main window title is verified as 'OpenAIRAC Map <version> ...'.
+2. Main window title is verified as 'OpenAIRAC Map 2.4.0 ...' (0 .develop leakage).
 3. .running lock file is created on startup and cleared on exit.
 4. Exit code is 0 on every single run.
 5. No crash report zip or stack trace is left behind.
@@ -47,22 +47,20 @@ def get_windows_for_pid(pid):
     user32.EnumWindows(WNDENUMPROC(enum_windows_callback), 0)
     return hwnds
 
-def close_all_for_pid(pid):
+def close_all_for_pid(pid, main_hwnd):
     WM_CLOSE = 0x0010
     WM_KEYDOWN = 0x0100
     VK_RETURN = 0x0D
     
+    # Close any popups or dialogs first
     windows = get_windows_for_pid(pid)
-    # First press Enter on any modal prompt/dialog if present
     for hwnd, title in windows:
-        if not title.startswith("OpenAIRAC Map 3"):
+        if not title.startswith("OpenAIRAC Map 2.4.0"):
             user32.PostMessageW(hwnd, WM_KEYDOWN, VK_RETURN, 0)
             user32.PostMessageW(hwnd, WM_CLOSE, 0, 0)
             
     time.sleep(0.3)
-    windows = get_windows_for_pid(pid)
-    for hwnd, title in windows:
-        user32.PostMessageW(hwnd, WM_CLOSE, 0, 0)
+    user32.PostMessageW(main_hwnd, WM_CLOSE, 0, 0)
 
 def main():
     print("=== OpenAIRAC Map Ten-Launch Stability Gate ===")
@@ -82,16 +80,19 @@ ShowQuitLoading=false
 ShowInstallGlobe=false
 ShowMissingSimulators=false
 ShowDisconnectInfo=false
+ShowInstallXpconnectXplWarning=false
+ShowInstallXpconnectInfo=false
 
 [Options]
 Widget_checkBoxOptionsStartupShowSplash=false
+
+[OptionsDialog]
+Widget_checkBoxOptionsStartupCheckUpdates=false
 
 [MainWindow]
 FirstApplicationStart=false
 """
     (TEST_PROFILE / "openairac_map.ini").write_text(ini_content, encoding="utf-8")
-
-    WM_CLOSE = 0x0010
 
     for i in range(1, 11):
         print(f"\n[Run {i}/10] Launching OpenAIRAC Map...")
@@ -115,7 +116,7 @@ FirstApplicationStart=false
                 
             windows = get_windows_for_pid(proc.pid)
             for hwnd, title in windows:
-                if title.startswith("OpenAIRAC Map 3"):
+                if title.startswith("OpenAIRAC Map 2.4.0"):
                     ui_ready = True
                     main_hwnd = hwnd
                     main_title = title
@@ -129,12 +130,18 @@ FirstApplicationStart=false
             proc.kill()
             sys.exit(1)
             
+        # Verify 0 .develop leakage
+        if ".develop" in main_title:
+            print(f"❌ Run {i} FAILED: Title contains forbidden '.develop' string: '{main_title}'!")
+            proc.kill()
+            sys.exit(1)
+
         print(f"  -> Main window ready: '{main_title}' (HWND: {main_hwnd}, PID: {proc.pid})")
-        print("  -> Waiting 4 seconds for event loop and database connections...")
+        print("  -> Waiting 4 seconds for event loop and background tasks...")
         time.sleep(4.0)
         
-        print("  -> Sending clean close...")
-        close_all_for_pid(proc.pid)
+        print(f"  -> Sending clean close to HWND {main_hwnd}...")
+        close_all_for_pid(proc.pid, main_hwnd)
         
         # Wait for exit
         exit_start = time.time()
@@ -173,6 +180,8 @@ FirstApplicationStart=false
 
     print("\n=======================================================")
     print("✅ TEN-LAUNCH STABILITY GATE PASSED: 10/10 CLEAN RUNS")
+    print("=======================================================")
+    print("✅ VERSION AGREEMENT: OpenAIRAC Map v2.4.0 (0 .develop strings)")
     print("=======================================================\n")
 
 if __name__ == "__main__":

@@ -153,8 +153,8 @@ MainWindow::MainWindow()
 
   aboutMessage =
     tr("<h3>OpenAIRAC Map</h3>"
-       "<p><b>Version 2.2.0</b> (OpenAIRAC 3.2 AI Crew Gateway)<br/>"
-       "Powered by <b>OpenAIRAC Core v2.11.0</b></p>"
+       "<p><b>Version 2.4.0</b> (OpenAIRAC 3.4 Product Release)<br/>"
+       "Powered by <b>OpenAIRAC Core v2.12.0</b></p>"
        "<p>OpenAIRAC Map is an open-first aviation flight planner, moving map, and electronic flight bag (EFB).<br/>"
        "Compatible with X-Plane 11, X-Plane 12, Microsoft Flight Simulator (2020 / 2024), and Prepar3D.</p>"
        "<p><b>Open-AIRAC comes first:</b> independent, open aviation data, transparent provenance, and no proprietary subscription required.</p>"
@@ -888,7 +888,7 @@ void MainWindow::showAboutOpenAirac()
 {
   QString aboutText = tr(
     "<h2>OpenAIRAC Map</h2>"
-    "<p><b>Version 2.3.0</b> (OpenAIRAC 3.3 Product Release)<br/>"
+    "<p><b>Version 2.4.0</b> (OpenAIRAC 3.4 Product Release)<br/>"
     "Core Engine: OpenAIRAC Core v2.12.0</p>"
     "<p><span style='background-color: #ffebee; color: #c62828; font-weight: bold; padding: 2px 6px; border-radius: 3px;'>"
     "⚠️ FOR FLIGHT SIMULATION ONLY — NEVER USE FOR REAL AVIATION</span></p>"

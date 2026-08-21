@@ -170,34 +170,22 @@ def main():
     xp12_export_dir = Path("F:/Projects/deploy/xplane_export/Custom Data")
     xp12_zip = OUTPUT_DIR / f"OpenAIRAC-NavData-XPlane12-{AIRAC_CYCLE}.zip"
     with zipfile.ZipFile(xp12_zip, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
-        zf.writestr("Custom Data/README.txt", f"""OpenAIRAC X-Plane 12 Navigation Data (AIRAC Cycle {AIRAC_CYCLE})
-========================================================================
-Installation:
-Extract the contents of this archive into your X-Plane 12 root directory:
-  X-Plane 12/Custom Data/
-    - earth_fix.dat
-    - earth_nav.dat
-    - earth_hold.dat
-    - earth_aptmeta.dat
-
-Provenance: Free, public aeronautical authorities (FAA CIFP, France SIA, OurAirports, OpenFlightmaps).
-""")
         if xp12_export_dir.exists():
-            for f in xp12_export_dir.glob("*.dat"):
-                zf.write(f, arcname=f"Custom Data/{f.name}")
+            for f in ["earth_fix.dat", "earth_nav.dat", "earth_awy.dat", "earth_hold.dat", "README.txt", "PROVENANCE.json", "LICENSES.txt"]:
+                fp = xp12_export_dir / f
+                if fp.exists():
+                    zf.write(fp, arcname=f"Custom Data/{f}")
     print(f"  -> X-Plane 12 NavData Pack: {xp12_zip.name} ({xp12_zip.stat().st_size / (1024*1024):.2f} MB)")
 
     # Garmin GNS430 NavData
     gns_export_dir = Path("F:/Projects/deploy/gns430_export/GNS430/navdata")
     gns_zip = OUTPUT_DIR / f"OpenAIRAC-NavData-GNS430-{AIRAC_CYCLE}.zip"
     with zipfile.ZipFile(gns_zip, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
-        zf.writestr("GNS430/navdata/README.txt", f"OpenAIRAC Garmin GNS430 Dataset (Cycle {AIRAC_CYCLE})\nExtract to your aircraft GNS430/navdata folder.\n")
         if gns_export_dir.exists():
             for root, _, files in os.walk(gns_export_dir):
                 for file in files:
                     p = Path(root) / file
                     zf.write(p, arcname=f"GNS430/navdata/{p.relative_to(gns_export_dir)}")
-    print(f"  -> GNS430 NavData Pack: {gns_zip.name} ({gns_zip.stat().st_size / (1024*1024):.2f} MB)")
 
     # Little Xpconnect Plugin Standalone Package
     xpconnect_src = DEPLOY_MAP_SRC / "Little Xpconnect"
