@@ -59,6 +59,15 @@ private:
     ApiResponse handleGetExecutionProgress();
     ApiResponse handleGetExecutionWeather();
     ApiResponse handleGetExecutionSnapshot();
+    ApiResponse handleGetFlightdeckSnapshot(bool compact = false);
+    ApiResponse handleGetFlightdeckEvents();
+    ApiResponse handleGetFlightdeckDeltas();
+    ApiResponse handleGetFlightdeckAdvisories();
+    ApiResponse handleGetFlightdeckDepartureBrief();
+    ApiResponse handleGetFlightdeckArrivalBrief();
+    ApiResponse handleGetFlightdeckNextConstraint();
+    ApiResponse handleGetFlightdeckTools();
+    ApiResponse handleGetFlightdeckIdentity(const QString& ident);
     ApiResponse handleGetWeather(const QString& icao);
     ApiResponse handleGetOnline(const QString& network);
     ApiResponse handleGetCharts(const QString& icao);

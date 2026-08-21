@@ -77,7 +77,13 @@ public:
     int activeLegIndex() const { return m_activeLegIdx; }
 
     QJsonObject executionSnapshot() const;
-
+    QJsonObject flightdeckSnapshotV2() const;
+    QJsonObject compactAiSnapshot() const;
+    QJsonArray flightdeckAdvisories() const;
+    QJsonArray flightdeckEvents() const;
+    QJsonObject flightdeckDepartureBrief() const;
+    QJsonObject flightdeckArrivalBrief() const;
+    QJsonObject flightdeckNextConstraint() const;
 public slots:
     void onSimDataReceived(const atools::fs::sc::SimConnectData& data);
     void onFlightPhaseChanged(openairac::FlightPhase oldPhase, openairac::FlightPhase newPhase, const QString& evidence);

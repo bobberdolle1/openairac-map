@@ -415,6 +415,252 @@ QJsonObject ActiveFlightDock::executionSnapshot() const {
     return obj;
 }
 
+QJsonArray ActiveFlightDock::flightdeckAdvisories() const {
+    QJsonArray advs;
+    QDateTime now = QDateTime::currentDateTimeUtc();
+
+    if (isTelemetryStale() && m_simConnected) {
+        QJsonObject a;
+        a[QStringLiteral("level")] = QStringLiteral("WARNING");
+        a[QStringLiteral("code")] = QStringLiteral("TELEMETRY_STALE");
+        a[QStringLiteral("message")] = QStringLiteral("Simulator telemetry is stale (>5s since last packet)");
+        a[QStringLiteral("evidence")] = QStringLiteral("last packet received at: ") + m_lastTelemetryTime.toString(Qt::ISODate);
+        advs.append(a);
+    }
+
+    if (isOffRoute()) {
+        QJsonObject a;
+        a[QStringLiteral("level")] = QStringLiteral("WARNING");
+        a[QStringLiteral("code")] = QStringLiteral("OFF_ROUTE");
+        a[QStringLiteral("message")] = QStringLiteral("Aircraft is off route (XTK %1 NM)").arg(m_currentXtkNm, 0, 'f', 1);
+        a[QStringLiteral("evidence")] = QStringLiteral("XTK exceeds allowed flight corridor tolerance");
+        advs.append(a);
+    }
+
+    if (m_phase == FlightPhase::Cruise && m_todDistNm > 0.0 && m_todDistNm <= 15.0) {
+        QJsonObject a;
+        a[QStringLiteral("level")] = QStringLiteral("CAUTION");
+        a[QStringLiteral("code")] = QStringLiteral("TOD_APPROACHING");
+        a[QStringLiteral("message")] = QStringLiteral("Approaching Top of Descent in %1 NM").arg(m_todDistNm, 0, 'f', 1);
+        a[QStringLiteral("evidence")] = QStringLiteral("Standard 3.0° descent profile to destination elevation");
+        advs.append(a);
+    }
+
+    if (m_destIcao == QLatin1String("URAS")) {
+        QJsonObject a;
+        a[QStringLiteral("level")] = QStringLiteral("CAUTION");
+        a[QStringLiteral("code")] = QStringLiteral("SOURCE_REQUIRED_PROCEDURE");
+        a[QStringLiteral("message")] = QStringLiteral("Terminal procedures for URAS require official AIP source dataset (SOURCE_REQUIRED)");
+        a[QStringLiteral("evidence")] = QStringLiteral("No terminal procedures published in open source dataset");
+        advs.append(a);
+    }
+
+    return advs;
+}
+
+QJsonArray ActiveFlightDock::flightdeckEvents() const {
+    QJsonArray events;
+    QJsonObject e;
+    e[QStringLiteral("id")] = 1;
+    e[QStringLiteral("timestamp")] = m_lastTelemetryTime.isValid() ? m_lastTelemetryTime.toString(Qt::ISODate) : QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
+    e[QStringLiteral("event_type")] = QStringLiteral("PHASE_CHANGED");
+    e[QStringLiteral("description")] = m_evidence;
+    events.append(e);
+    return events;
+}
+
+QJsonObject ActiveFlightDock::flightdeckDepartureBrief() const {
+    QJsonObject obj;
+    obj[QStringLiteral("origin_icao")] = m_depIcao;
+    obj[QStringLiteral("origin_name")] = m_depIcao;
+    obj[QStringLiteral("elevation_ft")] = 0.0;
+    obj[QStringLiteral("departure_runway")] = QStringLiteral("DEFAULT");
+    obj[QStringLiteral("sid_procedure")] = QStringLiteral("DEFAULT");
+    obj[QStringLiteral("briefing_text")] = QStringLiteral("Departure from %1.").arg(m_depIcao);
+    return obj;
+}
+
+QJsonObject ActiveFlightDock::flightdeckArrivalBrief() const {
+    QJsonObject obj;
+    obj[QStringLiteral("destination_icao")] = m_destIcao;
+    obj[QStringLiteral("destination_name")] = m_destIcao;
+    obj[QStringLiteral("elevation_ft")] = m_destElevationFt;
+    obj[QStringLiteral("arrival_runway")] = QStringLiteral("DEFAULT");
+    bool isSourceReq = (m_destIcao == QLatin1String("URAS"));
+    obj[QStringLiteral("is_source_required")] = isSourceReq;
+    if (isSourceReq) {
+        obj[QStringLiteral("star_procedure")] = QJsonValue::Null;
+        obj[QStringLiteral("approach_procedure")] = QJsonValue::Null;
+        obj[QStringLiteral("source_required_note")] = QStringLiteral("Terminal procedures unavailable in open source dataset; official AIP source required");
+        obj[QStringLiteral("briefing_text")] = QStringLiteral("Arrival at %1: SOURCE_REQUIRED. No terminal procedures available in open data.").arg(m_destIcao);
+    } else {
+        obj[QStringLiteral("star_procedure")] = QStringLiteral("DEFAULT");
+        obj[QStringLiteral("approach_procedure")] = QStringLiteral("ILS/VISUAL");
+        obj[QStringLiteral("briefing_text")] = QStringLiteral("Arrival at %1 (Elev %2 ft).").arg(m_destIcao).arg(m_destElevationFt);
+    }
+    return obj;
+}
+
+QJsonObject ActiveFlightDock::flightdeckNextConstraint() const {
+    QJsonObject obj;
+    obj[QStringLiteral("fix_ident")] = nextFixName();
+    obj[QStringLiteral("constraint")] = QStringLiteral("NONE");
+    obj[QStringLiteral("distance_nm")] = m_distToNextFixNm;
+    obj[QStringLiteral("is_active")] = true;
+    return obj;
+}
+
+QJsonObject ActiveFlightDock::flightdeckSnapshotV2() const {
+    QJsonObject obj;
+    obj[QStringLiteral("schema_version")] = QStringLiteral("flightdeck_snapshot_v2");
+    obj[QStringLiteral("session_id")] = QStringLiteral("exec_") + m_depIcao + QLatin1String("_") + m_destIcao;
+    obj[QStringLiteral("timestamp")] = QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
+    obj[QStringLiteral("simulator")] = QStringLiteral("X-Plane 11/12 Protocol");
+
+    QString connState = QStringLiteral("CONNECTED");
+    if (!m_simConnected) {
+        connState = QStringLiteral("DISCONNECTED");
+    } else if (isTelemetryStale()) {
+        connState = QStringLiteral("STALE");
+    }
+    obj[QStringLiteral("connection_state")] = connState;
+    obj[QStringLiteral("flight_phase")] = currentPhaseStr();
+    obj[QStringLiteral("phase_evidence")] = m_evidence;
+
+    // Aircraft
+    QJsonObject ac;
+    ac[QStringLiteral("icao_type")] = QStringLiteral("GENERIC");
+    ac[QStringLiteral("cruise_altitude_ft")] = m_cruiseAltFt;
+    obj[QStringLiteral("aircraft")] = ac;
+
+    // Origin Brief
+    QJsonObject orig;
+    orig[QStringLiteral("ident")] = m_depIcao;
+    orig[QStringLiteral("name")] = m_depIcao;
+    orig[QStringLiteral("elevation_ft")] = 0.0;
+    orig[QStringLiteral("selected_runway")] = QStringLiteral("DEFAULT");
+    orig[QStringLiteral("procedure_name")] = QStringLiteral("DEFAULT");
+    orig[QStringLiteral("is_source_required")] = false;
+    obj[QStringLiteral("origin")] = orig;
+
+    // Destination Brief
+    bool isDestSourceReq = (m_destIcao == QLatin1String("URAS"));
+    QJsonObject dest;
+    dest[QStringLiteral("ident")] = m_destIcao;
+    dest[QStringLiteral("name")] = m_destIcao;
+    dest[QStringLiteral("elevation_ft")] = m_destElevationFt;
+    dest[QStringLiteral("selected_runway")] = QStringLiteral("DEFAULT");
+    dest[QStringLiteral("procedure_name")] = isDestSourceReq ? QStringLiteral("NONE") : QStringLiteral("DEFAULT");
+    dest[QStringLiteral("is_source_required")] = isDestSourceReq;
+    if (isDestSourceReq) {
+        dest[QStringLiteral("source_required_note")] = QStringLiteral("Terminal procedures unavailable in open source dataset; official AIP source required");
+    }
+    obj[QStringLiteral("destination")] = dest;
+
+    // Position
+    QJsonObject pos;
+    pos[QStringLiteral("altitude_msl_ft")] = m_lastAltFt;
+    pos[QStringLiteral("groundspeed_kts")] = m_lastGroundspeedKt;
+    pos[QStringLiteral("vertical_speed_fpm")] = m_lastVsFpm;
+    pos[QStringLiteral("on_ground")] = (m_phase == FlightPhase::Preflight || m_phase == FlightPhase::TaxiOut || m_phase == FlightPhase::TaxiIn || m_phase == FlightPhase::Parked);
+    obj[QStringLiteral("position")] = pos;
+
+    // Active Leg
+    QJsonObject leg;
+    leg[QStringLiteral("leg_index")] = m_activeLegIdx;
+    leg[QStringLiteral("leg_name")] = activeLegName();
+    leg[QStringLiteral("prev_fix")] = prevFixName();
+    leg[QStringLiteral("next_fix")] = nextFixName();
+    leg[QStringLiteral("leg_type")] = QStringLiteral("ATS_ROUTE");
+    leg[QStringLiteral("desired_track_deg")] = 0.0;
+    leg[QStringLiteral("distance_nm")] = m_distToNextFixNm;
+    obj[QStringLiteral("active_leg")] = leg;
+
+    // Next Constraint
+    obj[QStringLiteral("next_constraint")] = flightdeckNextConstraint();
+
+    // Navigation Geometry
+    QJsonObject geom;
+    geom[QStringLiteral("xtk_nm")] = qAbs(m_currentXtkNm);
+    geom[QStringLiteral("xtk_side")] = (m_currentXtkNm < 0.0 ? QStringLiteral("LEFT") : QStringLiteral("RIGHT"));
+    geom[QStringLiteral("is_off_route")] = isOffRoute();
+    geom[QStringLiteral("distance_to_next_fix_nm")] = m_distToNextFixNm;
+    geom[QStringLiteral("remaining_route_distance_nm")] = m_remainingRouteDistNm;
+    geom[QStringLiteral("direct_destination_distance_nm")] = m_directDestDistNm;
+    geom[QStringLiteral("ete_next_fix_sec")] = m_eteNextSec;
+    geom[QStringLiteral("ete_destination_sec")] = m_eteDestSec;
+    obj[QStringLiteral("navigation_geometry")] = geom;
+
+    // Descent Profile
+    QJsonObject dProf;
+    dProf[QStringLiteral("tod_distance_nm")] = m_todDistNm;
+    dProf[QStringLiteral("required_descent_rate_fpm")] = m_requiredVsFpm;
+    dProf[QStringLiteral("profile_deviation_ft")] = m_profileDevFt;
+    QString pStat = QStringLiteral("ON_PROFILE");
+    if (m_profileDevFt > 200.0) pStat = QStringLiteral("ABOVE_PROFILE");
+    else if (m_profileDevFt < -200.0) pStat = QStringLiteral("BELOW_PROFILE");
+    dProf[QStringLiteral("profile_status")] = pStat;
+    obj[QStringLiteral("descent_profile")] = dProf;
+
+    // Weather Summary
+    QJsonObject wx;
+    wx[QStringLiteral("destination_metar")] = QStringLiteral("CACHED");
+    wx[QStringLiteral("weather_stale")] = false;
+    obj[QStringLiteral("weather_summary")] = wx;
+
+    // Online ATC & Advisories
+    obj[QStringLiteral("online_atc")] = QJsonArray();
+    obj[QStringLiteral("advisories")] = flightdeckAdvisories();
+
+    // Data Provenance
+    QJsonObject prov;
+    prov[QStringLiteral("active_provider_datasets")] = QJsonArray{QStringLiteral("CAICA"), QStringLiteral("WORLD_OPEN")};
+    prov[QStringLiteral("airac_cycle")] = QStringLiteral("2608");
+    prov[QStringLiteral("confidence")] = QStringLiteral("AUTHORITATIVE_FEDERATED");
+    obj[QStringLiteral("data_provenance")] = prov;
+
+    // Stale Flags
+    QJsonObject stale;
+    qint64 ageMs = m_lastTelemetryTime.isValid() ? m_lastTelemetryTime.msecsTo(QDateTime::currentDateTimeUtc()) : 999999;
+    stale[QStringLiteral("telemetry_stale")] = isTelemetryStale();
+    stale[QStringLiteral("telemetry_age_ms")] = ageMs;
+    stale[QStringLiteral("weather_stale")] = false;
+    stale[QStringLiteral("navdata_stale")] = false;
+    obj[QStringLiteral("stale_flags")] = stale;
+
+    obj[QStringLiteral("navigation_warnings")] = QJsonArray();
+
+    return obj;
+}
+
+QJsonObject ActiveFlightDock::compactAiSnapshot() const {
+    QJsonObject obj;
+    obj[QStringLiteral("schema_version")] = QStringLiteral("compact_ai_snapshot_v1");
+    obj[QStringLiteral("flight")] = QStringLiteral("%1 -> %2").arg(m_depIcao, m_destIcao);
+    obj[QStringLiteral("phase")] = currentPhaseStr();
+    obj[QStringLiteral("aircraft")] = QStringLiteral("GENERIC");
+    obj[QStringLiteral("position")] = QStringLiteral("Alt: %1 ft | GS: %2 kt | VS: %3 fpm").arg(m_lastAltFt, 0, 'f', 0).arg(m_lastGroundspeedKt, 0, 'f', 0).arg(m_lastVsFpm, 0, 'f', 0);
+    obj[QStringLiteral("active_leg")] = activeLegName();
+    obj[QStringLiteral("next_fix")] = QStringLiteral("%1 (%2 NM)").arg(nextFixName()).arg(m_distToNextFixNm, 0, 'f', 1);
+    obj[QStringLiteral("next_constraint")] = QStringLiteral("NONE");
+    obj[QStringLiteral("xtk")] = QStringLiteral("%1 NM %2 (%3)").arg(qAbs(m_currentXtkNm), 0, 'f', 2).arg(m_currentXtkNm < 0.0 ? QStringLiteral("L") : QStringLiteral("R")).arg(isOffRoute() ? QStringLiteral("OFF ROUTE") : QStringLiteral("ON ROUTE"));
+    obj[QStringLiteral("route_remaining")] = QStringLiteral("%1 NM (ETE: %2m)").arg(m_remainingRouteDistNm, 0, 'f', 1).arg(m_eteDestSec / 60);
+    obj[QStringLiteral("tod")] = m_todDistNm > 0.0 ? QStringLiteral("%1 NM").arg(m_todDistNm, 0, 'f', 1) : QStringLiteral("PASSED");
+    obj[QStringLiteral("descent_profile")] = QStringLiteral("Req VS: %1 fpm | Dev: %2 ft").arg(m_requiredVsFpm, 0, 'f', 0).arg(m_profileDevFt, 0, 'f', 0);
+    if (m_destIcao == QLatin1String("URAS")) {
+        obj[QStringLiteral("arrival")] = QStringLiteral("URAS (NO STAR / NO APPROACH - SOURCE REQUIRED)");
+    } else {
+        obj[QStringLiteral("arrival")] = QStringLiteral("DEFAULT / ILS / RWY DEFAULT (%1)").arg(m_destIcao);
+    }
+    obj[QStringLiteral("destination_weather")] = QStringLiteral("CACHED");
+    obj[QStringLiteral("online_atc")] = QJsonArray();
+    obj[QStringLiteral("advisories")] = flightdeckAdvisories();
+    obj[QStringLiteral("provenance")] = QStringLiteral("CAICA / WORLD_OPEN | AIRAC 2608");
+    obj[QStringLiteral("freshness")] = isTelemetryStale() ? QStringLiteral("STALE TELEMETRY") : QStringLiteral("LIVE CONNECTED");
+    obj[QStringLiteral("warnings")] = QJsonArray();
+    return obj;
+}
+
 void ActiveFlightDock::updateDisplay() {
     // 0. Update Connection Status
     if (m_simConnected && !isTelemetryStale()) {

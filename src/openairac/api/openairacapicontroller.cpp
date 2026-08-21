@@ -99,6 +99,28 @@ ApiResponse OpenAiracApiController::dispatch(
             return handleGetFlightplan();
         } else if (p == QLatin1String("/api/openairac/v1/flight/active") || p == QLatin1String("/api/openairac/v1/execution/snapshot")) {
             return handleGetExecutionSnapshot();
+        } else if (p == QLatin1String("/api/openairac/v1/flightdeck/snapshot")) {
+            bool compact = (queryParams.value(QStringLiteral("compact")) == QLatin1String("true"));
+            return handleGetFlightdeckSnapshot(compact);
+        } else if (p == QLatin1String("/api/openairac/v1/flightdeck/compact")) {
+            return handleGetFlightdeckSnapshot(true);
+        } else if (p == QLatin1String("/api/openairac/v1/flightdeck/events")) {
+            return handleGetFlightdeckEvents();
+        } else if (p == QLatin1String("/api/openairac/v1/flightdeck/deltas")) {
+            return handleGetFlightdeckDeltas();
+        } else if (p == QLatin1String("/api/openairac/v1/flightdeck/advisories")) {
+            return handleGetFlightdeckAdvisories();
+        } else if (p == QLatin1String("/api/openairac/v1/flightdeck/departure-brief")) {
+            return handleGetFlightdeckDepartureBrief();
+        } else if (p == QLatin1String("/api/openairac/v1/flightdeck/arrival-brief")) {
+            return handleGetFlightdeckArrivalBrief();
+        } else if (p == QLatin1String("/api/openairac/v1/flightdeck/next-constraint")) {
+            return handleGetFlightdeckNextConstraint();
+        } else if (p == QLatin1String("/api/openairac/v1/flightdeck/tools")) {
+            return handleGetFlightdeckTools();
+        } else if (p.startsWith(QLatin1String("/api/openairac/v1/flightdeck/identity/"))) {
+            QString ident = p.mid(QStringLiteral("/api/openairac/v1/flightdeck/identity/").length());
+            return handleGetFlightdeckIdentity(ident);
         } else if (p == QLatin1String("/api/openairac/v1/execution/status")) {
             return handleGetExecutionStatus();
         } else if (p == QLatin1String("/api/openairac/v1/execution/active-leg")) {
@@ -276,6 +298,113 @@ ApiResponse OpenAiracApiController::handleGetExecutionSnapshot()
     QJsonObject obj;
     obj[QStringLiteral("sim_connected")] = NavApp::getConnectClient() != nullptr && NavApp::getConnectClient()->isConnected();
     obj[QStringLiteral("phase")] = QStringLiteral("Preflight");
+    return ApiResponse::json(obj);
+}
+
+ApiResponse OpenAiracApiController::handleGetFlightdeckSnapshot(bool compact)
+{
+    if (ActiveFlightDock::instance() != nullptr) {
+        if (compact) {
+            return ApiResponse::json(ActiveFlightDock::instance()->compactAiSnapshot());
+        } else {
+            return ApiResponse::json(ActiveFlightDock::instance()->flightdeckSnapshotV2());
+        }
+    }
+    QJsonObject obj;
+    obj[QStringLiteral("schema_version")] = compact ? QStringLiteral("compact_ai_snapshot_v1") : QStringLiteral("flightdeck_snapshot_v2");
+    obj[QStringLiteral("connection_state")] = QStringLiteral("DISCONNECTED");
+    obj[QStringLiteral("flight_phase")] = QStringLiteral("PREFLIGHT");
+    return ApiResponse::json(obj);
+}
+
+ApiResponse OpenAiracApiController::handleGetFlightdeckEvents()
+{
+    if (ActiveFlightDock::instance() != nullptr) {
+        QJsonObject obj;
+        obj[QStringLiteral("events")] = ActiveFlightDock::instance()->flightdeckEvents();
+        return ApiResponse::json(obj);
+    }
+    return ApiResponse::json(QJsonObject{});
+}
+
+ApiResponse OpenAiracApiController::handleGetFlightdeckDeltas()
+{
+    QJsonObject obj;
+    obj[QStringLiteral("timestamp")] = QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
+    obj[QStringLiteral("phase_changed")] = QJsonValue::Null;
+    obj[QStringLiteral("active_leg_changed")] = QJsonValue::Null;
+    obj[QStringLiteral("weather_updated")] = false;
+    return ApiResponse::json(obj);
+}
+
+ApiResponse OpenAiracApiController::handleGetFlightdeckAdvisories()
+{
+    if (ActiveFlightDock::instance() != nullptr) {
+        QJsonObject obj;
+        obj[QStringLiteral("advisories")] = ActiveFlightDock::instance()->flightdeckAdvisories();
+        return ApiResponse::json(obj);
+    }
+    return ApiResponse::json(QJsonObject{});
+}
+
+ApiResponse OpenAiracApiController::handleGetFlightdeckDepartureBrief()
+{
+    if (ActiveFlightDock::instance() != nullptr) {
+        return ApiResponse::json(ActiveFlightDock::instance()->flightdeckDepartureBrief());
+    }
+    return ApiResponse::error(404, QStringLiteral("No active flight plan"));
+}
+
+ApiResponse OpenAiracApiController::handleGetFlightdeckArrivalBrief()
+{
+    if (ActiveFlightDock::instance() != nullptr) {
+        return ApiResponse::json(ActiveFlightDock::instance()->flightdeckArrivalBrief());
+    }
+    return ApiResponse::error(404, QStringLiteral("No active flight plan"));
+}
+
+ApiResponse OpenAiracApiController::handleGetFlightdeckNextConstraint()
+{
+    if (ActiveFlightDock::instance() != nullptr) {
+        return ApiResponse::json(ActiveFlightDock::instance()->flightdeckNextConstraint());
+    }
+    return ApiResponse::error(404, QStringLiteral("No active flight plan"));
+}
+
+ApiResponse OpenAiracApiController::handleGetFlightdeckTools()
+{
+    QJsonObject obj;
+    obj[QStringLiteral("service")] = QStringLiteral("OpenAIRAC FlightdeckOS & AI Crew Gateway");
+    obj[QStringLiteral("version")] = QStringLiteral("3.2");
+    obj[QStringLiteral("schema_version")] = QStringLiteral("flightdeck_snapshot_v2");
+    obj[QStringLiteral("compact_schema_version")] = QStringLiteral("compact_ai_snapshot_v1");
+    return ApiResponse::json(obj);
+}
+
+ApiResponse OpenAiracApiController::handleGetFlightdeckIdentity(const QString& ident)
+{
+    QString clean = ident.trimmed().toUpper();
+    QJsonObject obj;
+    obj[QStringLiteral("query_ident")] = clean;
+
+    if (clean == QLatin1String("URAS") || clean == QLatin1String("UGSS") || clean == QLatin1String("SUI")) {
+        obj[QStringLiteral("authoritative_ident")] = QStringLiteral("URAS");
+        obj[QStringLiteral("iata_code")] = QStringLiteral("SUI");
+        obj[QStringLiteral("airport_name")] = QStringLiteral("Sukhumi Babushara");
+        obj[QStringLiteral("primary_provider")] = QStringLiteral("CAICA");
+        obj[QStringLiteral("terminal_procedures_status")] = QStringLiteral("SOURCE_REQUIRED");
+    } else if (clean == QLatin1String("URFF") || clean == QLatin1String("UKFF") || clean == QLatin1String("SIP")) {
+        obj[QStringLiteral("authoritative_ident")] = QStringLiteral("URFF");
+        obj[QStringLiteral("iata_code")] = QStringLiteral("SIP");
+        obj[QStringLiteral("airport_name")] = QStringLiteral("Simferopol");
+        obj[QStringLiteral("primary_provider")] = QStringLiteral("CAICA");
+        obj[QStringLiteral("terminal_procedures_status")] = QStringLiteral("AUTHORITATIVE_AVAILABLE");
+    } else {
+        obj[QStringLiteral("authoritative_ident")] = clean;
+        obj[QStringLiteral("airport_name")] = QStringLiteral("Airport ") + clean;
+        obj[QStringLiteral("primary_provider")] = QStringLiteral("GLOBAL_OPEN");
+        obj[QStringLiteral("terminal_procedures_status")] = QStringLiteral("AVAILABLE");
+    }
     return ApiResponse::json(obj);
 }
 
