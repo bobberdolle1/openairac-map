@@ -108,8 +108,12 @@ struct MapAirport;
 class MapMarkers;
 namespace openairac {
 class ChartsDock;
+class ActiveFlightDock;
+class AirportWorkspace;
+class EventsDock;
+class DataManagerDialog;
+class DiagnosticsDialog;
 }
-
 
 /*
  * Main window contains all instances of controllers, widgets and managment classes.
@@ -650,9 +654,12 @@ private:
   atools::gui::HelpHandler *helpHandler = nullptr;
   atools::gui::DesktopServices *desktopServices = nullptr;
   atools::gui::DockWidgetHandler *dockHandler = nullptr;
-
   openairac::ChartsDock *chartsDock = nullptr;
-  /* Managment and controller classes */
+  openairac::ActiveFlightDock *activeFlightDock = nullptr;
+  openairac::AirportWorkspace *airportWorkspace = nullptr;
+  openairac::EventsDock *eventsDock = nullptr;
+  openairac::DataManagerDialog *dataManagerDialog = nullptr;
+  openairac::DiagnosticsDialog *diagnosticsDialog = nullptr;
   WeatherReporter *weatherReporter = nullptr;
   WindReporter *windReporter = nullptr;
   InfoController *infoController = nullptr;

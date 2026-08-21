@@ -100,7 +100,15 @@
 #include "web/webcontroller.h"
 
 #include "openairac/charts/chartsdock.h"
+#include "openairac/efb/activeflightdock.h"
+#include "openairac/efb/airportworkspace.h"
+#include "openairac/online/eventsdock.h"
 #include "openairac/weather/flightbriefingdialog.h"
+#include "openairac/product/datamanagerdialog.h"
+#include "openairac/product/diagnosticsdialog.h"
+#include "openairac/product/appupdater.h"
+#include "openairac/product/firstrunwizard.h"
+#include "openairac/openairacdbmanager.h"
 #include <marble/MarbleAboutDialog.h>
 #include <marble/MarbleModel.h>
 #include <marble/HttpDownloadManager.h>
@@ -249,15 +257,27 @@ MainWindow::MainWindow()
     chartsDock = new openairac::ChartsDock(this);
     addDockWidget(Qt::RightDockWidgetArea, chartsDock);
 
+    activeFlightDock = new openairac::ActiveFlightDock(this);
+    addDockWidget(Qt::RightDockWidgetArea, activeFlightDock);
+    tabifyDockWidget(chartsDock, activeFlightDock);
+
+    airportWorkspace = new openairac::AirportWorkspace(this);
+    addDockWidget(Qt::RightDockWidgetArea, airportWorkspace);
+    tabifyDockWidget(chartsDock, airportWorkspace);
+
+    eventsDock = new openairac::EventsDock(this);
+    addDockWidget(Qt::RightDockWidgetArea, eventsDock);
+    tabifyDockWidget(chartsDock, eventsDock);
+
     dockHandler = new atools::gui::DockWidgetHandler(this,
                                                      // Add all available dock widgets here ==========================
                                                      {ui->dockWidgetAircraft, ui->dockWidgetSearch, ui->dockWidgetProfile,
-                                                      ui->dockWidgetInformation, ui->dockWidgetRoute, chartsDock},
+                                                      ui->dockWidgetInformation, ui->dockWidgetRoute, chartsDock,
+                                                      activeFlightDock, airportWorkspace, eventsDock},
                                                      {ui->toolBarMain, ui->toolBarMap, ui->toolBarMapOptions,
                                                       ui->toolBarMapOptionsRouteAircraft, ui->toolBarMapOptionsOther,
                                                       ui->toolBarRoute, ui->toolBarView, ui->toolBarAirspaces, ui->toolBarTools},
                                                      settings.getAndStoreValue(lnm::OPTIONS_DOCKHANDLER_DEBUG, false).toBool());
-
     marbleAboutDialog = new Marble::MarbleAboutDialog(this);
     marbleAboutDialog->setApplicationTitle(QCoreApplication::applicationName());
 
@@ -974,7 +994,10 @@ void MainWindow::setupUi()
                                   ui->dockWidgetAircraft->toggleViewAction(),
                                   ui->dockWidgetProfile->toggleViewAction(),
                                   ui->dockWidgetInformation->toggleViewAction(),
-                                  chartsDock->toggleViewAction()});
+                                  chartsDock->toggleViewAction(),
+                                  activeFlightDock->toggleViewAction(),
+                                  airportWorkspace->toggleViewAction(),
+                                  eventsDock->toggleViewAction()});
   // Add toobar actions to menu
   ui->menuWindowToolbars->addActions({ui->toolBarMain->toggleViewAction(),
                                       ui->toolBarMap->toggleViewAction(),
@@ -994,6 +1017,42 @@ void MainWindow::setupUi()
   ui->toolBarView->addAction(ui->dockWidgetProfile->toggleViewAction());
   ui->toolBarView->addAction(ui->dockWidgetInformation->toggleViewAction());
 
+  // Setup OpenAIRAC Top-Level Menu
+  QMenu *menuOpenAirac = ui->menuBar->addMenu(tr("&OpenAIRAC"));
+  QAction *actDataManager = menuOpenAirac->addAction(tr("&Data & Providers Manager..."));
+  QAction *actBriefing = menuOpenAirac->addAction(tr("Flight &Briefing [Weather & Traffic]..."));
+  QAction *actDiagnostics = menuOpenAirac->addAction(tr("System &Diagnostics..."));
+  menuOpenAirac->addSeparator();
+  menuOpenAirac->addAction(airportWorkspace->toggleViewAction());
+  menuOpenAirac->addAction(activeFlightDock->toggleViewAction());
+  menuOpenAirac->addAction(chartsDock->toggleViewAction());
+  menuOpenAirac->addAction(eventsDock->toggleViewAction());
+  menuOpenAirac->addSeparator();
+  QAction *actCheckUpdates = menuOpenAirac->addAction(tr("Check for OpenAIRAC &Updates..."));
+
+  connect(actDataManager, &QAction::triggered, this, [this]() {
+    if (!dataManagerDialog) {
+      dataManagerDialog = new openairac::DataManagerDialog(this);
+    }
+    dataManagerDialog->show();
+    dataManagerDialog->raise();
+    dataManagerDialog->activateWindow();
+  });
+
+  connect(actDiagnostics, &QAction::triggered, this, [this]() {
+    if (!diagnosticsDialog) {
+      diagnosticsDialog = new openairac::DiagnosticsDialog(this);
+    }
+    diagnosticsDialog->show();
+    diagnosticsDialog->raise();
+    diagnosticsDialog->activateWindow();
+  });
+
+  connect(actBriefing, &QAction::triggered, this, &MainWindow::showFlightBriefing);
+
+  connect(actCheckUpdates, &QAction::triggered, this, []() {
+    openairac::AppUpdater::instance().checkForUpdates(false);
+  });
 }
 
 void MainWindow::clearProcedureCache()
@@ -1106,7 +1165,21 @@ void MainWindow::connectAllSlots()
 
   connect(routeController, &RouteController::routeChanged, NavApp::updateWindowTitle);
   connect(routeController, &RouteController::routeChanged, infoController, &InfoController::routeChanged);
-
+  connect(routeController, &RouteController::routeChanged, this, [this]() {
+    const Route& route = NavApp::getRouteConst();
+    if (route.hasValidDeparture() && route.hasValidDestination() && activeFlightDock != nullptr) {
+      QString dep = route.getDepartureAirportLeg().getIdent();
+      QString dest = route.getDestinationAirportLeg().getIdent();
+      QStringList wpts;
+      QList<QPair<double, double>> coords;
+      for (int i = 0; i < route.size(); ++i) {
+        const RouteLeg& leg = route.value(i);
+        wpts.append(leg.getIdent());
+        coords.append(qMakePair(static_cast<double>(leg.getPosition().getLonX()), static_cast<double>(leg.getPosition().getLatY())));
+      }
+      activeFlightDock->setFlightPlan(dep, dest, wpts, coords, 0.0);
+    }
+  });
   // Add departure and dest runway actions separately to windows since their shortcuts overlap with context menu shortcuts
   const static QList<QAction *> ACTIONS({ui->actionShowDepartureCustom, ui->actionShowApproachCustom});
   mapWidget->addActions(ACTIONS);
@@ -1124,7 +1197,11 @@ void MainWindow::connectAllSlots()
   connect(airportSearch, &SearchBaseTable::showPos, mapWidget, &MapPaintWidget::showPos);
   connect(airportSearch, &SearchBaseTable::changeSearchMark, mapWidget, &MapWidget::changeSearchMark);
   connect(airportSearch, &SearchBaseTable::showInformation, infoController, &InfoController::showInformation);
-  connect(airportSearch, &SearchBaseTable::showProcedures, searchController->getProcedureSearch(), &ProcedureSearch::showProcedures);
+  connect(airportSearch, &SearchBaseTable::showProcedures, this, [this](const map::MapAirport& airport, bool, bool) {
+    if (airportWorkspace != nullptr) {
+      airportWorkspace->setAirport(airport.getIdent());
+    }
+  });
   connect(airportSearch, &SearchBaseTable::showCustomApproach, routeController, &RouteController::showCustomApproach);
   connect(airportSearch, &SearchBaseTable::showCustomDeparture, routeController, &RouteController::showCustomDeparture);
   connect(airportSearch, &SearchBaseTable::routeSetDeparture, routeController, &RouteController::routeSetDeparture);
