@@ -6,10 +6,10 @@ No external accounts, subscriptions, or imports are required!
 
 ---
 
-> **Scenario**: Paris Charles de Gaulle (`LFPG`) to Toulouse-Blagnac (`LFBO`)  
+> **Scenario**: Paris Charles de Gaulle (`LFPG`) to Nice Côte d'Azur (`LFMN`)  
 > **Aircraft**: Airbus A320 / Boeing 737 / Generic Jet  
-> **Cruise Altitude**: FL310 (31,000 ft)  
-> **Estimated Time Enroute**: ~1h 10m
+> **Cruise Altitude**: FL330 (33,000 ft)  
+> **Estimated Time Enroute**: ~1h 15m
 
 ---
 
@@ -24,8 +24,8 @@ No external accounts, subscriptions, or imports are required!
 
 1. Open the **Flight Planning** dock on the left side of the window.
 2. In the **Departure** field, type: `LFPG` (Paris Charles de Gaulle).
-3. In the **Destination** field, type: `LFBO` (Toulouse-Blagnac).
-4. Set the **Cruise Altitude** to `31000` ft (or `FL310`).
+3. In the **Destination** field, type: `LFMN` (Nice Côte d'Azur).
+4. Set the **Cruise Altitude** to `33000` ft (or `FL330`).
 
 ---
 
@@ -33,7 +33,7 @@ No external accounts, subscriptions, or imports are required!
 
 1. In the Flight Planning dock toolbar, click the **Calculate Flight Plan** button (or press `Ctrl+Alt+C`).
 2. Select **Calculate along Airways (High Altitude)** and click **Calculate**.
-3. OpenAIRAC Map automatically computes a fuel-optimal route through official French and European airway corridors (e.g., `LFPG - OKASI - UN874 - VELIN - LFBO`).
+3. OpenAIRAC Map automatically computes a fuel-optimal route through official French and European airway corridors connecting departure and arrival fixes.
 
 ---
 
@@ -41,15 +41,14 @@ No external accounts, subscriptions, or imports are required!
 
 1. **Departure SID**:
    - Right-click `LFPG` on the map or in the flight plan table, and select **Show Departure Procedures**.
-   - Select departure runway (e.g., `Runway 27L`) and a SID procedure (e.g., `OKASI 5A`).
+   - Select departure runway (e.g. `Runway 26L`) and the official SID procedure (e.g. `OPALE 5A`).
    - Click **Insert SID into Flight Plan**.
-2. **Arrival STAR & Approach**:
-   - Right-click `LFBO` and select **Show Arrival Procedures**.
-   - Select arrival runway (e.g., `Runway 14R`) and an approach (e.g., `ILS 14R`).
-   - Select a connecting STAR (e.g., `VELIN 6A`).
+2. **Arrival Approach & STAR**:
+   - Right-click `LFMN` and select **Show Arrival Procedures**.
+   - Select arrival runway (e.g. `Runway 04L`) and the official approach (e.g. `RNP 04L` or `ILS 04L`).
    - Click **Insert Approach into Flight Plan**.
 
-Your full flight plan is now continuously connected from takeoff to landing!
+Your full flight plan is now continuously connected from takeoff to landing with 0 discontinuities!
 
 ---
 
@@ -57,10 +56,10 @@ Your full flight plan is now continuously connected from takeoff to landing!
 
 1. **Weather Briefing**:
    - Go to **OpenAIRAC → Flight Briefing [Weather & Traffic]**.
-   - Inspect live METAR observations and wind components for `LFPG` and `LFBO`.
+   - Inspect live METAR observations and wind components for `LFPG` and `LFMN`.
 2. **View Official Approach Plates**:
    - Open the **Charts** dock (`OpenAIRAC → Charts Viewer`).
-   - Search for `LFBO` and click **ILS Rwy 14R** to display the official France SIA instrument approach plate directly on your screen.
+   - Search for `LFMN` to display the official France SIA instrument approach plate directly on your screen.
 
 ---
 

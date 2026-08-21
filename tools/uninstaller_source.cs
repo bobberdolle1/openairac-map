@@ -125,8 +125,8 @@ namespace OpenAIRAC.Uninstaller
 
             try {
                 await System.Threading.Tasks.Task.Run(() => {
-                    // Remove shortcuts
-                    string startMenuDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonPrograms), "OpenAIRAC Map");
+                    // Remove Per-User shortcuts
+                    string startMenuDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), "OpenAIRAC Map");
                     if (Directory.Exists(startMenuDir)) {
                         try { Directory.Delete(startMenuDir, true); } catch {}
                     }
@@ -136,15 +136,12 @@ namespace OpenAIRAC.Uninstaller
                         try { File.Delete(desktopShortcut); } catch {}
                     }
 
-                    // Remove registry keys
-                    try {
-                        Registry.LocalMachine.DeleteSubKeyTree(@"Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenAIRAC Map", false);
-                    } catch {}
+                    // Remove HKCU registry key
                     try {
                         Registry.CurrentUser.DeleteSubKeyTree(@"Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenAIRAC Map", false);
                     } catch {}
 
-                    // Remove user settings if requested
+                    // Remove user settings if explicitly requested
                     if (removeSettingsCheckBox.Checked) {
                         string appDataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ABarthel");
                         if (Directory.Exists(appDataDir)) {

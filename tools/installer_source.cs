@@ -79,7 +79,7 @@ namespace OpenAIRAC.Installer
             };
 
             descLabel = new Label() {
-                Text = "Setup will install OpenAIRAC Map to the following destination folder.\nTo install to a different folder, click Browse and select another directory.",
+                Text = "Setup will install OpenAIRAC Map for the current user into the following folder.\nNo administrator privileges are required.",
                 Location = new Point(0, 5),
                 Size = new Size(520, 35)
             };
@@ -93,7 +93,9 @@ namespace OpenAIRAC.Installer
             };
             mainPanel.Controls.Add(destLabel);
 
-            string defaultPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "OpenAIRAC Map");
+            // Per-User Installation Path: %LOCALAPPDATA%\Programs\OpenAIRAC Map
+            string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string defaultPath = Path.Combine(localAppData, "Programs", "OpenAIRAC Map");
             pathTextBox = new TextBox() {
                 Text = defaultPath,
                 Location = new Point(0, 68),
@@ -224,14 +226,14 @@ namespace OpenAIRAC.Installer
                         File.Copy(uninstallerExePath, Path.Combine(targetDir, "Uninstall.exe"), true);
                     }
 
-                    // Register uninstaller in Windows Registry
+                    // Register uninstaller strictly in HKCU (Per-User)
                     RegisterUninstall(targetDir);
 
-                    // Create shortcuts
+                    // Create user-level shortcuts
                     string exePath = Path.Combine(targetDir, "littlenavmap.exe");
                     if (File.Exists(exePath)) {
                         if (startMenuCheckBox.Checked) {
-                            string startMenuDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonPrograms), "OpenAIRAC Map");
+                            string startMenuDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), "OpenAIRAC Map");
                             if (!Directory.Exists(startMenuDir)) {
                                 Directory.CreateDirectory(startMenuDir);
                             }
@@ -275,39 +277,21 @@ namespace OpenAIRAC.Installer
 
         private void RegisterUninstall(string installDir)
         {
-            try {
-                string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenAIRAC Map";
-                using (RegistryKey key = Registry.LocalMachine.CreateSubKey(keyPath)) {
-                    if (key != null) {
-                        key.SetValue("DisplayName", "OpenAIRAC Map 2.3.0 (64-bit)");
-                        key.SetValue("DisplayVersion", "2.3.0");
-                        key.SetValue("Publisher", "OpenAIRAC Contributors");
-                        key.SetValue("DisplayIcon", Path.Combine(installDir, "littlenavmap.exe") + ",0");
-                        key.SetValue("UninstallString", "\"" + Path.Combine(installDir, "Uninstall.exe") + "\"");
-                        key.SetValue("InstallLocation", installDir);
-                        key.SetValue("URLInfoAbout", "https://github.com/bobberdolle1/openairac-map");
-                        key.SetValue("HelpLink", "https://github.com/bobberdolle1/open-airac/tree/main/docs");
-                        key.SetValue("NoModify", 1, RegistryValueKind.DWord);
-                        key.SetValue("NoRepair", 1, RegistryValueKind.DWord);
-                    }
+            // Strictly register in HKCU for coherent Per-User installation (1 entry in Add/Remove Programs)
+            string keyPath = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenAIRAC Map";
+            using (RegistryKey key = Registry.CurrentUser.CreateSubKey(keyPath)) {
+                if (key != null) {
+                    key.SetValue("DisplayName", "OpenAIRAC Map 2.3.0 (64-bit)");
+                    key.SetValue("DisplayVersion", "2.3.0");
+                    key.SetValue("Publisher", "OpenAIRAC Contributors");
+                    key.SetValue("DisplayIcon", Path.Combine(installDir, "littlenavmap.exe") + ",0");
+                    key.SetValue("UninstallString", "\"" + Path.Combine(installDir, "Uninstall.exe") + "\"");
+                    key.SetValue("InstallLocation", installDir);
+                    key.SetValue("URLInfoAbout", "https://github.com/bobberdolle1/openairac-map");
+                    key.SetValue("HelpLink", "https://github.com/bobberdolle1/open-airac/blob/main/docs/USER_GUIDE.md");
+                    key.SetValue("NoModify", 1, RegistryValueKind.DWord);
+                    key.SetValue("NoRepair", 1, RegistryValueKind.DWord);
                 }
-            } catch {
-                // If LocalMachine fails due to permissions, write to CurrentUser
-                try {
-                    string userKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenAIRAC Map";
-                    using (RegistryKey key = Registry.CurrentUser.CreateSubKey(userKeyPath)) {
-                        if (key != null) {
-                            key.SetValue("DisplayName", "OpenAIRAC Map 2.3.0 (64-bit)");
-                            key.SetValue("DisplayVersion", "2.3.0");
-                            key.SetValue("Publisher", "OpenAIRAC Contributors");
-                            key.SetValue("DisplayIcon", Path.Combine(installDir, "littlenavmap.exe") + ",0");
-                            key.SetValue("UninstallString", "\"" + Path.Combine(installDir, "Uninstall.exe") + "\"");
-                            key.SetValue("InstallLocation", installDir);
-                            key.SetValue("URLInfoAbout", "https://github.com/bobberdolle1/openairac-map");
-                            key.SetValue("HelpLink", "https://github.com/bobberdolle1/open-airac/tree/main/docs");
-                        }
-                    }
-                } catch {}
             }
         }
 
