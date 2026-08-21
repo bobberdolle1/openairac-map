@@ -4,7 +4,7 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE.txt)
 [![Version: 2.3.0](https://img.shields.io/badge/Version-2.3.0_win64-green.svg)](https://github.com/bobberdolle1/openairac-map/releases/latest)
-[![OpenAIRAC Core](https://img.shields.io/badge/Core_Engine-v2.11.0-orange.svg)](https://github.com/bobberdolle1/open-airac)
+[![OpenAIRAC Core](https://img.shields.io/badge/Core_Engine-v2.12.0-orange.svg)](https://github.com/bobberdolle1/open-airac)
 [![Target: X-Plane & MSFS](https://img.shields.io/badge/Simulators-X--Plane_12_|_MSFS-blue.svg)](https://github.com/bobberdolle1/open-airac/blob/main/docs/SIMULATOR_SETUP.md)
 
 **Open flight-simulation navigation data, flight planner, moving map, and Electronic Flight Bag (EFB).**

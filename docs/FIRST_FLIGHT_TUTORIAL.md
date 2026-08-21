@@ -13,6 +13,21 @@ No external accounts, subscriptions, or imports are required!
 
 ---
 
+## Flight Overview & Source Truth
+
+| Parameter | Value | Provider Source |
+|---|---|---|
+| **Origin Airport** | `LFPG` (Paris Charles de Gaulle) | OurAirports / France SIA |
+| **Departure Runway** | `Runway 26L` | France SIA eAIP |
+| **Departure SID** | `OPALE 5A` (Exit: `OPALE`) | France SIA eAIP |
+| **Enroute Airways** | `OPALE -> MN080` | European ATS Airway Network |
+| **Arrival STAR** | `NONE` (Direct enroute transition) | France SIA eAIP |
+| **Destination Airport**| `LFMN` (Nice Côte d'Azur) | OurAirports / France SIA |
+| **Arrival Runway** | `Runway 04L` | France SIA eAIP |
+| **Instrument Approach**| `RNP 04L` | France SIA eAIP |
+
+---
+
 ## Step 1: Launch OpenAIRAC Map
 
 1. Start **OpenAIRAC Map** from your Start Menu or desktop shortcut (or run `littlenavmap.exe`).
@@ -33,7 +48,7 @@ No external accounts, subscriptions, or imports are required!
 
 1. In the Flight Planning dock toolbar, click the **Calculate Flight Plan** button (or press `Ctrl+Alt+C`).
 2. Select **Calculate along Airways (High Altitude)** and click **Calculate**.
-3. OpenAIRAC Map automatically computes a fuel-optimal route through official French and European airway corridors connecting departure and arrival fixes.
+3. OpenAIRAC Map automatically computes a fuel-optimal route through official French and European airway corridors connecting departure fix `OPALE` to arrival fix `MN080`.
 
 ---
 
@@ -41,12 +56,13 @@ No external accounts, subscriptions, or imports are required!
 
 1. **Departure SID**:
    - Right-click `LFPG` on the map or in the flight plan table, and select **Show Departure Procedures**.
-   - Select departure runway (e.g. `Runway 26L`) and the official SID procedure (e.g. `OPALE 5A`).
+   - Select departure runway **Runway 26L** and the official SID procedure **OPALE 5A**.
    - Click **Insert SID into Flight Plan**.
-2. **Arrival Approach & STAR**:
+2. **Arrival Approach**:
    - Right-click `LFMN` and select **Show Arrival Procedures**.
-   - Select arrival runway (e.g. `Runway 04L`) and the official approach (e.g. `RNP 04L` or `ILS 04L`).
+   - Select arrival runway **Runway 04L** and the official approach **RNP 04L**.
    - Click **Insert Approach into Flight Plan**.
+   *(Note: For this route, no STAR is required as the airway feeds directly into the RNP 04L initial approach fix).*
 
 Your full flight plan is now continuously connected from takeoff to landing with 0 discontinuities!
 
@@ -59,13 +75,13 @@ Your full flight plan is now continuously connected from takeoff to landing with
    - Inspect live METAR observations and wind components for `LFPG` and `LFMN`.
 2. **View Official Approach Plates**:
    - Open the **Charts** dock (`OpenAIRAC → Charts Viewer`).
-   - Search for `LFMN` to display the official France SIA instrument approach plate directly on your screen.
+   - Search for `LFMN` and select **RNP Rwy 04L** to display the official France SIA instrument approach plate directly on your screen.
 
 ---
 
 ## Step 6: Connect to Your Simulator
 
-1. Launch your simulator (e.g., **X-Plane 12** or **MSFS 2024 / 2020**).
+1. Launch your simulator (e.g. **X-Plane 12** or **MSFS 2024 / 2020**).
 2. Position your aircraft at a gate in `LFPG`.
 3. In OpenAIRAC Map, go to **Tools → Connect to Flight Simulator**.
 4. The status bar will show **Connected: X-Plane** or **Connected: SimConnect**.

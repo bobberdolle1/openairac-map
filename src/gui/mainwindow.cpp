@@ -892,7 +892,7 @@ void MainWindow::showAboutOpenAirac()
   QString aboutText = tr(
     "<h2>OpenAIRAC Map</h2>"
     "<p><b>Version 2.3.0</b> (OpenAIRAC 3.3 Product Release)<br/>"
-    "Core Engine: OpenAIRAC Core v2.11.0</p>"
+    "Core Engine: OpenAIRAC Core v2.12.0</p>"
     "<p><span style='background-color: #ffebee; color: #c62828; font-weight: bold; padding: 2px 6px; border-radius: 3px;'>"
     "⚠️ FOR FLIGHT SIMULATION ONLY — NEVER USE FOR REAL AVIATION</span></p>"
     "<p>OpenAIRAC Map is an open-source flight planning, moving map, and electronic flight bag (EFB) "
