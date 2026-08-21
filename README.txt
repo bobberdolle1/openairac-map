@@ -1,77 +1,52 @@
-------------------------------------------------------------------------------
--- Little Navmap -------------------------------------------------------------
-------------------------------------------------------------------------------
+==============================================================================
+-- OpenAIRAC Map -------------------------------------------------------------
+==============================================================================
 
-Little Navmap is a free open source flight planner, navigation tool, moving map, airport search and
-airport information system for Flight Simulator X, Prepar3D, Microsoft Flight Simulator 2020,
-Microsoft Flight Simulator 2024 and X-Plane.
+OpenAIRAC Map is an open-source flight navigation data system, flight planner,
+moving map, and in-flight Electronic Flight Bag (EFB) for X-Plane 12/11 and
+Microsoft Flight Simulator (MSFS 2024 / 2020).
 
-A widely configurable map display using the OpenStreetMap as a background map is only one option
-of many online or included offline maps.
-
-Navigraph provides updates for all navigation data. A cycle 1801 database is included.
-
-It supports approach and departure procedures, offers several automatic flight plan calculation
-options and multiple export formats like GFP, GPX, RTE, FLP and FMS as well as drag and drop flight
-plan editing on the map.
-
-An elevation profile is shown for the flight plan allowing to find a safe cruise altitude.
-
-Search functionality allows to look for airports, navaids or procedures by a large amount of
-criteria also including a spatial search.
-
-The program can generate an route description string from flight plans and vice versa.
-
-Little Navmap supports FSX, FSX Steam Edition, Prepar3d Versions 3, 4, 5, Microsoft Flight
-Simulator 2020, Microsoft Flight Simulator 2024, X-Plane 11 and X-Plane 12.
+⚠️ FOR FLIGHT SIMULATION ONLY — NEVER USE FOR REAL-WORLD AVIATION.
 
 ------------------------------------------------------------------------------
-
-See the Little Navmap help for more information.
-All online here: https://www.littlenavmap.org/manuals/littlenavmap/release/latest/en/
-
-------------------------------------------------------------------------------
--- INSTALLATION --------------------------------------------------------------
+-- NAVIGATION DATA & PROVIDER POLICY -----------------------------------------
 ------------------------------------------------------------------------------
 
-See online manual for installation instructions:
-https://www.littlenavmap.org/manuals/littlenavmap/release/latest/en/INSTALLATION.html
+OpenAIRAC Map is powered by the OpenAIRAC temporal aeronautical engine:
+
+* Public Baseline Included: Free worldwide navigation baseline pre-configured
+  from FAA CIFP, OurAirports, OpenFlightmaps, and France SIA.
+* Commercial Paywalls NOT Bundled: OpenAIRAC NEVER bundles or redistributes
+  proprietary datasets (Navigraph, Jeppesen, NavDataPro).
+* Local AIP Vault: Users can import their own legally acquired national AIP
+  packages (such as Russian CAICA) locally via OpenAIRAC -> Data & Providers
+  Manager for private personal simulation use.
 
 ------------------------------------------------------------------------------
--- OTHER PROGRAMS INCLUDED ---------------------------------------------------
+-- QUICK START ---------------------------------------------------------------
 ------------------------------------------------------------------------------
 
-This archieve can contain two additional programs depending on downloaded version:
-
-Little Navconnect
-=================
-
-An agent connecting Little Navmap with a FSX, Prepar3D or X-Plane flight simulator usable
-for remote and networked connections.
-
-Little Xpconnect
-=================
-
-A X-Plane plugin that allows to use Little Navmap as a moving map when flying.
-Little Navmap can connect locally to this plugin. Remote or networked setups can be done with
-the Little Navconnect program.
-
-Apple macOS users: Keep in mind that you have to clear the quarantine flag for *Little Xpconnect*
-on installation or update. See
-https://www.littlenavmap.org/manuals/littlenavmap/release/latest/en/XPCONNECT.html#clearing-the-quarantine-flag-on-macos
-for more information.
+1. Run the installer or extract the portable ZIP archive to any folder.
+2. Launch "littlenavmap.exe" (OpenAIRAC Map).
+3. The First-Run Setup Wizard will guide you through simulator detection and
+   initial baseline data verification.
+4. Plan a flight using the "Flight Planning" dock, view weather & VATSIM traffic,
+   and connect to your simulator via Tools -> Connect to Flight Simulator.
 
 ------------------------------------------------------------------------------
--- LICENSE -------------------------------------------------------------------
+-- DOCUMENTATION & SUPPORT ---------------------------------------------------
 ------------------------------------------------------------------------------
 
-This software is licensed under GPL3 or any later version.
+* OpenAIRAC Documentation: https://github.com/bobberdolle1/open-airac/tree/main/docs
+* OpenAIRAC Map Repository: https://github.com/bobberdolle1/openairac-map
+* OpenAIRAC Core Engine: https://github.com/bobberdolle1/open-airac
+* Report Issues: https://github.com/bobberdolle1/openairac-map/issues
 
-The source code for this application is available at Github:
-https://github.com/albar965/atools
-https://github.com/albar965/littlenavmap
+------------------------------------------------------------------------------
+-- CREDITS & ATTRIBUTION -----------------------------------------------------
+------------------------------------------------------------------------------
 
-The source code for Little Navconnect is available at Github too:
-https://github.com/albar965/littlenavconnect
-
-Copyright 2015-2025 Alexander Barthel (https://www.littlenavmap.org/contact.html).
+OpenAIRAC Map is licensed under the GNU General Public License v3.0 (GPLv3).
+OpenAIRAC Map is proudly derived from Little Navmap by Alexander Barthel and
+contributors, with gratitude to the Little Navmap, KDE Marble, and Qt communities.
+==============================================================================

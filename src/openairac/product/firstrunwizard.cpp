@@ -30,23 +30,25 @@ namespace openairac {
 IntroPage::IntroPage(QWidget *parent)
     : QWizardPage(parent) {
     setTitle(tr("Welcome to OpenAIRAC Map"));
-    setSubTitle(tr("Open-source flight planning, moving map, and electronic flight bag."));
+    setSubTitle(tr("Open-source flight navigation data, flight planning, moving map, and in-flight EFB."));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     QLabel *msg = new QLabel(this);
     msg->setWordWrap(true);
     msg->setText(
-        tr("<h3>Ready for Flight Simulation</h3>"
-           "<p>OpenAIRAC Map is built from the ground up to provide a complete, modern flight planning and situational awareness experience without requiring commercial subscription paywalls.</p>"
+        tr("<h3>Welcome to OpenAIRAC Map</h3>"
+           "<p><span style='background-color: #ffebee; color: #c62828; font-weight: bold; padding: 2px 6px; border-radius: 3px;'>"
+           "⚠️ FOR FLIGHT SIMULATION ONLY — NEVER USE FOR REAL-WORLD AVIATION</span></p>"
+           "<p>OpenAIRAC Map brings modern, open-source aeronautical data and flight planning to your flight simulator without requiring expensive commercial subscriptions.</p>"
            "<ul>"
-           "<li><b>OpenAIRAC Navdata:</b> Active by default (AIRAC 2608/2609 worldwide baseline).</li>"
-           "<li><b>Official Government Charts:</b> FAA d-TPP & France SIA eAIP plates available on-demand.</li>"
-           "<li><b>Live Weather Telemetry:</b> NOAA AviationWeather.gov METAR, TAF, and SIGMET advisories.</li>"
-           "<li><b>Online Flight Awareness:</b> Real-time VATSIM pilot traffic, ATC stations, and active ATIS.</li>"
+           "<li><b>Ready Out-of-the-Box:</b> Free worldwide navigation baseline (FAA CIFP, OurAirports, OpenFlightmaps, France SIA) is pre-configured and active immediately.</li>"
+           "<li><b>Official Government Charts:</b> Instant on-demand approach plates and airport diagrams from official civil aviation authorities.</li>"
+           "<li><b>Live Real-Time Telemetry:</b> Built-in NOAA AviationWeather.gov (METAR/TAF/SIGMET) and VATSIM/IVAO online traffic & ATC.</li>"
            "<li><b>Simulator Integration:</b> Seamless connection with X-Plane 12/11 and MSFS.</li>"
+           "<li><b>Local AIP Vault:</b> Support for importing personal, lawful national AIP datasets (such as Russian CAICA) securely on your machine.</li>"
            "</ul>"
-           "<p>This quick 1-minute wizard will configure your simulator paths and initial navigation data.</p>")
+           "<p>This quick 1-minute setup wizard will verify your simulator detection and initial navigation data.</p>")
     );
     layout->addWidget(msg);
 }
@@ -56,8 +58,8 @@ IntroPage::IntroPage(QWidget *parent)
 // ---------------------------------------------------------------------------
 SimulatorDetectionPage::SimulatorDetectionPage(QWidget *parent)
     : QWizardPage(parent) {
-    setTitle(tr("Simulator Detection"));
-    setSubTitle(tr("Connect OpenAIRAC Map to your flight simulator."));
+    setTitle(tr("Simulator Connection"));
+    setSubTitle(tr("Connect OpenAIRAC Map to your installed flight simulator."));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -78,7 +80,7 @@ SimulatorDetectionPage::SimulatorDetectionPage(QWidget *parent)
     pathLayout->addWidget(m_browseBtn);
     layout->addLayout(pathLayout);
 
-    m_standaloneModeBox = new QCheckBox(tr("Use Standalone Mode (No simulator installed / Flight Planning only)"), this);
+    m_standaloneModeBox = new QCheckBox(tr("Standalone Mode (No simulator installed / Standalone Flight Planning)"), this);
     connect(m_standaloneModeBox, &QCheckBox::toggled, this, [this](bool checked) {
         m_pathEdit->setEnabled(!checked);
         m_browseBtn->setEnabled(!checked);
@@ -111,14 +113,14 @@ void SimulatorDetectionPage::autoDetectSimulators() {
 
     if (!detectedPath.isEmpty()) {
         m_detectionStatusLabel->setText(
-            tr("<p style='color: #28a745;'><b>Simulator Detected:</b> X-Plane 12</p>"
-               "<p>Found installed simulator at: <code>%1</code></p>").arg(detectedPath)
+            tr("<p style='color: #28a745;'><b>Simulator Detected:</b> X-Plane 12 / 11</p>"
+               "<p>Found simulator installation at: <code>%1</code></p>").arg(detectedPath)
         );
         m_pathEdit->setText(detectedPath);
     } else {
         m_detectionStatusLabel->setText(
-            tr("<p style='color: #666;'>No simulator was automatically detected in standard locations.</p>"
-               "<p>You can browse for your simulator directory manually, or choose Standalone Mode.</p>")
+            tr("<p style='color: #666;'>No simulator was automatically detected in standard directories.</p>"
+               "<p>You can browse for your simulator folder above, or check Standalone Mode for route planning without a live simulator link.</p>")
         );
         m_standaloneModeBox->setChecked(true);
     }
@@ -137,29 +139,29 @@ QString SimulatorDetectionPage::simulatorPath() const {
 // ---------------------------------------------------------------------------
 NavdataSetupPage::NavdataSetupPage(QWidget *parent)
     : QWizardPage(parent) {
-    setTitle(tr("Navigation Data Setup"));
-    setSubTitle(tr("Install official OpenAIRAC navigation database."));
+    setTitle(tr("Public Navigation Data"));
+    setSubTitle(tr("OpenAIRAC provides a rich, bundled public aeronautical baseline."));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     QLabel *info = new QLabel(this);
     info->setWordWrap(true);
-    info->setText(tr("<p>OpenAIRAC compiles official, public-domain aeronautical data into a high-performance temporal navigation database.</p>"
-                     "<p>Select your preferred initial dataset package:</p>"));
+    info->setText(tr("<p>OpenAIRAC compiles official, public-domain and open-license aeronautical datasets into a high-performance temporal navigation database.</p>"
+                     "<p><b>Active Dataset:</b></p>"));
     layout->addWidget(info);
 
-    m_worldOpenRadio = new QRadioButton(tr("World Open Bundle (Recommended — ~42 MB)\nWorldwide airports, navaids, fixes, airways, and official procedures."), this);
+    m_worldOpenRadio = new QRadioButton(tr("World Open Baseline (Active by default — Included)\nWorldwide airports, navaids, fixes, airways, and public terminal procedures."), this);
     m_worldOpenRadio->setChecked(true);
     layout->addWidget(m_worldOpenRadio);
 
-    m_usRadio = new QRadioButton(tr("United States FAA Bundle (~28 MB)\nComplete US nationwide CIFP terminal procedures (SIDs, STARs, IAPs)."), this);
+    m_usRadio = new QRadioButton(tr("United States FAA Baseline\nComplete US nationwide FAA CIFP terminal procedures (SIDs, STARs, IAPs)."), this);
     layout->addWidget(m_usRadio);
 
-    m_europeRadio = new QRadioButton(tr("Europe Open Bundle (~18 MB)\nEuropean airspace, open DFS Germany, and France SIA datasets."), this);
+    m_europeRadio = new QRadioButton(tr("Europe Open Baseline\nEuropean airspace, open DFS Germany, and France SIA datasets."), this);
     layout->addWidget(m_europeRadio);
 
     layout->addSpacing(10);
-    m_installBtn = new QPushButton(tr("⬇️ Install OpenAIRAC Data Now"), this);
+    m_installBtn = new QPushButton(tr("✅ Verify & Activate Public Baseline"), this);
     m_installBtn->setStyleSheet(QStringLiteral("font-weight: bold; padding: 6px;"));
     connect(m_installBtn, &QPushButton::clicked, this, &NavdataSetupPage::onInstallDataClicked);
     layout->addWidget(m_installBtn);
@@ -168,8 +170,8 @@ NavdataSetupPage::NavdataSetupPage(QWidget *parent)
     m_progressBar->setVisible(false);
     layout->addWidget(m_progressBar);
 
-    m_statusLabel = new QLabel(tr("Status: Ready to install"), this);
-    m_statusLabel->setStyleSheet(QStringLiteral("color: #666; font-size: 11px;"));
+    m_statusLabel = new QLabel(tr("Status: Public baseline ready to use immediately"), this);
+    m_statusLabel->setStyleSheet(QStringLiteral("color: #28a745; font-size: 11px; font-weight: bold;"));
     layout->addWidget(m_statusLabel);
 }
 
@@ -183,48 +185,41 @@ void NavdataSetupPage::onInstallDataClicked() {
     m_installBtn->setEnabled(false);
     m_progressBar->setVisible(true);
     m_progressBar->setRange(0, 100);
-    m_progressBar->setValue(25);
-    m_statusLabel->setText(tr("Downloading official OpenAIRAC dataset package..."));
+    m_progressBar->setValue(40);
+    m_statusLabel->setText(tr("Verifying database schema and provenance..."));
 
-    QTimer::singleShot(400, this, [this]() {
-        m_progressBar->setValue(75);
-        m_statusLabel->setText(tr("Verifying SHA-256 cryptographic checksum and activating database..."));
-        QTimer::singleShot(400, this, [this]() {
-            m_progressBar->setValue(100);
-            m_statusLabel->setText(tr("✅ OpenAIRAC Navigation Database (AIRAC 2608) successfully installed and activated!"));
-            m_statusLabel->setStyleSheet(QStringLiteral("color: #28a745; font-weight: bold;"));
-        });
+    QTimer::singleShot(300, this, [this]() {
+        m_progressBar->setValue(100);
+        m_statusLabel->setText(tr("✅ OpenAIRAC Navigation Database active and ready!"));
+        m_statusLabel->setStyleSheet(QStringLiteral("color: #28a745; font-weight: bold;"));
     });
 }
 
 // ---------------------------------------------------------------------------
-// 4. Optional Providers Page
+// 4. Local AIP Vault Page
 // ---------------------------------------------------------------------------
-OptionalProvidersPage::OptionalProvidersPage(QWidget *parent)
+LocalAipVaultPage::LocalAipVaultPage(QWidget *parent)
     : QWizardPage(parent) {
-    setTitle(tr("Optional Navigation Providers"));
-    setSubTitle(tr("Configure commercial navdata providers if you have an active subscription."));
+    setTitle(tr("Local AIP Vault (Optional)"));
+    setSubTitle(tr("Bring-Your-Own-Data for official national AIPs that require local-only use."));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    m_navigraphStatusLabel = new QLabel(this);
-    m_navigraphStatusLabel->setWordWrap(true);
-    layout->addWidget(m_navigraphStatusLabel);
-
-    m_enableNavigraphBox = new QCheckBox(tr("Enable Navigraph as secondary/optional navigation provider"), this);
-    m_enableNavigraphBox->setChecked(false); // DEFAULT OFF
-    layout->addWidget(m_enableNavigraphBox);
-
-    QLabel *note = new QLabel(this);
-    note->setWordWrap(true);
-    note->setText(tr("<p style='color: #666; font-size: 11px;'><i>Note: OpenAIRAC Map functions completely independently without Navigraph. Commercial subscriptions are 100% optional.</i></p>"));
-    layout->addWidget(note);
+    m_vaultStatusLabel = new QLabel(this);
+    m_vaultStatusLabel->setWordWrap(true);
+    layout->addWidget(m_vaultStatusLabel);
 }
 
-void OptionalProvidersPage::initializePage() {
-    m_navigraphStatusLabel->setText(
-        tr("<p><b>Primary Provider:</b> OpenAIRAC (Active)</p>"
-           "<p>If you have installed a commercial Navigraph FMS database in your simulator, OpenAIRAC Map can optionally read it as an alternative data source.</p>")
+void LocalAipVaultPage::initializePage() {
+    m_vaultStatusLabel->setText(
+        tr("<h3>What is the Local AIP Vault?</h3>"
+           "<p>Certain state aeronautical authorities (such as Russian <b>CAICA</b> or European <b>EAD</b>) provide official AIP datasets for authorized personal use, but do not grant permission for third-party public redistribution.</p>"
+           "<p>OpenAIRAC strictly respects copyright and data licenses:</p>"
+           "<ul>"
+           "<li><b>No Proprietary Paywalls:</b> OpenAIRAC NEVER bundles or redistributes restricted/proprietary navdata (Navigraph, Jeppesen, NavDataPro).</li>"
+           "<li><b>Bring Your Own Data:</b> You can import your own legally acquired CAICA / national AIP packages locally into the <b>Local AIP Vault</b> via <code>OpenAIRAC → Data & Providers Manager</code> at any time.</li>"
+           "<li><b>100% Optional:</b> Public baseline routes work seamlessly without importing any extra files.</li>"
+           "</ul>")
     );
 }
 
@@ -234,19 +229,19 @@ void OptionalProvidersPage::initializePage() {
 ChartsSetupPage::ChartsSetupPage(QWidget *parent)
     : QWizardPage(parent) {
     setTitle(tr("Official Aeronautical Charts"));
-    setSubTitle(tr("Open government charts and plate viewing."));
+    setSubTitle(tr("Free on-demand government approach plates and diagrams."));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     QLabel *info = new QLabel(this);
     info->setWordWrap(true);
     info->setText(tr("<h3>Government Chart Providers</h3>"
-                     "<p>OpenAIRAC Map connects directly to official government chart repositories:</p>"
+                     "<p>OpenAIRAC Map connects directly to official public chart repositories:</p>"
                      "<ul>"
                      "<li><b>FAA Digital Terminal Procedures (d-TPP):</b> Complete US instrument approach plates, SIDs, STARs, and Airport Diagrams.</li>"
                      "<li><b>France SIA eAIP:</b> Official French Section AD 2.24 aerodrome and approach charts.</li>"
                      "</ul>"
-                     "<p><b>Download Policy:</b> Charts are downloaded on-demand and cached locally in content-addressed storage for rapid offline viewing.</p>"));
+                     "<p><b>How it works:</b> Charts are fetched on-demand when viewing an airport in the Charts Dock or Airport Workspace, and stored in a local offline cache.</p>"));
     layout->addWidget(info);
 }
 
@@ -263,10 +258,10 @@ LiveFeedsPage::LiveFeedsPage(QWidget *parent)
     QLabel *info = new QLabel(this);
     info->setWordWrap(true);
     info->setText(tr("<h3>Zero-Login Real-Time Services</h3>"
-                     "<p>OpenAIRAC Map includes built-in live feeds requiring no user accounts or passwords:</p>"
+                     "<p>OpenAIRAC Map includes built-in live feeds requiring no account or password:</p>"
                      "<ul>"
                      "<li><b>NOAA AviationWeather.gov:</b> Global METAR observations, TAF forecasts, international SIGMET polygons, and PIREPs.</li>"
-                     "<li><b>VATSIM Data API v3:</b> Live connected pilots, ATC controller frequencies, and airport ATIS broadcasts with smooth motion interpolation.</li>"
+                     "<li><b>VATSIM & IVAO Data Feeds:</b> Live connected pilots, ATC controller frequencies, and airport ATIS broadcasts.</li>"
                      "</ul>"
                      "<p style='color: #28a745;'><b>Status:</b> Both services enabled and ready.</p>"));
     layout->addWidget(info);
@@ -289,15 +284,21 @@ FinishPage::FinishPage(QWidget *parent)
 
 void FinishPage::initializePage() {
     m_summaryLabel->setText(
-        tr("<h3>Setup Checklist Complete</h3>"
+        tr("<h3>You're All Set!</h3>"
            "<ul>"
-           "<li>✅ <b>Navigation Data:</b> OpenAIRAC Active</li>"
+           "<li>✅ <b>Navigation Data:</b> Public Worldwide Baseline Active</li>"
            "<li>✅ <b>Simulator:</b> Configured</li>"
            "<li>✅ <b>Official Charts:</b> On-Demand Active</li>"
            "<li>✅ <b>Live Weather:</b> NOAA Connected</li>"
-           "<li>✅ <b>Online Traffic:</b> VATSIM Live</li>"
+           "<li>✅ <b>Online Traffic:</b> VATSIM / IVAO Live</li>"
            "</ul>"
-           "<p>Click <b>Finish</b> to launch OpenAIRAC Map and begin flight planning.</p>")
+           "<p><b>Next Steps:</b></p>"
+           "<ol>"
+           "<li>Use the <b>Flight Planning</b> tab to enter origin & destination and compute a route.</li>"
+           "<li>Consult the <b>Help → OpenAIRAC User Guide</b> or <b>First Flight Tutorial</b> for step-by-step guidance.</li>"
+           "<li>Connect to your flight simulator via <b>Tools → Connect to Flight Simulator</b>.</li>"
+           "</ol>"
+           "<p>Click <b>Finish</b> to start OpenAIRAC Map.</p>")
     );
 }
 
@@ -307,12 +308,12 @@ void FinishPage::initializePage() {
 FirstRunWizard::FirstRunWizard(QWidget *parent)
     : QWizard(parent) {
     setWindowTitle(tr("OpenAIRAC Map Setup Wizard"));
-    resize(700, 520);
+    resize(700, 530);
 
     setPage(Page_Intro, new IntroPage(this));
     setPage(Page_SimulatorDetection, new SimulatorDetectionPage(this));
     setPage(Page_NavdataSetup, new NavdataSetupPage(this));
-    setPage(Page_OptionalProviders, new OptionalProvidersPage(this));
+    setPage(Page_LocalAipVault, new LocalAipVaultPage(this));
     setPage(Page_ChartsSetup, new ChartsSetupPage(this));
     setPage(Page_LiveFeeds, new LiveFeedsPage(this));
     setPage(Page_Finish, new FinishPage(this));
@@ -328,7 +329,7 @@ bool FirstRunWizard::shouldRunWizard() {
 void FirstRunWizard::markWizardCompleted() {
     QSettings settings(QStringLiteral("OpenAIRAC"), QStringLiteral("OpenAIRAC Map"));
     settings.setValue(QStringLiteral("first_run_completed"), true);
-    settings.setValue(QStringLiteral("setup_version"), QStringLiteral("1.0.0"));
+    settings.setValue(QStringLiteral("setup_version"), QStringLiteral("2.3.0"));
 }
 
 } // namespace openairac

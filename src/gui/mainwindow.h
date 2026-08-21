@@ -537,9 +537,10 @@ private:
   bool openInSkyVector();
   void clearProcedureCache();
 
+  void showAboutOpenAirac();
+  void openLogFolder();
   void openLogFile();
   void openConfigFile();
-
   /* Emit a signal windowShown after first appearance */
   virtual void showEvent(QShowEvent *event) override;
 

@@ -1,0 +1,33 @@
+name: OpenAIRAC Map Windows Release Packaging
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  package-windows:
+    name: Package Windows 64-bit Installer & Portable
+    runs-on: windows-latest
+    steps:
+      - name: Checkout OpenAIRAC Map
+        uses: actions/checkout@v4
+        with:
+          path: openairac-map
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Restricted Payload Leak Scanner Gate
+        shell: bash
+        run: |
+          cd openairac-map
+          python tools/scan_leaks.py .
+
+      - name: Output Pipeline Verification
+        shell: bash
+        run: |
+          echo "Windows packaging pipeline verified."

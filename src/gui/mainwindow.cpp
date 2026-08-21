@@ -127,7 +127,10 @@
 #include <QToolTip>
 #include <QActionGroup>
 #include <QTimeZone>
-
+#include <QDesktopServices>
+#include <QUrl>
+#include <QMessageBox>
+#include <QStandardPaths>
 #include "ui_mainwindow.h"
 
 // Shutdown will be delayed if closing early to avoid deadlocks in Marble
@@ -884,6 +887,47 @@ void MainWindow::showOfflineHelp()
 {
   desktopServices->openFile(HelpHandler::getHelpFile(lnm::helpOfflineFile, OptionData::getLanguageFromConfigFile()));
 }
+void MainWindow::showAboutOpenAirac()
+{
+  QString aboutText = tr(
+    "<h2>OpenAIRAC Map</h2>"
+    "<p><b>Version 2.3.0</b> (OpenAIRAC 3.3 Product Release)<br/>"
+    "Core Engine: OpenAIRAC Core v2.11.0</p>"
+    "<p><span style='background-color: #ffebee; color: #c62828; font-weight: bold; padding: 2px 6px; border-radius: 3px;'>"
+    "⚠️ FOR FLIGHT SIMULATION ONLY — NEVER USE FOR REAL AVIATION</span></p>"
+    "<p>OpenAIRAC Map is an open-source flight planning, moving map, and electronic flight bag (EFB) "
+    "powered by the OpenAIRAC temporal aeronautical navigation data engine.</p>"
+    "<h4>Key Capabilities</h4>"
+    "<ul>"
+    "<li><b>Free Public Navdata:</b> Worldwide navigation baseline from FAA CIFP, OurAirports, OpenFlightmaps, France SIA.</li>"
+    "<li><b>Local AIP Vault:</b> Secure, local-only import for personal national AIP packages (e.g. Russian CAICA).</li>"
+    "<li><b>Official Charts:</b> On-demand FAA d-TPP and France SIA terminal plates.</li>"
+    "<li><b>Live Weather & Traffic:</b> Real-time NOAA AviationWeather.gov and VATSIM / IVAO network feeds.</li>"
+    "<li><b>AI Crew Gateway:</b> Localhost REST API for FlightdeckOS and companion EFB tools.</li>"
+    "</ul>"
+    "<hr/>"
+    "<h4>License & Attribution</h4>"
+    "<p>Licensed under the <b>GNU General Public License v3.0 (GPLv3)</b>.</p>"
+    "<p>OpenAIRAC Map is proudly derived from <b>Little Navmap</b> by <b>Alexander Barthel</b> and contributors. "
+    "We gratefully acknowledge the Little Navmap project, KDE Marble virtual globe, and the Qt open-source community.</p>"
+    "<p>Project Homepage: <a href='https://github.com/bobberdolle1/openairac-map'>github.com/bobberdolle1/openairac-map</a><br/>"
+    "Core Repository: <a href='https://github.com/bobberdolle1/open-airac'>github.com/bobberdolle1/open-airac</a></p>"
+  );
+
+  QMessageBox::about(this, tr("About OpenAIRAC Map"), aboutText);
+}
+void MainWindow::openLogFolder()
+{
+  QString logDir;
+  const QStringList logFiles = atools::logging::LoggingHandler::getLogFiles(false);
+  if (!logFiles.isEmpty()) {
+    logDir = QFileInfo(logFiles.first()).absolutePath();
+  }
+  if (logDir.isEmpty() || !QDir(logDir).exists()) {
+    logDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+  }
+  QDesktopServices::openUrl(QUrl::fromLocalFile(logDir));
+}
 
 void MainWindow::openLogFile()
 {
@@ -895,7 +939,6 @@ void MainWindow::openConfigFile()
 {
   desktopServices->openFile(Settings::getFilename());
 }
-
 void MainWindow::setupUi()
 {
   // Reduce large icons on mac once intially
@@ -1028,7 +1071,33 @@ void MainWindow::setupUi()
   menuOpenAirac->addAction(chartsDock->toggleViewAction());
   menuOpenAirac->addAction(eventsDock->toggleViewAction());
   menuOpenAirac->addSeparator();
+  QAction *actUserGuide = menuOpenAirac->addAction(tr("OpenAIRAC &User Guide..."));
+  QAction *actFirstFlight = menuOpenAirac->addAction(tr("Getting Started & &First Flight Tutorial..."));
+  QAction *actProvidersGuide = menuOpenAirac->addAction(tr("Data & &Providers Guide [Local AIP Vault]..."));
+  QAction *actSimGuide = menuOpenAirac->addAction(tr("&Simulator Connection Guide..."));
+  QAction *actReportIssue = menuOpenAirac->addAction(tr("&Report an Issue (GitHub)..."));
+  QAction *actOpenLogs = menuOpenAirac->addAction(tr("Open &Log Folder..."));
+  menuOpenAirac->addSeparator();
   QAction *actCheckUpdates = menuOpenAirac->addAction(tr("Check for OpenAIRAC &Updates..."));
+  QAction *actAboutOpenAirac = menuOpenAirac->addAction(tr("&About OpenAIRAC Map..."));
+
+  connect(actUserGuide, &QAction::triggered, this, []() {
+    QDesktopServices::openUrl(QUrl(QStringLiteral("https://github.com/bobberdolle1/open-airac/blob/main/docs/USER_GUIDE.md")));
+  });
+  connect(actFirstFlight, &QAction::triggered, this, []() {
+    QDesktopServices::openUrl(QUrl(QStringLiteral("https://github.com/bobberdolle1/open-airac/blob/main/docs/FIRST_FLIGHT_TUTORIAL.md")));
+  });
+  connect(actProvidersGuide, &QAction::triggered, this, []() {
+    QDesktopServices::openUrl(QUrl(QStringLiteral("https://github.com/bobberdolle1/open-airac/blob/main/docs/DATA_AND_PROVIDERS.md")));
+  });
+  connect(actSimGuide, &QAction::triggered, this, []() {
+    QDesktopServices::openUrl(QUrl(QStringLiteral("https://github.com/bobberdolle1/open-airac/blob/main/docs/SIMULATOR_SETUP.md")));
+  });
+  connect(actReportIssue, &QAction::triggered, this, []() {
+    QDesktopServices::openUrl(QUrl(QStringLiteral("https://github.com/bobberdolle1/openairac-map/issues")));
+  });
+  connect(actOpenLogs, &QAction::triggered, this, &MainWindow::openLogFolder);
+  connect(actAboutOpenAirac, &QAction::triggered, this, &MainWindow::showAboutOpenAirac);
 
   connect(actDataManager, &QAction::triggered, this, [this]() {
     if (!dataManagerDialog) {
@@ -1526,7 +1595,7 @@ void MainWindow::connectAllSlots()
   connect(ui->actionHelpContentsOffline, &QAction::triggered, this, &MainWindow::showOfflineHelp);
   connect(ui->actionHelpDownloads, &QAction::triggered, this, &MainWindow::showOnlineDownloads);
   connect(ui->actionHelpChangelog, &QAction::triggered, this, &MainWindow::showChangelog);
-  connect(ui->actionHelpAbout, &QAction::triggered, helpHandler, &atools::gui::HelpHandler::about);
+  connect(ui->actionHelpAbout, &QAction::triggered, this, &MainWindow::showAboutOpenAirac);
   connect(ui->actionHelpAboutQt, &QAction::triggered, helpHandler, &atools::gui::HelpHandler::aboutQt);
   connect(ui->actionHelpCheckUpdates, &QAction::triggered, this, &MainWindow::checkForUpdates);
   connect(ui->actionHelpDonate, &QAction::triggered, this, &MainWindow::showDonationPage);
@@ -3736,62 +3805,13 @@ void MainWindow::mainWindowShownDelayed()
   // First installation actions ====================================================
 
   Settings& settings = Settings::instance();
-#ifdef DEBUG_INFORMATION_NO_STARTUP_MESSAGES
-  if(false)
-#else
-  if(settings.valueBool(lnm::MAINWINDOW_FIRSTAPPLICATIONSTART, true))
-#endif
+#ifndef DEBUG_INFORMATION_NO_STARTUP_MESSAGES
+  if (settings.valueBool(lnm::MAINWINDOW_FIRSTAPPLICATIONSTART, true) || openairac::FirstRunWizard::shouldRunWizard())
   {
     settings.setValue(lnm::MAINWINDOW_FIRSTAPPLICATIONSTART, false);
-
-    QString text = tr("<html>"
-                        "<head><style>body { font-size: large; white-space: pre; }</style></head>"
-                          "<body>"
-                            "<h2>Welcome to Little Navmap</h2>"
-                              "<p>This seems to be the first time you are installing the program.</p>"
-                                "<p>In the following several dialog windows and a web page will<br/>"
-                                "open to guide you through the first steps:</p>"
-                                "<ol>"
-                                  "<li>Web page in the online user manual showing<br/>"
-                                  "important information for first time users.</li>"
-                                  "<li>A dialog window which allows to create a<br/>"
-                                  "directory structure to save your files.<br/>"
-                                  "You can do this later in menu \"Tools\" -> \"Create Directory Structure\".<br/>"
-                                  "This step is optional.</li>"
-                                  "<li>The dialog window \"Load Scenery Library\" opens to load the<br/>"
-                                  "simulator scenery into the Little Navmap database.<br/>"
-                                  "This process runs in the background.<br/>"
-                                  "You can start this manually in the menu<br/>"
-                                  "\"Scenery Library\" -> \"Load Scenery Library\".</li>"
-                                  "<li>The connection dialog window opens allowing to attach Little Navmap<br/>"
-                                  "to a simulator while flying.<br/>"
-                                  "Do this manually in menu \"Tools\" -> \"Connect to Flight Simulator\".</li>"
-                                "</ol>"
-                                "<p>You can also skip all these steps and run them later.</p>"
-                                  "<p>See the help menu to access the online user manual and tutorials.</p>"
-                                  "</body>"
-                                "</html>");
-
-    int retval = atools::gui::Dialog::information(this, text, QMessageBox::Ok, QMessageBox::Cancel);
-
-    if(retval == QMessageBox::Ok)
-    {
-      // Open a start page in the web browser ============================
-      HelpHandler::openHelpUrlWeb(this, lnm::helpOnlineStartUrl, lnm::helpLanguageOnline());
-
-      // Create recommended folder structure if user confirms =========================================
-      runDirTool(false /* manual */);
-
-      // Show the scenery database dialog on first start
-      if(databaseManager->hasInstalledSimulators())
-      {
-        // Found simulators let the user create new databases
-        databaseManager->loadScenery();
-
-        // Open connection dialog ============================
-        NavApp::getConnectClient()->connectToServerDialog();
-      }
-      // else warning was already shown above
+    openairac::FirstRunWizard wizard(this);
+    if (wizard.exec() == QDialog::Accepted) {
+      openairac::FirstRunWizard::markWizardCompleted();
     }
   }
   else if(databasesErased)
@@ -3801,6 +3821,7 @@ void MainWindow::mainWindowShownDelayed()
     if(databaseManager->hasInstalledSimulators())
       databaseManager->loadScenery();
   }
+#endif
 
   // Checks if version of database is smaller than application database version and shows a warning dialog if it is
   databaseManager->checkDatabaseVersion();

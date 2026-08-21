@@ -1,17 +1,32 @@
-# OpenAIRAC Map — Procedure Sources & Taxonomy (v1.1.0)
+# OpenAIRAC Procedure Sources & Taxonomy Specification (v2.1.0)
 
-## 1. Source Taxonomy & Visual Badges
+## 1. The Source Taxonomy
 
-OpenAIRAC Map displays clear source badges to identify how terminal procedures are sourced:
+Aviation data exists across distinct legal, technical, and structural formats. OpenAIRAC defines four first-class source taxonomy classes:
 
-* **`[DATASET]`**: Complete machine-readable datasets (e.g. FAA CIFP nationwide ARINC 424 navigation dataset).
-* **`[PROCEDURE_PUB]`**: Official structured procedure coding tables published by civil aviation authorities (e.g. French SIA Section AD 2.24 `DATA SID / STAR / RNP` tables).
-* **`[CHART]`**: Human-readable graphical chart plates (e.g. FAA d-TPP / France SIA eAIP Section AD 2.24 PDF plates).
+```text
++─────────────────────────────────────────────────────────────────────────────+
+|                          SOURCE TAXONOMY CLASSES                            |
++─────────────────────────────────────────────────────────────────────────────+
+| 1. StructuredNavDataset           | Complete machine-readable datasets       |
+|                                   | (e.g. FAA CIFP ARINC 424, AIXM 5.1/4.5)  |
+|                                   |                                         |
+| 2. StructuredProcedurePublication | Explicit tabular coding tables published |
+|                                   | by authorities in official eAIPs        |
+|                                   | (e.g. SIA DATA SID/STAR/RNP, ENAIRE)    |
+|                                   |                                         |
+| 3. HumanReadableChart             | Graphical chart plates (PDF, PNG, JPG)  |
+|                                   | (e.g. FAA d-TPP, SIA IAC / VAC / SID)    |
+|                                   |                                         |
+| 4. DerivedGeometry                | Reconstructed or computed geometry       |
+|                                   | (e.g. FIR boundaries, WMM2025 grids)     |
++─────────────────────────────────────────────────────────────────────────────+
+```
 
 ---
 
-## 2. Direct Procedure-to-Chart Plate Linking
+## 2. Inviolable Rule of Procedure Ingestion
 
-When selecting any SID, STAR, or Approach procedure in the **Airport Workspace**:
-* The canonical procedure legs are rendered on the moving map and flight plan list.
-* The exact corresponding official chart plate (e.g. SIA eAIP plate for `OPALE 5A` at `LFPG`) is directly linked with 1-click viewing in the embedded PDF viewer.
+* **`StructuredNavDataset` & `StructuredProcedurePublication`**: Legitimate sources for canonical navigation procedures because the civil aviation authority explicitly encodes path terminators (`IF`, `TF`, `CF`, `DF`), courses, distances, and constraints.
+* **`HumanReadableChart`**: Never used to synthesize or guess procedure legs via OCR, machine vision, or geometric fitting.
+* **No Invented Waypoints**: When a structured table references an unlocated fix, it remains unresolved; OpenAIRAC never invents coordinates.

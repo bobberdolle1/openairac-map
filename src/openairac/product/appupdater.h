@@ -26,7 +26,7 @@ namespace openairac {
 
 struct AppUpdateInfo {
     bool hasUpdate = false;
-    QString currentVersion = QStringLiteral("1.0.0");
+    QString currentVersion = QStringLiteral("2.3.0");
     QString latestVersion;
     QString releaseNotesUrl;
     QString downloadUrl;
@@ -39,7 +39,7 @@ class AppUpdater : public QObject {
 public:
     static AppUpdater& instance();
 
-    QString currentVersion() const { return QStringLiteral("1.0.0"); }
+    QString currentVersion() const { return QStringLiteral("2.3.0"); }
     QString releaseChannel() const { return m_channel; }
     void setReleaseChannel(const QString& channel) { m_channel = channel; }
 

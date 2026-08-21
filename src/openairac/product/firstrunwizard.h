@@ -70,15 +70,14 @@ private:
     QLabel *m_statusLabel = nullptr;
 };
 
-class OptionalProvidersPage : public QWizardPage {
+class LocalAipVaultPage : public QWizardPage {
     Q_OBJECT
 public:
-    explicit OptionalProvidersPage(QWidget *parent = nullptr);
+    explicit LocalAipVaultPage(QWidget *parent = nullptr);
     virtual void initializePage() override;
 
 private:
-    QLabel *m_navigraphStatusLabel = nullptr;
-    QCheckBox *m_enableNavigraphBox = nullptr;
+    QLabel *m_vaultStatusLabel = nullptr;
 };
 
 class ChartsSetupPage : public QWizardPage {
@@ -111,7 +110,7 @@ public:
         Page_Intro,
         Page_SimulatorDetection,
         Page_NavdataSetup,
-        Page_OptionalProviders,
+        Page_LocalAipVault,
         Page_ChartsSetup,
         Page_LiveFeeds,
         Page_Finish

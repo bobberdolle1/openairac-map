@@ -1,130 +1,153 @@
-#### Latest Stable Release
+# ✈️ OpenAIRAC Map
 
-<!-- VERSION_NUMBER_TODO Update all download texts and links. -->
+<div align="center">
 
-[**► Windows 64-bit Installer \(*MSFS 2020, MSFS 2024 and X-Plane*\)** - LittleNavmap-win64-3.0.18-Install.exe](https://github.com/albar965/littlenavmap/releases/download/v3.0.18/LittleNavmap-win64-3.0.18-Install.exe)<br/>
-[**► macOS** - LittleNavmap-macOS-3.0.18.zip](https://github.com/albar965/littlenavmap/releases/download/v3.0.18/LittleNavmap-macOS-3.0.18.zip)<br/>
-[**► Linux \(64 bit, based on Ubuntu 24.04\)** - LittleNavmap-linux-ubuntu-24.04-3.0.18.tar.xz](https://github.com/albar965/littlenavmap/releases/download/v3.0.18/LittleNavmap-linux-ubuntu-24.04-3.0.18.tar.xz)<br/>
-[**► Linux Debian Installation Package \(64 bit, based on Ubuntu 24.04\)** - LittleNavmap-linux-ubuntu-24.04-3.0.18-1_amd64.deb](https://github.com/albar965/littlenavmap/releases/download/v3.0.18/LittleNavmap-linux-ubuntu-24.04-3.0.18-1_amd64.deb)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE.txt)
+[![Version: 2.3.0](https://img.shields.io/badge/Version-2.3.0_win64-green.svg)](https://github.com/bobberdolle1/openairac-map/releases/latest)
+[![OpenAIRAC Core](https://img.shields.io/badge/Core_Engine-v2.11.0-orange.svg)](https://github.com/bobberdolle1/open-airac)
+[![Target: X-Plane & MSFS](https://img.shields.io/badge/Simulators-X--Plane_12_|_MSFS-blue.svg)](https://github.com/bobberdolle1/open-airac/blob/main/docs/SIMULATOR_SETUP.md)
 
-**Other Versions:**
+**Open flight-simulation navigation data, flight planner, moving map, and Electronic Flight Bag (EFB).**
 
-[► Windows 32-bit Installer \(*only for FSX and P3D*\) - LittleNavmap-win32-3.0.18-Install.exe](https://github.com/albar965/littlenavmap/releases/download/v3.0.18/LittleNavmap-win32-3.0.18-Install.exe)<br/>
-[► Linux \(64 bit, based on Ubuntu 22.04 for Debian or older systems\) - LittleNavmap-linux-ubuntu-22.04-3.0.18.tar.xz](https://github.com/albar965/littlenavmap/releases/download/v3.0.18/LittleNavmap-linux-ubuntu-22.04-3.0.18.tar.xz)<br/>
-[► Linux Debian Installation Package \(64 bit, based on Ubuntu 22.04\) - LittleNavmap-linux-ubuntu-22.04-3.0.18-1_amd64.deb](https://github.com/albar965/littlenavmap/releases/download/v3.0.18/LittleNavmap-linux-ubuntu-22.04-3.0.18-1_amd64.deb)
+[📥 **Download OpenAIRAC Map for Windows (Installer)**](https://github.com/bobberdolle1/openairac-map/releases/latest/download/OpenAIRAC-Map-2.3.0-Setup.exe) • [📦 **Portable ZIP**](https://github.com/bobberdolle1/openairac-map/releases/latest/download/OpenAIRAC-Map-2.3.0-win64.zip) • [📖 **Documentation**](https://github.com/bobberdolle1/open-airac/blob/main/docs/USER_GUIDE.md)
 
-Zipped Windows releases without installer are available in the alternative download locations below or from the release assets at [GitHub - Little Navmap Releases - Version 3.0.18](https://github.com/albar965/littlenavmap/releases/v3.0.18) \(scroll down to `Assets`\).
+</div>
 
-**[► Alternative Download Locations](https://albar965.github.io/downloads.html).** Look into sub-folders for beta, development or release candidates.
+---
 
-<p style="color: #c00000; background: rgba(250, 220, 220, 0.5); font-size: 1em;">
-  <b>
-    <a style="color: #a00000;" href="/littlenavmap-faq.html#windows-download">► Read here if you have problems downloading Little Navmap for Windows</a><br/>
-    <a style="color: #a00000;" href="https://www.littlenavmap.org/manuals/littlenavmap/release/latest/en/INSTALLATION.html#macos">► See here if you have problems running Little Navmap on macOS</a><br/>
-  </b>
-</p>
+> ⚠️ **FOR FLIGHT SIMULATION ONLY — NEVER USE FOR REAL-WORLD AVIATION.**  
+> OpenAIRAC Map is designed exclusively for flight simulation (X-Plane 12/11, MSFS 2024/2020). It is not certified and must never be used for real flight planning or navigation.
 
-### Little Navmap Links
+---
 
-[**► Screenshots for _Little Navmap_**](https://albar965.github.io/littlenavmapscreens.html)
+## 🌟 What is OpenAIRAC Map?
 
-[**► Screenshots of new 2.8 Features**](https://albar965.github.io/pages/28/littlenavmapscreens.html)
+**OpenAIRAC Map** is a complete, modern desktop flight planning, moving map, and Electronic Flight Bag application powered by the **OpenAIRAC** temporal aeronautical navigation data engine.
 
+Unlike traditional flight planning tools that depend on proprietary subscription paywalls, OpenAIRAC Map delivers a full-featured navigation suite using **official, public-domain, and open-license government datasets** right out of the box.
 
-[**► User manuals for _Little Navmap_ and _Little Navconnect_**](https://albar965.github.io/manuals.html)
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                            OpenAIRAC Map                               │
+│  ┌──────────────────────┬──────────────────────┬────────────────────┐  │
+│  │   Moving Map & EFB   │   Flight Planning    │  Official Charts   │  │
+│  │  OpenStreetMap/Marble│  SIDs, STARs, IAPs   │  FAA d-TPP & SIA   │  │
+│  └──────────┬───────────┴──────────┬───────────┴──────────┬─────────┘  │
+│             │                      │                      │            │
+│  ┌──────────▼──────────────────────▼──────────────────────▼─────────┐  │
+│  │                     OpenAIRAC Navigation Engine                  │  │
+│  │       Public Baseline Data + Optional Local AIP Vault            │  │
+│  └─────────────────────────────────┬────────────────────────────────┘  │
+│                                    │                                   │
+│  ┌─────────────────────────────────▼────────────────────────────────┐  │
+│  │         Live Feeds: NOAA Weather • VATSIM/IVAO Traffic           │  │
+│  │           Simulator Link: X-Plane 12/11 • MSFS 2024/2020         │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────┘
+```
 
------
+---
 
-[**► Other Downloads** (SimConnect, Aircraft Performance and more)](https://www.littlenavmap.org/downloads)
+## ⚡ Key Capabilities
 
-[**► _Little Navmap_ - Frequently asked Questions**](https://albar965.github.io/littlenavmap-faq.html)
+* **Free Public Navdata Included**: Bundled worldwide baseline from **FAA CIFP**, **OurAirports**, **OpenFlightmaps**, and **France SIA** — fully functional immediately without accounts or subscriptions.
+* **Official Government Charts**: On-demand viewing of official terminal approach plates, SIDs, STARs, and airport diagrams from FAA d-TPP and France SIA eAIP.
+* **Real-Time Weather Telemetry**: Built-in NOAA AviationWeather.gov METAR observations, TAF forecasts, PIREPs, and international SIGMET hazard polygons.
+* **Online Flying Awareness**: Real-time VATSIM and IVAO pilot traffic, active ATC stations, and airport ATIS broadcasts with smooth motion interpolation.
+* **Flight Simulator Connection**: Native zero-configuration telemetry connection with **X-Plane 12**, **X-Plane 11**, **MSFS 2024**, and **MSFS 2020**.
+* **Local AIP Vault**: Secure, personal import for official national AIP datasets that require local-only use (such as Russian **CAICA**).
+* **Multi-Format Flight Plan Export**: Export directly to X-Plane FMS, MSFS PLN, PMDG RTE, Garmin FPL, and more with one click.
+* **AI Crew Gateway**: Localhost REST API (`127.0.0.1:8989`) enabling AI co-pilots (such as FlightdeckOS) and companion EFB tools to query active flight status deterministically.
 
-[**► _Little Navmap_ - Install Navigraph Updates**](https://albar965.github.io/littlenavmap_navigraph.html) Shows how to update the included Navigraph database to the latest cycle.
+---
 
-[► GitHub Profile](https://github.com/albar965) All my projects, releases, source code, issue lists and more.
+## 📥 Download & Installation
 
-[**► Support Forum at _Avsim_**](https://www.avsim.com/forum/780-little-navmap-little-navconnect-little-logbook-support-forum) **Support and help for users.** An ad-blocker like [uBlock Origin (uBO)](https://github.com/gorhill/uBlock) or [AdGuard](https://adguard.com) is recommended.
+### Windows 64-bit (Recommended)
 
-### Little Navmap Donations
+1. Download the [**OpenAIRAC Map Setup Installer (OpenAIRAC-Map-2.3.0-Setup.exe)**](https://github.com/bobberdolle1/openairac-map/releases/latest/download/OpenAIRAC-Map-2.3.0-Setup.exe).
+2. Run the setup installer and follow the on-screen steps.
+3. Launch **OpenAIRAC Map** from the Start Menu or Desktop shortcut.
 
-[![Donate](https://albar965.github.io/assets/images/donate.png)](https://albar965.github.io/donate.html)
+### Portable Version (No Installation Required)
 
-**Donate to show your appreciation if you like my programs.**
-**Spenden Sie, um Ihre Wertschätzung zu zeigen, wenn Ihnen  meine Programme gefallen.**
+1. Download [**OpenAIRAC-Map-2.3.0-win64.zip**](https://github.com/bobberdolle1/openairac-map/releases/latest/download/OpenAIRAC-Map-2.3.0-win64.zip).
+2. Extract the archive to any folder on your computer (e.g. `C:\FlightSim\OpenAIRAC-Map`).
+3. Run `littlenavmap.exe` directly.
 
-## Little Navmap
+> 🔍 **Integrity Verification**: Checksum signatures are available in [SHA256SUMS.txt](https://github.com/bobberdolle1/openairac-map/releases/latest/download/SHA256SUMS.txt).
 
-![Little Navmap](https://albar965.github.io/assets/images/navroute.png) **_Little Navmap_** is a free open source flight planner, navigation tool, moving map,
-airport search and airport information system for **Flight Simulator X, Prepar3D, Microsoft Flight Simulator 2020, Microsoft Flight Simulator 2024 and X-Plane** and is available for **Windows, Apple macOS and Linux**.
+---
 
-_Little Navmap_ comes with a **detailed manual** also including tutorials which is available online as well as in PDF and other formats like EPUB.
-Help buttons in all relevant areas of the program display corresponding chapters in the online manual on click.
+## 🛫 First Flight in 2 Minutes
 
-[![Little Navmap 2.2.2 spherical map projection and elevation profile with flight plan](https://albar965.github.io/assets/images/spherical_small.jpg)](https://albar965.github.io/assets/images/spherical.jpg)
+1. **Launch OpenAIRAC Map**: The First-Run Wizard will confirm that your public navigation baseline is active.
+2. **Select Origin & Destination**: In the **Flight Planning** tab on the left, type an origin (e.g. `LFPG` Paris Charles de Gaulle) and destination (e.g. `LFBO` Toulouse-Blagnac).
+3. **Calculate Route**: Click **Calculate Flight Plan** to generate an optimized airway route with assigned SIDs and STARs.
+4. **View Weather & Charts**: Open the **Charts** dock or **Flight Briefing** to inspect departure/arrival METAR and approach plates.
+5. **Connect to Simulator**: In the menu, go to **Tools → Connect to Flight Simulator** and launch your simulator.
+6. **Fly with Real-Time Map**: Track your aircraft position, groundspeed, altitude profile, and route progress in real-time.
 
-[![Little Navmap 2.2.2 sun shadow on globe](https://albar965.github.io/assets/images/sunshadow_small.jpg)](https://albar965.github.io/assets/images/sunshadow.jpg)
+For full step-by-step instructions, see the [**First Flight Tutorial**](https://github.com/bobberdolle1/open-airac/blob/main/docs/FIRST_FLIGHT_TUTORIAL.md).
 
-A widely configurable **map display** using the OpenStreetMap as a background map which is only one
-option of many online and included offline maps. The map shows airports, navaids, airways,
-airspaces, oceanic tracks, high altitude winds, AI or multiplayer aircraft and ships as well as airport weather, winds aloft and a minimum off-route altitude grid (MORA). A seamlessly integrated **airport diagram** displays
-taxiways, displaced thresholds, overrun areas, aprons, parking spots and more.
+---
 
-User can place airport traffic patterns or holdings as a visual guidance on the map.
+## 🛡️ Navigation Data & Distribution Policy
 
-[![Little Navmap 2.4.4 winds aloft](https://albar965.github.io/assets/images/user_features_small.jpg)](https://albar965.github.io/assets/images/user_features.jpg)
+OpenAIRAC strictly enforces copyright and data provenance:
 
-[![Little Navmap 2.4.4 User Features](https://albar965.github.io/assets/images/wind_small.jpg)](https://albar965.github.io/assets/images/wind.jpg)
+| Data Type | Status | Source |
+|---|---|---|
+| **Public Baseline** | **BUNDLED & ACTIVE** | FAA CIFP (US), OurAirports (Worldwide), OpenFlightmaps (Europe), France SIA |
+| **Official Government Charts** | **ON-DEMAND STREAM** | FAA d-TPP, France SIA eAIP (cached locally) |
+| **Real-Time Weather & Traffic** | **LIVE ZERO-LOGIN** | NOAA AviationWeather.gov, VATSIM API v3, IVAO Data |
+| **Local National AIPs (e.g. CAICA)**| **OPTIONAL BYOD** | User-supplied lawful local files imported into Local AIP Vault |
+| **Proprietary Paywalls** | **STRICTLY NOT BUNDLED** | Navigraph, Jeppesen, NavDataPro are **NEVER** distributed by OpenAIRAC |
 
-It supports **approach and departure procedures like SIDs, STARs, custom final approaches**, offers a
-widely configurable **automatic flight plan calculation** and **several export formats** like GFP \(Reality XP GTN
-and Flight1 GTN\), FPL \(Reality XP GNS\), GPX, RTE, FLP and X-Plane FMS as well as drag and drop
-flight plan editing on the map. The program can read the PLN, FMS and FLP and more flight plan formats.
+---
 
-Several flight plan formats can be exported using the **flight plan multiexport** feature with one click.
+## 📚 Documentation & User Guides
 
-Keyboard shortcuts help to access most functions without mouse.
+* [📖 **Master User Guide**](https://github.com/bobberdolle1/open-airac/blob/main/docs/USER_GUIDE.md) — Complete user manual and navigation reference.
+* [🚀 **First Flight Tutorial**](https://github.com/bobberdolle1/open-airac/blob/main/docs/FIRST_FLIGHT_TUTORIAL.md) — Beginner flight planning walk-through.
+* [🎮 **Simulator Setup Guide**](https://github.com/bobberdolle1/open-airac/blob/main/docs/SIMULATOR_SETUP.md) — Connecting X-Plane 12/11 and MSFS 2024/2020.
+* [🗄️ **Data & Providers Guide**](https://github.com/bobberdolle1/open-airac/blob/main/docs/DATA_AND_PROVIDERS.md) — Understanding AIRAC cycles, public baseline, and Local AIP Vault.
+* [🇷🇺 **Russia / CAICA Guide**](https://github.com/bobberdolle1/open-airac/blob/main/docs/RUSSIA_CAICA_GUIDE.md) — Optional guide for importing Russian AIP packages.
+* [💾 **Saving & Exporting**](https://github.com/bobberdolle1/open-airac/blob/main/docs/SAVING_AND_EXPORTING.md) — Multi-format flight plan exports.
+* [🤖 **AI Crew Gateway**](https://github.com/bobberdolle1/open-airac/blob/main/docs/AI_CREW_GATEWAY.md) — REST API for FlightdeckOS and EFB companion apps.
+* [🔧 **Troubleshooting & FAQ**](https://github.com/bobberdolle1/open-airac/blob/main/docs/TROUBLESHOOTING.md) — Solutions for common connection and setup issues.
+* [🔒 **Privacy & Security**](https://github.com/bobberdolle1/open-airac/blob/main/docs/PRIVACY_AND_SECURITY.md) — Network endpoints and local data privacy.
 
-An **elevation profile** is shown for the flight plan allowing to find a safe cruise altitude also
-displaying top of climb, top of descent and procedure altitude restrictions. Calculated and shown
-climb as well as descent paths adhere to altitude restrictions.
+---
 
-**Aircraft performance and fuel planning** is included which automatically considers winds aloft for
-fuel, top of climb and top of descent calculation. Performance values can be collected
-automatically during flight and can be merged into the currently profile at any time.
+## 🛠️ Building from Source (Developers Only)
 
-**Search** functionality allows to look for airports, navaids, procedures, user defined waypoints and
-logbook entries by a large amount of criteria also including a spatial search.
+Normal users do **not** need to build from source — use the [pre-built installer](https://github.com/bobberdolle1/openairac-map/releases/latest).
 
-Userpoint functionality allow to place, edit and export **user defined features like points of
-interest**, visual reporting points and more on the map. Import and export of CSV, X-Plane and Garmin
-files.
+### Prerequisites
+* Windows 10/11 64-bit, macOS 13+, or Linux (Ubuntu 24.04+)
+* Qt 6.5+ (Qt 6.8.2 recommended) with `svg`, `sql`, `printsupport`, `core5compat`
+* C++20 compatible compiler (GCC 13+, Clang 16+, MSVC 2022)
+* CMake 3.25+ and Ninja / Make
 
-_Little Navmap_ comes with its own **logbook** allowing to automatically record, search and edit
-logbook entries. The logbook records the flight plan and the flown track which can be exported to
-GPX files.
+### Build Steps
+```bash
+git clone https://github.com/bobberdolle1/openairac-map.git
+cd openairac-map
+# Follow BUILD.txt for marble and atools setup
+qmake6 littlenavmap.pro CONFIG+=release
+make -j$(nproc)
+```
 
-**Oceanic and other tracks** like NAT can be downloaded, shown on the map and can be used for
-automatic flight plan calculation.
+---
 
-[![Little Navmap 2.4.4 Logbook](https://albar965.github.io/assets/images/logbook_small.jpg)](https://albar965.github.io/assets/images/logbook.jpg)
+## 📜 Credits & Upstream Attribution
 
-[![Little Navmap 2.2.2 Airport Weather](https://albar965.github.io/assets/images/airportweather_small.jpg)](https://albar965.github.io/assets/images/airportweather.jpg)
+OpenAIRAC Map is distributed under the **GNU General Public License v3.0 (GPLv3)**.
 
-The program can generate an **ATS route description** from flight plans and vice versa where the output
-is widely configurable.
+OpenAIRAC Map is proudly derived from **Little Navmap** created by **Alexander Barthel** and open-source contributors. We express our deepest gratitude to Alexander Barthel and the Little Navmap community for building an extraordinary foundation for flight simulation navigation.
 
-A cycle 1801 database courtesy of Navigraph is included in the download and includes navaids,
-airways, airspaces, procedures and more. The **navigation data can be updated by the Navigraph
-FMS Data Manager**.
-
-Display of clients and centers of **VATSIM, IVAO, PilotEdge** and custom online networks.
-
-_Little Navmap_ features its own internal **web server** which allows to follow aircraft progress from
-any device across a network.
-
-**Supported Flight Simulators:** All FSX versions from SP2 up, Flight Simulator - Steam Edition,
-Prepar3D v4, v5, v6, Microsoft Flight Simulator 2020, Microsoft Flight Simulator 2024, X-Plane 11 and X-Plane 12.
-
-**Supported platforms:** Windows 7/8/10/11, Apple macOS \(10.12 or newer only\) and Linux \(64 bit only\).
-
-[![Little Navmap](https://albar965.github.io/assets/images/Tipp_FSMagazin_D_Neu_2014_50.png)](https://www.facebook.com/FSMAGAZIN/posts/1349379408450042)
+* **Upstream Project**: [Little Navmap by Alexander Barthel](https://github.com/albar965/littlenavmap) ([littlenavmap.org](https://www.littlenavmap.org/))
+* **Virtual Globe**: [KDE Marble Project](https://marble.kde.org/)
+* **UI Framework**: [The Qt Company](https://www.qt.io/)
+* **Aeronautical Engine**: [OpenAIRAC Core](https://github.com/bobberdolle1/open-airac)
