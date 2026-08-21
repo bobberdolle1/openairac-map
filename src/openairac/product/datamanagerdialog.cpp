@@ -102,9 +102,9 @@ DataManagerDialog::DataManagerDialog(QWidget *parent)
 }
 
 void DataManagerDialog::refreshStatus() {
-    m_installedAiracLabel->setText(tr("Installed AIRAC: <b>2608</b> (Effective: 2026-08-13 to 2026-09-10)"));
-    m_availableAiracLabel->setText(tr("Latest Available: <b>2608</b> (Up to date)"));
-    m_statusLabel->setText(tr("Database healthy (13,316 airports, 5,772 navaids, full FAA CIFP coverage)"));
+    m_installedAiracLabel->setText(tr("Current AIRAC: <b>2608</b> (Effective: 06 Aug 2026 – 02 Sep 2026) [CURRENT]"));
+    m_availableAiracLabel->setText(tr("Next Cycle: <b>2609</b> (Effective: 03 Sep 2026) [FUTURE]"));
+    m_statusLabel->setText(tr("Database active: 13,316 airports, 5,772 navaids (FAA CIFP, SIA France, CAICA Russia, OurAirports)"));
 }
 
 void DataManagerDialog::onCheckUpdatesClicked() {

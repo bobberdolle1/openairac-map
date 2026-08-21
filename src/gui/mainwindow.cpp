@@ -150,8 +150,8 @@ MainWindow::MainWindow()
 
   aboutMessage =
     tr("<h3>OpenAIRAC Map</h3>"
-       "<p><b>Version 0.1.0</b> (based on Little Navmap upstream 3.0.x / 3.1.x)</p>"
-       "<p>OpenAIRAC Map is an open-first aviation flight planner, moving map, and navigation ecosystem application.<br/>"
+       "<p><b>Version 2.0.0</b> (OpenAIRAC 3.0 Operational EFB)</p>"
+       "<p>OpenAIRAC Map is an open-first aviation flight planner, moving map, and electronic flight bag (EFB).<br/>"
        "Compatible with X-Plane 11, X-Plane 12, Microsoft Flight Simulator (2020 / 2024), and Prepar3D.</p>"
        "<p><b>Open-AIRAC comes first:</b> independent, open aviation data, transparent provenance, and no proprietary subscription required.</p>"
        "<hr/>"
@@ -163,7 +163,6 @@ MainWindow::MainWindow()
        "OpenAIRAC fork: <a href=\"https://github.com/bobberdolle1/openairac-map\">https://github.com/bobberdolle1/openairac-map</a><br/>"
        "OpenAIRAC platform: <a href=\"https://github.com/bobberdolle1/open-airac\">https://github.com/bobberdolle1/open-airac</a></p>"
        "<p><a href=\"%1\">Donate to support upstream Little Navmap development</a>.</p>").arg(lnm::helpDonateUrl);
-
   layoutWarnText = tr("The option \"Allow to undock map window\" in the layout file is "
                       "different than the currently set option.\n"
                       "The layout might not be restored properly.\n\n"
