@@ -394,9 +394,9 @@ const QLatin1String OPTIONS_DIALOG_WEB_DOCROOT_DLG("OptionsDialog/WebDocroot");
 const QLatin1String OPTIONS_DIALOG_SHOW_SPLASH("OptionsDialog/Widget_checkBoxOptionsStartupShowSplash");
 
 /* Other options that are only accessible in the configuration file */
-const QLatin1String OPTIONS_APPLICATION("Little Navmap");
-const QLatin1String OPTIONS_APPLICATION_ORGANIZATION("ABarthel");
-const QLatin1String OPTIONS_APPLICATION_DOMAIN("littlenavmap.org");
+const QLatin1String OPTIONS_APPLICATION("OpenAIRAC Map");
+const QLatin1String OPTIONS_APPLICATION_ORGANIZATION("OpenAIRAC");
+const QLatin1String OPTIONS_APPLICATION_DOMAIN("openairac.org");
 const QLatin1String OPTIONS_DIALOG_LANGUAGE("OptionsDialog/Language");
 const QLatin1String OPTIONS_DIALOG_GUI_FONT("OptionsDialog/Font");
 const QLatin1String OPTIONS_DIALOG_MAP_FONT("OptionsDialog/MapFont");

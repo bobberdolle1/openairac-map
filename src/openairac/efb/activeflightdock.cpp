@@ -189,6 +189,11 @@ ActiveFlightDock::ActiveFlightDock(QWidget *parent)
         connect(NavApp::getConnectClient(), &ConnectClient::dataPacketReceived, this, &ActiveFlightDock::onSimDataReceived);
     }
 }
+ActiveFlightDock::~ActiveFlightDock() {
+    if (s_instance == this) {
+        s_instance = nullptr;
+    }
+}
 
 void ActiveFlightDock::setFlightPlan(
     const QString& depIcao,

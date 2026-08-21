@@ -65,8 +65,35 @@ void backupFileAndLog(const QString& filename, bool keepOriginalFile)
   atools::io::FileRoller(3, "${base}.${ext}_update-backup.${num}", keepOriginalFile).rollFile(filename);
 }
 
+void migrateFromLegacyLittleNavmap()
+{
+  QString openairacIni = Settings::getFilename();
+  if(!QFile::exists(openairacIni))
+  {
+    QString openairacDir = QFileInfo(openairacIni).dir().absolutePath();
+    QDir dir(openairacDir);
+    if(dir.cdUp())
+    {
+      QString legacyIni = dir.filePath("ABarthel" + QString(QDir::separator()) + "little_navmap.ini");
+      if(QFile::exists(legacyIni))
+      {
+        qInfo() << Q_FUNC_INFO << "Found legacy Little Navmap settings at" << legacyIni << "- safely importing to" << openairacIni;
+        QDir().mkpath(openairacDir);
+        if(QFile::copy(legacyIni, openairacIni))
+        {
+          qInfo() << Q_FUNC_INFO << "Successfully imported settings from legacy Little Navmap";
+          QSettings imported(openairacIni, QSettings::IniFormat);
+          imported.remove("Options/Version");
+          imported.sync();
+        }
+      }
+    }
+  }
+}
+
 void checkAndMigrateSettings()
 {
+  migrateFromLegacyLittleNavmap();
   Settings& settings = Settings::instance();
 
   optionsVersion = Version(settings.valueStr(lnm::OPTIONS_VERSION));

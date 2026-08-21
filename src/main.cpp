@@ -186,8 +186,8 @@ int main(int argc, char *argv[])
     // Check if LNM is already running - send message across shared memory and exit if yes, otherwise continue normally
     if(!NavApp::initDataExchange())
     {
-      Application::setEmailAddresses({"alex@littlenavmap.org"});
-      Application::setContactUrl("https://www.littlenavmap.org/contact.html");
+      Application::setEmailAddresses({"support@openairac.org"});
+      Application::setContactUrl("https://github.com/bobberdolle1/openairac-map/issues");
 
       // ==============================================
       // Initialize logging and force logfiles into the system or user temp directory
@@ -405,24 +405,23 @@ int main(int argc, char *argv[])
         ATOOLS_DELETE_LOG(dbManager);
 
         QApplication::setQuitOnLastWindowClosed(true);
+        {
+          MainWindow mainWindow;
+          qDebug() << Q_FUNC_INFO << "mainWindow.devicePixelRatioF()" << mainWindow.devicePixelRatioF();
+          mainWindow.setDatabaseErased(databasesErased);
+          mainWindow.show();
+          NavApp::finishSplashScreen(&mainWindow);
+          qDebug() << Q_FUNC_INFO << "Before QApplication::exec()";
+          retval = QApplication::exec();
+          qDebug() << Q_FUNC_INFO << "After QApplication::exec()";
+        }
 
-        MainWindow mainWindow;
-
-        qDebug() << Q_FUNC_INFO << "mainWindow.devicePixelRatioF()" << mainWindow.devicePixelRatioF();
-
-        // Show database dialog if something was removed
-        mainWindow.setDatabaseErased(databasesErased);
-
-        mainWindow.show();
-
-        // Hide splash once main window is shown
-        NavApp::finishSplashScreen(&mainWindow);
-
-        // =============================================================================================
-        // Run application
-        qDebug() << Q_FUNC_INFO << "Before QApplication::exec()";
-        retval = QApplication::exec();
-        qDebug() << Q_FUNC_INFO << "After QApplication::exec()";
+        if(Application::isRestartApplication() && Application::isResetSettings())
+          Settings::clearAndShutdown();
+        else
+          Settings::shutdown();
+        Translator::unload();
+        atools::gui::Application::recordExit();
       }
       else
       {
@@ -450,11 +449,7 @@ int main(int argc, char *argv[])
     // Does not return in case of fatal error
   }
 
-  atools::util::crashhandler::clearStackTrace(Settings::getConfigFilename(lnm::STACKTRACE_SUFFIX, lnm::CRASHREPORTS_DIR));
-  NavApp::deInitDataExchange();
-
-  ATOOLS_DELETE_LOG(dbManager);
-
-  qInfo() << Q_FUNC_INFO << "Exiting" << retval;
-  return retval;
+  atools::util::crashhandler::deInit();
+  qInfo() << Q_FUNC_INFO << "Exiting cleanly with code" << retval;
+  std::exit(retval);
 }

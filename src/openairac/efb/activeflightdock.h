@@ -43,7 +43,7 @@ class ActiveFlightDock : public QDockWidget {
 
 public:
     explicit ActiveFlightDock(QWidget *parent = nullptr);
-    virtual ~ActiveFlightDock() override = default;
+    virtual ~ActiveFlightDock() override;
 
     static ActiveFlightDock* instance();
 

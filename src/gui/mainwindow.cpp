@@ -316,7 +316,7 @@ MainWindow::MainWindow()
     // centralWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
     // centralWidget->hide(); // Potentially messes up docking windows (i.e. Profile dock cannot be shrinked) in certain configurations.
     // setCentralWidget(centralWidget);
-    if(OptionData::instance().getFlags2().testFlag(opts2::MAP_ALLOW_UNDOCK))
+    if(OptionData::instance().getFlags2().testFlag(opts2::MAP_ALLOW_UNDOCK) && centralWidget() != nullptr)
       centralWidget()->hide();
 
     setupUi();
@@ -330,7 +330,7 @@ MainWindow::MainWindow()
     optionsChangedInitial();
 
     // Remember original title
-    mainWindowTitle = windowTitle();
+    mainWindowTitle = tr("OpenAIRAC Map");
 
     // Prepare database and queries
     qDebug() << Q_FUNC_INFO << "Creating DatabaseManager";
@@ -632,7 +632,7 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow()
 {
   qDebug() << Q_FUNC_INFO;
-  delete ui;
+  deInit();
 }
 
 void MainWindow::deInit()
@@ -687,6 +687,10 @@ void MainWindow::deInit()
     ATOOLS_DELETE_LOG(simbriefHandler);
     ATOOLS_DELETE_LOG(mapThemeHandler);
     ATOOLS_DELETE_LOG(statusBar);
+    ATOOLS_DELETE_LOG(chartsDock);
+    ATOOLS_DELETE_LOG(activeFlightDock);
+    ATOOLS_DELETE_LOG(airportWorkspace);
+    ATOOLS_DELETE_LOG(eventsDock);
 
     // Delete NavApp members
     NavApp::deInit();
@@ -696,21 +700,14 @@ void MainWindow::deInit()
     ATOOLS_DELETE_LOG(ui);
     ATOOLS_DELETE_LOG(dockHandler);
 
-    if(Application::isRestartApplication() && Application::isResetSettings())
-      Settings::clearAndShutdown();
-    else
-      Settings::shutdown();
-
-    // Free translations
-    atools::gui::Translator::unload();
+    Settings::syncSettings();
 
 #if defined(Q_OS_LINUX)
     // Remove signal handler
     atools::util::SignalHandler::deleteInstance();
 #endif
 
-    qDebug() << Q_FUNC_INFO << "About to exit";
-    atools::gui::Application::recordExit();
+    qDebug() << Q_FUNC_INFO << "deInit complete";
     atools::logging::LoggingGuiAbortHandler::resetGuiAbortFunction();
   }
   else
@@ -5254,15 +5251,17 @@ void MainWindow::closeEvent(QCloseEvent *event)
       // Close all registerd non-modal dialogs to allow application to close
       dockHandler->closeAllDialogs();
     }
-
-    if(!Application::isResetSettings())
-      saveStateMain();
-
-    /* Have to delete early before deleting main map widget */
     if(quit)
     {
+      if(!Application::isResetSettings())
+        saveStateMain();
       NavApp::deInitWebController();
-      deInit();
+      event->accept();
+      QApplication::quit();
+    }
+    else
+    {
+      event->ignore();
     }
   }
   else

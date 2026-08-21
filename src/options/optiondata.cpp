@@ -52,11 +52,12 @@ void OptionData::initUa()
   // Mozilla/5.0 (compatible; Marble/0.25.5 (stable release for Little Navmap); DesktopDevice; Browser; QNamNetworkPlugin)
 
   if(userAgentDefault.isEmpty())
-    // Friendly default with web page and contact
-    userAgentDefault = QStringLiteral("%1/%2 (+https://www.littlenavmap.org; contact: %3)").
-                       arg(QCoreApplication::applicationName(), QCoreApplication::applicationVersion(),
-                           atools::gui::Application::getEmailAddresses().constFirst());
-
+  {
+    const QStringList& emails = atools::gui::Application::getEmailAddresses();
+    QString email = emails.isEmpty() ? QStringLiteral("support@openairac.org") : emails.constFirst();
+    userAgentDefault = QStringLiteral("%1/%2 (+https://github.com/bobberdolle1/openairac-map; contact: %3)").
+                       arg(QCoreApplication::applicationName(), QCoreApplication::applicationVersion(), email);
+  }
   if(userAgentRandom.isEmpty())
   {
     QRandomGenerator random(QDateTime::currentSecsSinceEpoch());
