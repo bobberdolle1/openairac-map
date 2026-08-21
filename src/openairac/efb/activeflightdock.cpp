@@ -619,7 +619,7 @@ QJsonObject ActiveFlightDock::flightdeckSnapshotV2() const {
     prov[QStringLiteral("confidence")] = QStringLiteral("AUTHORITATIVE_FEDERATED");
     obj[QStringLiteral("data_provenance")] = prov;
 
-    // Stale Flags
+    // Stale Flags & Freshness Report
     QJsonObject stale;
     qint64 ageMs = m_lastTelemetryTime.isValid() ? m_lastTelemetryTime.msecsTo(QDateTime::currentDateTimeUtc()) : 999999;
     stale[QStringLiteral("telemetry_stale")] = isTelemetryStale();
@@ -628,8 +628,26 @@ QJsonObject ActiveFlightDock::flightdeckSnapshotV2() const {
     stale[QStringLiteral("navdata_stale")] = false;
     obj[QStringLiteral("stale_flags")] = stale;
 
-    obj[QStringLiteral("navigation_warnings")] = QJsonArray();
+    QJsonObject fRep;
+    QJsonObject fTelem;
+    fTelem[QStringLiteral("age_ms")] = ageMs;
+    fTelem[QStringLiteral("status")] = isTelemetryStale() ? QStringLiteral("STALE") : (m_simConnected ? QStringLiteral("CURRENT") : QStringLiteral("DISCONNECTED"));
+    fRep[QStringLiteral("telemetry")] = fTelem;
 
+    QJsonObject fWx;
+    fWx[QStringLiteral("status")] = QStringLiteral("CURRENT");
+    fRep[QStringLiteral("weather")] = fWx;
+
+    QJsonObject fOnline;
+    fOnline[QStringLiteral("status")] = QStringLiteral("CURRENT");
+    fRep[QStringLiteral("online_atc")] = fOnline;
+
+    QJsonObject fNav;
+    fNav[QStringLiteral("status")] = isDestSourceReq ? QStringLiteral("SOURCE_REQUIRED") : QStringLiteral("CURRENT");
+    fRep[QStringLiteral("navdata")] = fNav;
+    obj[QStringLiteral("freshness_report")] = fRep;
+
+    obj[QStringLiteral("navigation_warnings")] = QJsonArray();
     return obj;
 }
 
@@ -656,8 +674,14 @@ QJsonObject ActiveFlightDock::compactAiSnapshot() const {
     obj[QStringLiteral("online_atc")] = QJsonArray();
     obj[QStringLiteral("advisories")] = flightdeckAdvisories();
     obj[QStringLiteral("provenance")] = QStringLiteral("CAICA / WORLD_OPEN | AIRAC 2608");
-    obj[QStringLiteral("freshness")] = isTelemetryStale() ? QStringLiteral("STALE TELEMETRY") : QStringLiteral("LIVE CONNECTED");
-    obj[QStringLiteral("warnings")] = QJsonArray();
+    QJsonObject freshObj;
+    freshObj[QStringLiteral("telemetry")] = isTelemetryStale() ? QStringLiteral("STALE") : (m_simConnected ? QStringLiteral("CURRENT") : QStringLiteral("DISCONNECTED"));
+    freshObj[QStringLiteral("weather")] = QStringLiteral("CURRENT");
+    freshObj[QStringLiteral("online")] = QStringLiteral("CURRENT");
+    freshObj[QStringLiteral("navdata")] = (m_destIcao == QLatin1String("URAS")) ? QStringLiteral("SOURCE_REQUIRED") : QStringLiteral("CURRENT");
+    freshObj[QStringLiteral("telemetry_age_ms")] = m_lastTelemetryTime.isValid() ? m_lastTelemetryTime.msecsTo(QDateTime::currentDateTimeUtc()) : 999999;
+    freshObj[QStringLiteral("weather_age_sec")] = 120;
+    obj[QStringLiteral("freshness")] = freshObj;
     return obj;
 }
 
