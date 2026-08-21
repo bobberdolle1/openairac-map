@@ -1,7 +1,7 @@
 {
   "region": "ABKHAZIA_REGION",
   "effective_cycle": "2608",
-  "generated_at": "2026-08-21T02:00:00Z",
+  "generated_at": "2026-08-21T02:30:00Z",
   "physical_aerodromes_count": 3,
   "aerodromes": [
     {
@@ -21,7 +21,7 @@
           "type": "icao_legacy",
           "provider": "ourairports",
           "status": "legacy",
-          "source": "OurAirports / Historical International Record (Not in active 2026 Georgian AIP)"
+          "source": "OurAirports / Historical International Record (Not listed in active 2026 Georgian AIP GEN 2.4)"
         },
         {
           "identifier": "SUI",
@@ -29,6 +29,13 @@
           "provider": "iata",
           "status": "current_in_provider",
           "source": "IATA Coding Directory"
+        },
+        {
+          "identifier": "UG29",
+          "type": "community_alias",
+          "provider": "ourairports",
+          "status": "historical",
+          "source": "OurAirports Secondary Identifier Mapping"
         }
       ],
       "classification": "FULL_IFR",
@@ -56,9 +63,11 @@
         }
       ],
       "procedures": {
-        "sids": ["SUKHUM 1A"],
-        "stars": ["BABUS 1A"],
-        "approaches": ["2NDB 12", "VISUAL 30"]
+        "status": "SOURCE_REQUIRED",
+        "note": "Detailed instrument procedure coding tables require Local AIP Vault CAICA Manual No.12 source payload. Public baseline contains airport identity, runway geometry, and NDB baseline only.",
+        "sids": [],
+        "stars": [],
+        "approaches": []
       },
       "ats_connectivity": {
         "connected_airways": ["G247", "W112"],
@@ -67,15 +76,22 @@
     },
     {
       "entity_id": "aerodrome_gudauta_bamboura",
-      "canonical_name": "Gudauta Bamboura Airfield",
-      "primary_icao": "UG29",
+      "canonical_name": "Gudauta Bombora Airfield",
+      "primary_icao": "UGSG",
       "aliases": [
         {
-          "identifier": "UG29",
-          "type": "local_aip_code",
+          "identifier": "UGSG",
+          "type": "gps_code",
           "provider": "ourairports",
           "status": "current_in_provider",
-          "source": "Regional Airfield Record"
+          "source": "OurAirports GPS Identifier"
+        },
+        {
+          "identifier": "UG23",
+          "type": "community_alias",
+          "provider": "ourairports",
+          "status": "historical",
+          "source": "OurAirports Historical Keyword Record"
         }
       ],
       "classification": "LIMITED_MILITARY_AIRFIELD",
@@ -97,14 +113,14 @@
     {
       "entity_id": "aerodrome_pskhu",
       "canonical_name": "Pskhu Mountain Airfield",
-      "primary_icao": "UG28",
+      "primary_icao": "PSKHU_LOCAL",
       "aliases": [
         {
-          "identifier": "UG28",
+          "identifier": "PSKHU",
           "type": "local_aip_code",
           "provider": "ourairports",
           "status": "current_in_provider",
-          "source": "Mountain Aviation Landing Site"
+          "source": "Mountain Aviation Landing Site (Not UG28)"
         }
       ],
       "classification": "VFR_MOUNTAIN_STRIP",

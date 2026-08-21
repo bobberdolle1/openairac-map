@@ -1,7 +1,7 @@
 {
   "region": "CRIMEA_REGION",
   "effective_cycle": "2608",
-  "generated_at": "2026-08-21T02:00:00Z",
+  "generated_at": "2026-08-21T02:30:00Z",
   "physical_aerodromes_count": 6,
   "aerodromes": [
     {
@@ -14,7 +14,7 @@
           "type": "icao_official",
           "provider": "ru_caica_local",
           "status": "current_in_provider",
-          "source": "CAICA AIP Russia (AIRAC 2608)"
+          "source": "CAICA AIP Russia / Aeronautical Information Manual (AIRAC 2608)"
         },
         {
           "identifier": "UKFF",
@@ -64,9 +64,27 @@
         }
       ],
       "procedures": {
-        "sids": ["AN 1A", "TABAN 1A", "GUKAN 1A", "RUMOD 1A"],
-        "stars": ["DEDIS 1A", "RUDOM 1A", "OLMIN 1A"],
-        "approaches": ["ILS 19R", "RNP 01L", "RNP 19R", "2NDB 01L"]
+        "source": "CAICA Official RNAV Coding Collection (AIRAC 2608)",
+        "sids": [
+          "NL 2W",
+          "NL 2X",
+          "RENBA 2U",
+          "SOGTA 2T",
+          "SOGTA 2U",
+          "TINAL 2W"
+        ],
+        "stars": [
+          "BURUD 2Y",
+          "DIPER 2Y",
+          "RAKUS 2Y",
+          "SOGTA 2Y"
+        ],
+        "approaches": [
+          "ILS 19R",
+          "RNP 01L",
+          "RNP 19R",
+          "2NDB 01L"
+        ]
       },
       "ats_connectivity": {
         "connected_airways": ["A102", "B145", "G247", "R114", "W109"],
