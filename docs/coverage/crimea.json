@@ -1,0 +1,236 @@
+{
+  "region": "CRIMEA_REGION",
+  "effective_cycle": "2608",
+  "generated_at": "2026-08-21T02:00:00Z",
+  "physical_aerodromes_count": 6,
+  "aerodromes": [
+    {
+      "entity_id": "aerodrome_simferopol_intl",
+      "canonical_name": "Simferopol International Airport (Amet-khan Sultan)",
+      "primary_icao": "URFF",
+      "aliases": [
+        {
+          "identifier": "URFF",
+          "type": "icao_official",
+          "provider": "ru_caica_local",
+          "status": "current_in_provider",
+          "source": "CAICA AIP Russia (AIRAC 2608)"
+        },
+        {
+          "identifier": "UKFF",
+          "type": "icao_legacy",
+          "provider": "ourairports",
+          "status": "legacy",
+          "source": "OurAirports / Historical International Indicator"
+        },
+        {
+          "identifier": "SIP",
+          "type": "iata",
+          "provider": "iata",
+          "status": "current_in_provider",
+          "source": "IATA Coding Directory"
+        }
+      ],
+      "classification": "FULL_IFR",
+      "coordinates": {
+        "latitude": 45.0522,
+        "longitude": 33.9750,
+        "elevation_ft": 639.0
+      },
+      "runways": [
+        {
+          "designator": "01L/19R",
+          "length_ft": 12139,
+          "width_ft": 197,
+          "surface": "CON",
+          "ils_available": true,
+          "ils_frequency_mhz": 109.9
+        },
+        {
+          "designator": "01R/19L",
+          "length_ft": 8858,
+          "width_ft": 148,
+          "surface": "ASP",
+          "ils_available": false
+        }
+      ],
+      "navaids": [
+        {
+          "ident": "SIP",
+          "type": "VOR_DME",
+          "frequency_mhz": 114.3,
+          "latitude": 45.0531,
+          "longitude": 33.9780
+        }
+      ],
+      "procedures": {
+        "sids": ["AN 1A", "TABAN 1A", "GUKAN 1A", "RUMOD 1A"],
+        "stars": ["DEDIS 1A", "RUDOM 1A", "OLMIN 1A"],
+        "approaches": ["ILS 19R", "RNP 01L", "RNP 19R", "2NDB 01L"]
+      },
+      "ats_connectivity": {
+        "connected_airways": ["A102", "B145", "G247", "R114", "W109"],
+        "status": "CONNECTED_TO_NATIONAL_GRAPH"
+      }
+    },
+    {
+      "entity_id": "aerodrome_simferopol_zavodskoye",
+      "canonical_name": "Simferopol Zavodskoye Airfield",
+      "primary_icao": "URFW",
+      "aliases": [
+        {
+          "identifier": "URFW",
+          "type": "icao_official",
+          "provider": "ru_caica_local",
+          "status": "current_in_provider",
+          "source": "CAICA General Aviation Airfield Index"
+        }
+      ],
+      "classification": "VFR_GENERAL_AVIATION",
+      "coordinates": {
+        "latitude": 44.9272,
+        "longitude": 34.0650,
+        "elevation_ft": 950.0
+      },
+      "runways": [
+        {
+          "designator": "05/23",
+          "length_ft": 3937,
+          "width_ft": 131,
+          "surface": "GRASS",
+          "ils_available": false
+        }
+      ]
+    },
+    {
+      "entity_id": "aerodrome_sevastopol_belbek",
+      "canonical_name": "Sevastopol Belbek Airport",
+      "primary_icao": "URFB",
+      "aliases": [
+        {
+          "identifier": "URFB",
+          "type": "icao_official",
+          "provider": "ru_caica_local",
+          "status": "current_in_provider",
+          "source": "CAICA Joint Civil/Military Index"
+        },
+        {
+          "identifier": "UKFB",
+          "type": "icao_legacy",
+          "provider": "ourairports",
+          "status": "legacy",
+          "source": "OurAirports"
+        }
+      ],
+      "classification": "LIMITED_IFR_JOINT_USE",
+      "coordinates": {
+        "latitude": 44.6914,
+        "longitude": 33.5744,
+        "elevation_ft": 344.0
+      },
+      "runways": [
+        {
+          "designator": "07/25",
+          "length_ft": 9843,
+          "width_ft": 157,
+          "surface": "CON",
+          "ils_available": true,
+          "ils_frequency_mhz": 110.3
+        }
+      ]
+    },
+    {
+      "entity_id": "aerodrome_kerch_voykovo",
+      "canonical_name": "Kerch Voykovo Airfield",
+      "primary_icao": "URFK",
+      "aliases": [
+        {
+          "identifier": "URFK",
+          "type": "icao_official",
+          "provider": "ru_caica_local",
+          "status": "current_in_provider",
+          "source": "CAICA Regional Airfield Directory"
+        },
+        {
+          "identifier": "UKFK",
+          "type": "icao_legacy",
+          "provider": "ourairports",
+          "status": "legacy",
+          "source": "OurAirports"
+        }
+      ],
+      "classification": "VFR_REGIONAL",
+      "coordinates": {
+        "latitude": 45.3711,
+        "longitude": 36.4014,
+        "elevation_ft": 170.0
+      },
+      "runways": [
+        {
+          "designator": "06/24",
+          "length_ft": 5413,
+          "width_ft": 131,
+          "surface": "ASP",
+          "ils_available": false
+        }
+      ]
+    },
+    {
+      "entity_id": "aerodrome_evpatoria",
+      "canonical_name": "Evpatoria Aviation Repair Plant Airfield",
+      "primary_icao": "URFE",
+      "aliases": [
+        {
+          "identifier": "URFE",
+          "type": "icao_official",
+          "provider": "ru_caica_local",
+          "status": "current_in_provider",
+          "source": "CAICA Airfield Registry"
+        },
+        {
+          "identifier": "UKFE",
+          "type": "icao_legacy",
+          "provider": "ourairports",
+          "status": "legacy",
+          "source": "OurAirports"
+        }
+      ],
+      "classification": "SPECIAL_FACTORY",
+      "coordinates": {
+        "latitude": 45.2217,
+        "longitude": 33.3783,
+        "elevation_ft": 33.0
+      },
+      "runways": [
+        {
+          "designator": "09/27",
+          "length_ft": 6562,
+          "width_ft": 131,
+          "surface": "CON",
+          "ils_available": false
+        }
+      ]
+    },
+    {
+      "entity_id": "aerodrome_gurzuf_helipad",
+      "canonical_name": "Gurzuf Artek Marine Helipad",
+      "primary_icao": "URFG",
+      "aliases": [
+        {
+          "identifier": "URFG",
+          "type": "local_aip_code",
+          "provider": "ru_caica_local",
+          "status": "current_in_provider",
+          "source": "CAICA Vertodrome Register"
+        }
+      ],
+      "classification": "HELIPORT",
+      "coordinates": {
+        "latitude": 44.5480,
+        "longitude": 34.2950,
+        "elevation_ft": 85.0
+      },
+      "runways": []
+    }
+  ]
+}

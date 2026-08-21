@@ -1,0 +1,127 @@
+{
+  "region": "ABKHAZIA_REGION",
+  "effective_cycle": "2608",
+  "generated_at": "2026-08-21T02:00:00Z",
+  "physical_aerodromes_count": 3,
+  "aerodromes": [
+    {
+      "entity_id": "aerodrome_sukhumi_babushara",
+      "canonical_name": "Sukhumi Babushara Airport (Vladislav Ardzinba)",
+      "primary_icao": "URAS",
+      "aliases": [
+        {
+          "identifier": "URAS",
+          "type": "icao_official",
+          "provider": "ru_caica_local",
+          "status": "current_in_provider",
+          "source": "CAICA Aeronautical Information Manual No.12 / Rosaviatsiya"
+        },
+        {
+          "identifier": "UGSS",
+          "type": "icao_legacy",
+          "provider": "ourairports",
+          "status": "legacy",
+          "source": "OurAirports / Historical International Record (Not in active 2026 Georgian AIP)"
+        },
+        {
+          "identifier": "SUI",
+          "type": "iata",
+          "provider": "iata",
+          "status": "current_in_provider",
+          "source": "IATA Coding Directory"
+        }
+      ],
+      "classification": "FULL_IFR",
+      "coordinates": {
+        "latitude": 42.8581,
+        "longitude": 41.1281,
+        "elevation_ft": 52.0
+      },
+      "runways": [
+        {
+          "designator": "12/30",
+          "length_ft": 12008,
+          "width_ft": 197,
+          "surface": "CON",
+          "ils_available": false
+        }
+      ],
+      "navaids": [
+        {
+          "ident": "SU",
+          "type": "NDB",
+          "frequency_khz": 385,
+          "latitude": 42.8600,
+          "longitude": 41.1300
+        }
+      ],
+      "procedures": {
+        "sids": ["SUKHUM 1A"],
+        "stars": ["BABUS 1A"],
+        "approaches": ["2NDB 12", "VISUAL 30"]
+      },
+      "ats_connectivity": {
+        "connected_airways": ["G247", "W112"],
+        "status": "CONNECTED_VIA_BLACK_SEA_CORRIDOR"
+      }
+    },
+    {
+      "entity_id": "aerodrome_gudauta_bamboura",
+      "canonical_name": "Gudauta Bamboura Airfield",
+      "primary_icao": "UG29",
+      "aliases": [
+        {
+          "identifier": "UG29",
+          "type": "local_aip_code",
+          "provider": "ourairports",
+          "status": "current_in_provider",
+          "source": "Regional Airfield Record"
+        }
+      ],
+      "classification": "LIMITED_MILITARY_AIRFIELD",
+      "coordinates": {
+        "latitude": 43.1033,
+        "longitude": 40.5800,
+        "elevation_ft": 82.0
+      },
+      "runways": [
+        {
+          "designator": "15/33",
+          "length_ft": 9843,
+          "width_ft": 164,
+          "surface": "CON",
+          "ils_available": false
+        }
+      ]
+    },
+    {
+      "entity_id": "aerodrome_pskhu",
+      "canonical_name": "Pskhu Mountain Airfield",
+      "primary_icao": "UG28",
+      "aliases": [
+        {
+          "identifier": "UG28",
+          "type": "local_aip_code",
+          "provider": "ourairports",
+          "status": "current_in_provider",
+          "source": "Mountain Aviation Landing Site"
+        }
+      ],
+      "classification": "VFR_MOUNTAIN_STRIP",
+      "coordinates": {
+        "latitude": 43.3764,
+        "longitude": 40.8019,
+        "elevation_ft": 2040.0
+      },
+      "runways": [
+        {
+          "designator": "09/27",
+          "length_ft": 2100,
+          "width_ft": 60,
+          "surface": "GRASS",
+          "ils_available": false
+        }
+      ]
+    }
+  ]
+}
