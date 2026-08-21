@@ -18,10 +18,10 @@
         },
         {
           "identifier": "UGSS",
-          "type": "icao_legacy",
+          "type": "icao_official",
           "provider": "ourairports",
-          "status": "legacy",
-          "source": "OurAirports / Historical International Record (Not listed in active 2026 Georgian AIP GEN 2.4)"
+          "status": "current_in_provider",
+          "source": "OurAirports Baseline Dataset (Current in OurAirports)"
         },
         {
           "identifier": "SUI",
@@ -38,6 +38,12 @@
           "source": "OurAirports Secondary Identifier Mapping"
         }
       ],
+      "provider_statuses": {
+        "ru_caica_local": "current_in_provider",
+        "ourairports": "current_in_provider",
+        "georgia_ais": "not_listed_in_provider",
+        "iata": "current_in_provider"
+      },
       "classification": "FULL_IFR",
       "coordinates": {
         "latitude": 42.8581,
