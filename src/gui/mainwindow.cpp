@@ -150,7 +150,8 @@ MainWindow::MainWindow()
 
   aboutMessage =
     tr("<h3>OpenAIRAC Map</h3>"
-       "<p><b>Version 2.0.0</b> (OpenAIRAC 3.0 Operational EFB)</p>"
+       "<p><b>Version 2.1.0</b> (OpenAIRAC 3.1 In-Flight EFB)<br/>"
+       "Powered by <b>OpenAIRAC Core v2.10.0</b></p>"
        "<p>OpenAIRAC Map is an open-first aviation flight planner, moving map, and electronic flight bag (EFB).<br/>"
        "Compatible with X-Plane 11, X-Plane 12, Microsoft Flight Simulator (2020 / 2024), and Prepar3D.</p>"
        "<p><b>Open-AIRAC comes first:</b> independent, open aviation data, transparent provenance, and no proprietary subscription required.</p>"
