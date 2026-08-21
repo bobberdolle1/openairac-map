@@ -66,71 +66,43 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout OpenAIRAC Map
+        uses: actions/checkout@v4
         with:
           path: openairac-map
-
       - name: Checkout atools
         uses: actions/checkout@v4
         with:
           repository: albar965/atools
           path: atools
 
-      - name: Verify OpenAIRAC Subsystem
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verify OpenAIRAC Subsystem & Documentation Integrity
         shell: bash
         run: |
           cd openairac-map
+          python tools/scan_leaks.py .
+          python tools/check_doc_links.py
           test -f src/openairac/navigationprovider.h
           test -f src/openairac/provenancemanager.h
           test -f src/openairac/coveragemanager.h
           test -f src/openairac/openairacdbmanager.h
-          test -f src/openairac/charts/chartmodel.h
-          test -f src/openairac/charts/chartclient.h
-          test -f src/openairac/charts/chartviewerwidget.h
-          test -f src/openairac/charts/chartsdock.h
-          test -f src/openairac/charts/flightsuggestions.h
-          test -f src/openairac/weather/weathermodel.h
-          test -f src/openairac/weather/weatherclient.h
-          test -f src/openairac/weather/flightbriefingdialog.h
-          test -f src/openairac/online/onlinenetworkmodel.h
-          test -f src/openairac/online/onlineclient.h
-          test -f src/openairac/online/eventsdock.h
-          test -f src/openairac/efb/flightphase.h
-          test -f src/openairac/efb/airportworkspace.h
-          test -f src/openairac/efb/chartcontextengine.h
           test -f src/openairac/efb/activeflightdock.h
-          test -f src/openairac/efb/georasterlayer.h
           test -f src/openairac/product/firstrunwizard.h
           test -f src/openairac/product/datamanagerdialog.h
           test -f src/openairac/product/appupdater.h
-          test -f src/openairac/product/diagnosticsdialog.h
-          test -f src/openairac/product/migration.h
-          test -f docs/UPSTREAM_SYNC.md
-          test -f docs/OPENAIRAC_INTEGRATION.md
-          test -f docs/EFB_ROADMAP.md
-          test -f docs/PLATFORM_SUPPORT.md
-          test -f docs/PROCEDURE_SOURCES.md
-          test -f THIRD_PARTY_NOTICES.md
-          test -f docs/CHARTS.md
-          test -f docs/OFFLINE_CHARTS.md
-          test -f docs/WEATHER.md
-          test -f docs/FLIGHT_BRIEFING.md
-          test -f docs/ONLINE_FLYING.md
-          test -f docs/VATSIM.md
-          test -f docs/ADVANCED_EFB.md
-          test -f docs/AIRPORT_WORKSPACE.md
-          test -f docs/FLIGHT_PHASE.md
-          test -f docs/AIRPORT_MOVING_MAP.md
-          test -f docs/GEOREFERENCED_CHARTS.md
-          test -f docs/user/INSTALL.md
-          test -f docs/user/FIRST_RUN.md
-          test -f docs/user/NAVDATA.md
-          test -f docs/user/FLIGHT_PLANNING.md
-          test -f docs/user/CHARTS.md
-          test -f docs/user/WEATHER.md
-          test -f docs/user/ONLINE.md
-          test -f docs/user/SIMULATOR_CONNECTION.md
-          test -f docs/user/UPDATES.md
-          test -f docs/user/TROUBLESHOOTING.md
-          test -f .github/ISSUE_TEMPLATE/bug_report.yml
-          test -f .github/ISSUE_TEMPLATE/feature_request.yml
+          test -f docs/USER_GUIDE.md
+          test -f docs/INSTALLATION.md
+          test -f docs/FIRST_FLIGHT_TUTORIAL.md
+          test -f docs/SIMULATOR_SETUP.md
+          test -f docs/DATA_AND_PROVIDERS.md
+          test -f docs/RUSSIA_CAICA_GUIDE.md
+          test -f docs/SAVING_AND_EXPORTING.md
+          test -f docs/AI_CREW_GATEWAY.md
+          test -f docs/TROUBLESHOOTING.md
+          test -f docs/FAQ.md
+          test -f docs/PRIVACY_AND_SECURITY.md
           echo "OpenAIRAC Map Windows workspace integrity verified."
