@@ -540,6 +540,7 @@ QJsonObject ActiveFlightDock::flightdeckSnapshotV2() const {
     orig[QStringLiteral("elevation_ft")] = 0.0;
     orig[QStringLiteral("selected_runway")] = QStringLiteral("DEFAULT");
     orig[QStringLiteral("procedure_name")] = QStringLiteral("DEFAULT");
+    orig[QStringLiteral("sid_procedure")] = QStringLiteral("DEFAULT");
     orig[QStringLiteral("is_source_required")] = false;
     obj[QStringLiteral("origin")] = orig;
 
@@ -551,6 +552,9 @@ QJsonObject ActiveFlightDock::flightdeckSnapshotV2() const {
     dest[QStringLiteral("elevation_ft")] = m_destElevationFt;
     dest[QStringLiteral("selected_runway")] = QStringLiteral("DEFAULT");
     dest[QStringLiteral("procedure_name")] = isDestSourceReq ? QStringLiteral("NONE") : QStringLiteral("DEFAULT");
+    dest[QStringLiteral("star_procedure")] = isDestSourceReq ? QJsonValue::Null : QJsonValue(QStringLiteral("DEFAULT"));
+    dest[QStringLiteral("approach_procedure")] = isDestSourceReq ? QJsonValue::Null : QJsonValue(QStringLiteral("ILS/VISUAL"));
+    dest[QStringLiteral("approach_type")] = isDestSourceReq ? QJsonValue::Null : QJsonValue(QStringLiteral("ILS"));
     dest[QStringLiteral("is_source_required")] = isDestSourceReq;
     if (isDestSourceReq) {
         dest[QStringLiteral("source_required_note")] = QStringLiteral("Terminal procedures unavailable in open source dataset; official AIP source required");
